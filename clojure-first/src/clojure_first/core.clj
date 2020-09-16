@@ -19,6 +19,7 @@
   )
 
 
+;todo
 (defn generate-words
   [list n]
 
@@ -54,6 +55,11 @@
     (list))
 )
 
+;!!!
+(defn main-word-function
+  [alphabet n]
+  (traverse-list alphabet (generate-atomic-words alphabet) n)
+  )
 
 
   
