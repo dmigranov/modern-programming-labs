@@ -1,0 +1,88 @@
+; This is the Calva evaluation results output window.
+; TIPS: The keyboard shortcut `ctrl+alt+c o` shows and focuses this window
+;   when connected to a REPL session.
+; Please see https://calva.io/output/ for more info.
+; Happy coding! ♥️
+
+; Connecting ...
+; Hooking up nREPL sessions...
+; Connected session: clj
+; TIPS: 
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - File URLs in stacktrace frames are peekable and clickable.
+clj::user=> 
+
+(defn words
+  [n]
+  (n (inc n)))
+#'user/words
+clj::user=> (words 1)
+; Execution error (ClassCastException) at user/words (REPL:21).
+; class java.lang.Long cannot be cast to class clojure.lang.IFn (java.lang.Long is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
+clj::user=> 
+(defn words
+  [n]
+  ('n '(inc n)))
+#'user/words
+clj::user=> 
+(words 2
+       )
+nil
+clj::user=> 
+
+(defn words
+  [n]
+  (1 2 3 4))
+#'user/words
+clj::user=> 
+(words 1)
+; Execution error (ClassCastException) at user/words (REPL:39).
+; class java.lang.Long cannot be cast to class clojure.lang.IFn (java.lang.Long is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
+clj::user=> 
+(defn words
+  [n]
+  '(1 2 3 4))
+#'user/words
+clj::user=> 
+(words 1)
+(1 2 3 4)
+clj::user=> 
+(defn words
+  [n]
+  '('n 'n))
+#'user/words
+clj::user=> 
+(words 1)
+((quote n) (quote n))
+clj::user=> 
+(defn words
+  [n]
+  '(n n))
+#'user/words
+clj::user=> 
+(words 1)
+(n n)
+clj::user=> 
+(defn words
+  [n]
+  (list n n))
+#'user/words
+clj::user=> 
+(words 1)
+(1 1)
+clj::user=> 
+(words 5)
+(5 5)
+clj::user=> 
+(defn words
+  [n]
+  (list n (inc n)))
+#'clojure-first.core/words
+clj::clojure-first.core=> 
+(words 5)
+(5 6)
+clj::clojure-first.core=> 
