@@ -23,7 +23,7 @@
   [list n]
 
   (if (> n 1)
-    (cons)    ;then: взять words с n-1  и прибавить буковки слева справа
+    (cons)    ;then: traverse-list?
     list    ;else
     )
 
@@ -31,8 +31,8 @@
 
 
 (defn generate-word-list
-  [word n]
-
+  [alphabet word n]
+  (let [first-letter (get word 0)]) ;char
   (if (> n 1)
     (cons)    ;then: взять words с n-1  и прибавить буковки слева справа
     list    ;else
@@ -40,11 +40,11 @@
 
   (list n (inc n)))
 
-(defn traverse-list [words]
+(defn traverse-list [alphabet words n]
   (if (> (count words) 0)
-    (concat (generate-word-list (first words) 0)
+    (concat (generate-word-list alphabet (first words) 0)
 
-          (traverse-list (rest words)))
+          (traverse-list alphabet (rest words) (dec n)))
 
     (list)))
 
