@@ -9,22 +9,47 @@
 
 (defn words
   [alphabet n]
-  (let [cardinality (count alphabet)])
+  
   (if (> n 1)
-    ()    ;then: взять words с n-1  и прибавить буковки слева справа
-    (alphabet)    ;else
+    (cons )    ;then: взять words с n-1  и прибавить буковки слева справа
+    alphabet    ;else
     )
 
   (list n (inc n))
   )
 
+
+(defn generate-words
+  [list n]
+
+  (if (> n 1)
+    (cons)    ;then: взять words с n-1  и прибавить буковки слева справа
+    list    ;else
+    )
+
+  (list n (inc n)))
+
+
 (defn generate-word-list
-  [alphabet n word]
-  (if (< (.length word) n)
-    ()   ;then
-    (list)   ;else
-  )
-  )
+  [word n]
+
+  (if (> n 1)
+    (cons)    ;then: взять words с n-1  и прибавить буковки слева справа
+    list    ;else
+    )
+
+  (list n (inc n)))
+
+(defn traverse-list [words]
+  (if (> (count words) 0)
+    (concat (generate-word-list (first words) 0)
+
+          (traverse-list (rest words)))
+
+    (list)))
+
+
+
   
 
 
