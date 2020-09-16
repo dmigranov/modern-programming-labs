@@ -40,13 +40,19 @@
 
   (list n (inc n)))
 
+(defn generate-atomic-words
+  [alphabet]
+  (if (> (count alphabet) 0)
+    (cons (str (first alphabet)) (generate-atomic-words (rest alphabet)))
+    (list)))
+
+
 (defn traverse-list [alphabet words n]
   (if (> (count words) 0)
     (concat (generate-word-list alphabet (first words) 0)
-
           (traverse-list alphabet (rest words) (dec n)))
-
-    (list)))
+    (list))
+)
 
 
 
