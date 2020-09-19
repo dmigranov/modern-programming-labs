@@ -15,77 +15,139 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - File URLs in stacktrace frames are peekable and clickable.
 clj::user=> 
-(defn generate-atomic-words
-  [alphabet]
-  (if (> (count alphabet) 0)
-    (concat (str (first alphabet)) (generate-atomic-words (rest alphabet)))
+(defn generate-word-list
+  [alphabet word n]
+  (let [first-letter (get word 0)]) ;char
+  (if (> n 1)
+    (if (> (count alphabet) 0)
+      (concat (str (first alphabet) word)
+              (generate-word-list (rest alphabet) word (dec n)))
+      (list))    ;then: взять words с n-1  и прибавить буковки слева справа
+    list    ;else
+    ))
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(defn traverse-list [alphabet words n]
+  (if (> (count words) 0)
+    (concat (generate-word-list alphabet (first words) n)
+            (traverse-list alphabet (rest words) n))
     (list)))
-#'user/generate-atomic-words
-clj::user=> (generate-atomic-words '(\t \d))
-(\t \d)
-clj::user=> 
-(generate-atomic-words '(3 4))
-(\3 \4)
-clj::user=> 
-(generate-atomic-words (3 4))
-; Execution error (ClassCastException) at user/eval5386 (REPL:30).
-; class java.lang.Long cannot be cast to class clojure.lang.IFn (java.lang.Long is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
-clj::user=> 
-(generate-atomic-words (list 3 4))
-(\3 \4)
-clj::user=> 
-"fd"
-"fd"
-clj::clojure-first.core=> 
-(generate-atomic-words (list 3 4))
-; Syntax error compiling at (clojure-first/.calva/output-window/output.calva-repl:40:1).
-(generate-atomic-words (list 3 4))
-; Unable to resolve symbol: generate-atomic-words in this context
-clj::clojure-first.core=> 
-
-3
-3
-clj::clojure-first.core=> 
-(generate-atomic-words '(3 4))
-; Syntax error compiling at (clojure-first/.calva/output-window/output.calva-repl:49:1).
-; Unable to resolve symbol: generate-atomic-words in this context
+#'clojure-first.core/traverse-list
 clj::clojure-first.core=> 
 (defn generate-atomic-words
   [alphabet]
   (if (> (count alphabet) 0)
-    (concat (str (first alphabet)) (generate-atomic-words (rest alphabet)))
+    (cons (str (first alphabet)) (generate-atomic-words (rest alphabet)))
     (list)))
 #'clojure-first.core/generate-atomic-words
 clj::clojure-first.core=> 
-(generate-atomic-words '(3 4))
-(\3 \4)
+(defn main-word-function
+  [alphabet n]
+  (traverse-list alphabet (generate-atomic-words alphabet) n)
+  )
+
+
+#'clojure-first.core/main-word-function
 clj::clojure-first.core=> 
-(str 1)
-"1"
-clj::clojure-first.core=> 3
-3
+(defn main-word-function
+  [alphabet n]
+  (traverse-list alphabet (generate-atomic-words alphabet) n))
+#'clojure-first.core/main-word-function
 clj::clojure-first.core=> 
-(first '(3 4 5))
-3
+(main-word-function [\a \d \f] n)
+; Syntax error compiling at (clojure-first/.calva/output-window/output.calva-repl:57:1).
 clj::clojure-first.core=> 
-()
-3
+(main-word-function [\a \d \f] 3)
+; Error printing return value (IllegalArgumentException) at clojure.lang.RT/seqFrom (RT.java:557).
+; Don't know how to create ISeq from: clojure.lang.PersistentList$Primordial
 clj::clojure-first.core=> 
-()
+(main-word-function (\d \q) 3)
+; Execution error (ClassCastException) at clojure-first.core/eval2146 (REPL:64).
+; class java.lang.Character cannot be cast to class clojure.lang.IFn (java.lang.Character is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
 clj::clojure-first.core=> 
-()
-()
-()
-(str )
-""
+(generate-atomic-words (\d \q))
+; Execution error (ClassCastException) at clojure-first.core/eval2228 (REPL:68).
+; class java.lang.Character cannot be cast to class clojure.lang.IFn (java.lang.Character is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
 clj::clojure-first.core=> 
-(str (first '(3 4 5)))
-"3"
+(str (first (\d \q)))
+; Execution error (ClassCastException) at clojure-first.core/eval2360 (REPL:72).
+; class java.lang.Character cannot be cast to class clojure.lang.IFn (java.lang.Character is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
 clj::clojure-first.core=> 
-(str (first '(3 4 5)))
-"3"
+first (\d \q)
+; Execution error (ClassCastException) at clojure-first.core/eval2452 (REPL:76).
+; class java.lang.Character cannot be cast to class clojure.lang.IFn (java.lang.Character is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
 clj::clojure-first.core=> 
-(str (first '(3 4 5)))
-"3"
+'(\d \q)
+(\d \q)
 clj::clojure-first.core=> 
-; nREPL Connection was closed
+(generate-atomic-words '(\d \q))
+("d" "q")
+clj::clojure-first.core=> 
+
+; Execution error (ClassCastException) at clojure-first.core/eval2458 (REPL:84).
+; class java.lang.String cannot be cast to class clojure.lang.IFn (java.lang.String is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
+clj::clojure-first.core=> 
+; Execution error (ClassCastException) at clojure-first.core/eval2460 (REPL:84).
+; class java.lang.String cannot be cast to class clojure.lang.IFn (java.lang.String is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
+clj::clojure-first.core=> 
+; Execution error (ClassCastException) at clojure-first.core/eval2462 (REPL:84).
+; class java.lang.String cannot be cast to class clojure.lang.IFn (java.lang.String is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
+clj::clojure-first.core=> 
+(+ 3 2)
+5
+clj::clojure-first.core=> 
+(main-word-function '(\d \q) 3)
+; Error printing return value (IllegalArgumentException) at clojure.lang.RT/seqFrom (RT.java:557).
+; Don't know how to create ISeq from: clojure.lang.PersistentList$Primordial
+clj::clojure-first.core=> 
+(generate-word-list '(\f \s) "s" 1)
+#object[clojure.lang.PersistentList$Primordial 0x6e134c9 "clojure.lang.PersistentList$Primordial@6e134c9"]
+clj::clojure-first.core=> 
+(defn generate-word-list
+  [alphabet word n]
+  (let [first-letter (get word 0)]) ;char
+
+  (if (> (count alphabet) 0)
+    (concat (str (first alphabet) word)
+            (generate-word-list (rest alphabet) word (dec n)))
+    (list))    ;then: взять words с n-1  и прибавить буковки слева справа
+  list    ;else
+  )
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(generate-word-list '(\f \s) "s" 1)
+#object[clojure.lang.PersistentList$Primordial 0x6e134c9 "clojure.lang.PersistentList$Primordial@6e134c9"]
+clj::clojure-first.core=> (defn generate-word-list
+                            [alphabet word n]
+                            (let [first-letter (get word 0)]) ;char
+
+                            (if (> (count alphabet) 0)
+                              (concat (str (first alphabet) word)
+                                      (generate-word-list (rest alphabet) word (dec n))) ;then: взять words с n-1  и прибавить буковки слева справа
+                              (list)))
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(generate-word-list '(\f \s) "t" 1)
+(\f \s \s \s)
+clj::clojure-first.core=> (generate-word-list '(\f \s) "t" 1)
+(\f \t \s \t)
+clj::clojure-first.core=> 
+(generate-word-list '("f" "s") "t" 1)
+(\f \t \s \t)
+clj::clojure-first.core=> 
+(generate-word-list '("f" "s") "ta" 1)
+(\f \t \a \s \t \a)
+clj::clojure-first.core=> 
+(defn generate-word-list
+  [alphabet word n]
+  (let [first-letter (get word 0)]) ;char
+
+  (if (> (count alphabet) 0)
+    (cons (str (first alphabet) word)
+          (generate-word-list (rest alphabet) word n))
+    (list)))
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(generate-word-list '("f" "s") "ta" 1)
+("fta" "sta")
+clj::clojure-first.core=> 
