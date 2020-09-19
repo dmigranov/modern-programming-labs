@@ -1,28 +1,28 @@
 (ns clojure-first.core
   (:gen-class))
 
-(defn multiply-word [word alphabet]
+(defn multiply-and-lenghten-word [word alphabet]
   (if (> (count alphabet) 0)
     (concat
      (if (not= (get word 0) (first alphabet)) (list (str (first alphabet) word)) (list))
-     (multiply-word word (rest alphabet))
+     (multiply-and-lenghten-word word (rest alphabet))
      )
     (list))
 )
 
-(defn traverse-list [alphabet words]
+(defn lengthen-words-by-one [alphabet words]
   (
    if (> (count words) 0)
-    (concat (multiply-word (first words) alphabet)
-          (traverse-list alphabet (rest words)))
+    (concat (multiply-and-lenghten-word (first words) alphabet)
+          (lengthen-words-by-one alphabet (rest words)))
     (list)
   )
 )
 
-(defn lengthen-words [alphabet words n]
+(defn lengthen-words-recursively [alphabet words n]
   (cond 
-    (> n 2) (lengthen-words alphabet (traverse-list alphabet words) (dec n))
-    (= n 2) (traverse-list alphabet words)
+    (> n 2) (lengthen-words-recursively alphabet (lengthen-words-by-one alphabet words) (dec n))
+    (= n 2) (lengthen-words-by-one alphabet words)
     :else words
     )
 )
@@ -36,9 +36,9 @@
 )
 
 (defn generate-words [alphabet n] ;!!!entry!!!
-  (lengthen-words alphabet (generate-atomic-words alphabet) n)
+  (lengthen-words-recursively alphabet (generate-atomic-words alphabet) n)
 )
 
 (defn -main [& args]
-  (println (generate-words '(\r \s) 2))
+  (println (generate-words '(\a \b \c) 3))
 )
