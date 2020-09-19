@@ -248,3 +248,86 @@ clj::clojure-first.core=>
 (generate-word-list '(\s \f) "sa")
 ()
 clj::clojure-first.core=> 
+(defn generate-word-list
+  [alphabet word]
+  ;()
+  (if (> (count alphabet) 0)
+    (cons (if (not= (get word 0) (first alphabet)) (str (first alphabet) word) (nil))
+          (generate-word-list (rest alphabet) word))
+    (list)))
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(generate-word-list '(\s \f) "sa")
+(nil "fsa")
+clj::clojure-first.core=> 
+(generate-word-list '(\e \f) "sa")
+("esa" "fsa")
+clj::clojure-first.core=> 
+(generate-word-list '(\e \f) "sa")
+("esa" "fsa")
+clj::clojure-first.core=> 
+(defn generate-word-list
+  [alphabet word]
+  ;()
+  (if (> (count alphabet) 0)
+    (cons (if (not= (get word 0) (first alphabet)) (str (first alphabet) word) (list))
+          (generate-word-list (rest alphabet) word))
+    (list)))
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(generate-word-list '(\e \f) "sa")
+("esa" "fsa")
+clj::clojure-first.core=> 
+(generate-word-list '(\s \f) "sa")
+(() "fsa")
+clj::clojure-first.core=> 
+(defn generate-word-list
+  [alphabet word]
+  ;()
+  (if (> (count alphabet) 0)
+    (concat (if (not= (get word 0) (list (first alphabet))) (str (first alphabet) word) (list))
+            (generate-word-list (rest alphabet) word))
+    (list)))
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(generate-word-list '(\s \f) "sa")
+(\s \s \a \f \s \a)
+clj::clojure-first.core=> 
+(defn generate-word-list
+  [alphabet word]
+  ;()
+  (if (> (count alphabet) 0)
+    (concat (if (not= (get word 0) (first alphabet)) (list (str (first alphabet) word)) (list))
+            (generate-word-list (rest alphabet) word))
+    (list)))
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(generate-word-list '(\s \f) "sa")
+("fsa")
+clj::clojure-first.core=> 
+(generate-word-list '(\s \f) "qa")
+("sqa" "fqa")
+clj::clojure-first.core=> 
+(generate-word-list '(\s \f \q) "qa")
+("sqa" "fqa")
+clj::clojure-first.core=> 
+(generate-word-list '(\s \f \q) "aqa")
+("saqa" "faqa" "qaqa")
+clj::clojure-first.core=> 
+(generate-word-list '(\s \f \q) "aqaq")
+("saqaq" "faqaq" "qaqaq")
+clj::clojure-first.core=> 
+(main-word-function '(\f \s \a) 3)
+; Execution error (ArityException) at clojure-first.core/traverse-list (REPL:32).
+; Wrong number of args (3) passed to: clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(defn traverse-list [alphabet words n]
+  (if (> (count words) 0)
+    (concat (generate-word-list alphabet (first words))
+            (traverse-list alphabet (rest words) n))
+    (list)))
+#'clojure-first.core/traverse-list
+clj::clojure-first.core=> 
+(main-word-function '(\f \s \a) 3)
+("sf" "af" "fs" "as" "fa" "sa")
+clj::clojure-first.core=> 

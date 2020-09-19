@@ -12,19 +12,15 @@
 ;;then: взять words с n-1  и прибавить буковки слева справа
 (defn generate-word-list
   [alphabet word]
-
-  ;if ()
-    (if (and (> (count alphabet) 0) (not= (get word 0) (first alphabet)))
-       (cons (str (first alphabet) word)
-             (generate-word-list (rest alphabet) word))
-       (list))
-
-)
+  (if (> (count alphabet) 0)
+    (concat (if (not= (get word 0) (first alphabet)) (list (str (first alphabet) word)) (list))
+          (generate-word-list (rest alphabet) word))
+    (list)))
 
 (defn traverse-list [alphabet words n]
   (
    if (> (count words) 0)
-    (concat (generate-word-list alphabet (first words) n)
+    (concat (generate-word-list alphabet (first words))
           (traverse-list alphabet (rest words) n))
     (list)
   )
