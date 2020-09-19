@@ -30,10 +30,11 @@
 )
 
 (defn lenghthen-words [alphabet words n]
-  (if (>= n 3)
-    (lenghthen-words alphabet (traverse-list alphabet words) (dec n))
-     (traverse-list alphabet words)
-  )
+  (cond 
+    (> n 2) (lenghthen-words alphabet (traverse-list alphabet words) (dec n))
+    (= n 2) (traverse-list alphabet words)
+    :else words
+    )
 )
 
 (defn generate-atomic-words
