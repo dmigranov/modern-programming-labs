@@ -13,9 +13,12 @@
 (defn generate-word-list
   [alphabet word]
   (if (> (count alphabet) 0)
-    (concat (if (not= (get word 0) (first alphabet)) (list (str (first alphabet) word)) (list))
-          (generate-word-list (rest alphabet) word))
-    (list)))
+    (concat
+     (if (not= (get word 0) (first alphabet)) (list (str (first alphabet) word)) (list))
+     (generate-word-list (rest alphabet) word)
+     )
+    (list))
+)
 
 (defn traverse-list [alphabet words n]
   (
