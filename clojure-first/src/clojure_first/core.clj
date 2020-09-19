@@ -29,6 +29,13 @@
   )
 )
 
+(defn lenghthen-words [alphabet words n]
+  (if (> n 0)
+    ()
+    ()
+  )
+)
+
 (defn generate-atomic-words
   [alphabet]
   (
