@@ -7,41 +7,17 @@
   [arg]
   (if (> arg 1) (* arg (fact (- arg 1))) 1))
 
-(defn words
-  [alphabet n]
-  
-  (if (> n 1)
-    (cons )    ;then: взять words с n-1  и прибавить буковки слева справа
-    alphabet    ;else
-    )
-
-  (list n (inc n))
-  )
-
-
-
-(defn generate-words
-  [list n]
-
-  (if (> n 1)
-    (cons)    ;then: traverse-list?
-    list    ;else
-    )
-
-  (list n (inc n))
-)
 
 ;todo
 ;;then: взять words с n-1  и прибавить буковки слева справа
 (defn generate-word-list
-  [alphabet word n]
-  (let [first-letter (get word 0)]) ;char
+  [alphabet word]
 
-    (if (> (count alphabet) 0)
-      (cons (str (first alphabet) word)
-              (generate-word-list (rest alphabet) word n)) 
-      (list))    
-
+  ;if ()
+    (if (and (> (count alphabet) 0) (not= (get word 0) (first alphabet)))
+       (cons (str (first alphabet) word)
+             (generate-word-list (rest alphabet) word))
+       (list))
 
 )
 

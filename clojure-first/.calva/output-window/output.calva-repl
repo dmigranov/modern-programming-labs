@@ -157,3 +157,94 @@ clj::clojure-first.core=>
 (main-word-function '(\d \a \r \q) 3)
 ("dd" "ad" "rd" "qd" "da" "aa" "ra" "qa" "dr" "ar" "rr" "qr" "dq" "aq" "rq" "qq")
 clj::clojure-first.core=> 
+(defn generate-word-list
+  [alphabet word]
+  (let [first-letter (get word 0)]
+    (if (not= first-letter first alphabet)
+      ((if (> (count alphabet) 0)
+         (cons (str (first alphabet) word)
+               (generate-word-list (rest alphabet) word))
+         (list)))
+      (list))))
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(generate-word-list '("f" "s") "ta")
+; Execution error (ClassCastException) at clojure-first.core/generate-word-list (REPL:164).
+; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'bootstrap')
+clj::clojure-first.core=> 
+(defn generate-word-list
+  [alphabet word]
+  (let [first-letter (get word 0)]
+    (if (not= first-letter (first alphabet))
+      ((if (> (count alphabet) 0)
+         (cons (str (first alphabet) word)
+               (generate-word-list (rest alphabet) word))
+         (list)))
+      (list))))
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(generate-word-list '("f" "s") "ta")
+; Execution error (ClassCastException) at clojure-first.core/generate-word-list (REPL:179).
+; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'bootstrap')
+clj::clojure-first.core=> 
+(defn generate-word-list
+  [alphabet word]
+
+  (if (not= (get word 0) (first alphabet))
+    ((if (> (count alphabet) 0)
+       (cons (str (first alphabet) word)
+             (generate-word-list (rest alphabet) word))
+       (list)))
+    (list))) 
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(generate-word-list '("f" "s") "ta")
+; Execution error (ClassCastException) at clojure-first.core/generate-word-list (REPL:194).
+; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'bootstrap')
+clj::clojure-first.core=> 
+(defn generate-word-list
+  [alphabet word]
+
+  ;if (not= (get word 0) (first alphabet))
+  (if (> (count alphabet) 0)
+    (cons (str (first alphabet) word)
+          (generate-word-list (rest alphabet) word))
+    (list)))
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(generate-word-list '("f" "s") "ta")
+("fta" "sta")
+clj::clojure-first.core=> 
+(defn generate-word-list
+  [alphabet word]
+
+  (if (and (> (count alphabet) 0) (not= (get word 0) (first alphabet)))
+    (cons (str (first alphabet) word)
+          (generate-word-list (rest alphabet) word))
+    (list)))
+#'clojure-first.core/generate-word-list
+clj::clojure-first.core=> 
+(generate-word-list '("f" "s") "ta")
+("fta" "sta")
+clj::clojure-first.core=> 
+(generate-word-list '("f" "s") "sa")
+("fsa" "ssa")
+clj::clojure-first.core=> 
+(generate-word-list '("f" "s") "as")
+("fas" "sas")
+clj::clojure-first.core=> 
+(get "sa" 0)
+\s
+clj::clojure-first.core=> 
+(generate-word-list '("s" "f") "as")
+("sas" "fas")
+clj::clojure-first.core=> 
+(generate-word-list '(s \f) "as")
+("sas" "fas")
+clj::clojure-first.core=> 
+(generate-word-list '(\s \f) "as")
+("sas" "fas")
+clj::clojure-first.core=> 
+(generate-word-list '(\s \f) "sa")
+()
+clj::clojure-first.core=> 
