@@ -331,3 +331,53 @@ clj::clojure-first.core=>
 (main-word-function '(\f \s \a) 3)
 ("sf" "af" "fs" "as" "fa" "sa")
 clj::clojure-first.core=> 
+(defn lenghthen-words [alphabet words n]
+  (if (> n 0)
+    (lenghthen-words alphabet (traverse-list alphabet words n) (dec n))
+    (list)))
+#'clojure-first.core/lenghthen-words
+clj::clojure-first.core=> 
+(defn main-word-function
+  [alphabet n]
+  ;(traverse-list alphabet (generate-atomic-words alphabet) n)
+  (lenghthen-words alphabet (generate-atomic-words alphabet) n))
+#'clojure-first.core/main-word-function
+clj::clojure-first.core=> 
+(main-word-function '(\f \s \a) 3)
+()
+clj::clojure-first.core=> 
+(main-word-function '(\f \s \a) 3)
+()
+clj::clojure-first.core=> 
+(defn traverse-list [alphabet words]
+  (if (> (count words) 0)
+    (concat (generate-word-list alphabet (first words))
+            (traverse-list alphabet (rest words)))
+    (list)))
+#'clojure-first.core/traverse-list
+clj::clojure-first.core=> 
+(defn lenghthen-words [alphabet words n]
+  (if (> n 0)
+    (lenghthen-words alphabet (traverse-list alphabet words) (dec n))
+    (list)))
+#'clojure-first.core/lenghthen-words
+clj::clojure-first.core=> 
+
+(defn lenghthen-words [alphabet words n]
+  (if (> n 0)
+    (lenghthen-words alphabet (traverse-list alphabet words) (dec n))
+    (traverse-list alphabet words)))
+#'clojure-first.core/lenghthen-words
+clj::clojure-first.core=> 
+(main-word-function '(\f \s \a) 3)
+("fsfsf" "asfsf" "fafsf" "safsf" "sfasf" "afasf" "fsasf" "asasf" "fsfaf" "asfaf" "fafaf" "safaf" "sfsaf" "afsaf" "fasaf" "sasaf" "sfsfs" "afsfs" "fasfs" "sasfs" "sfafs" "afafs" "fsafs" "asafs" "fsfas" "asfas" "fafas" "safas" "sfsas" "afsas" "fasas" "sasas" "sfsfa" "afsfa" "fasfa" "sasfa" "sfafa" "afafa" "fsafa" "asafa" "fsfsa" "asfsa" "fafsa" "safsa" "sfasa" "afasa" "fsasa" "asasa")
+clj::clojure-first.core=> 
+(main-word-function '(\f \s \a) 1)
+("fsf" "asf" "faf" "saf" "sfs" "afs" "fas" "sas" "sfa" "afa" "fsa" "asa")
+clj::clojure-first.core=> 
+(main-word-function '(\f \s \a) 2)
+("sfsf" "afsf" "fasf" "sasf" "sfaf" "afaf" "fsaf" "asaf" "fsfs" "asfs" "fafs" "safs" "sfas" "afas" "fsas" "asas" "fsfa" "asfa" "fafa" "safa" "sfsa" "afsa" "fasa" "sasa")
+clj::clojure-first.core=> 
+(main-word-function '(\f \s \a) 4)
+("sfsfsf" "afsfsf" "fasfsf" "sasfsf" "sfafsf" "afafsf" "fsafsf" "asafsf" "fsfasf" "asfasf" "fafasf" "safasf" "sfsasf" "afsasf" "fasasf" "sasasf" "sfsfaf" "afsfaf" "fasfaf" "sasfaf" "sfafaf" "afafaf" "fsafaf" "asafaf" "fsfsaf" "asfsaf" "fafsaf" "safsaf" "sfasaf" "afasaf" "fsasaf" "asasaf" "fsfsfs" "asfsfs" "fafsfs" "safsfs" "sfasfs" "afasfs" "fsasfs" "asasfs" "fsfafs" "asfafs" "fafafs" "safafs" "sfsafs" "afsafs" "fasafs" "sasafs" "sfsfas" "afsfas" "fasfas" "sasfas" "sfafas" "afafas" "fsafas" "asafas" "fsfsas" "asfsas" "fafsas" "safsas" "sfasas" "afasas" "fsasas" "asasas" "fsfsfa" "asfsfa" "fafsfa" "safsfa" "sfasfa" "afasfa" "fsasfa" "asasfa" "fsfafa" "asfafa" "fafafa" "safafa" "sfsafa" "afsafa" "fasafa" "sasafa" "sfsfsa" "afsfsa" "fasfsa" "sasfsa" "sfafsa" "afafsa" "fsafsa" "asafsa" "fsfasa" "asfasa" "fafasa" "safasa" "sfsasa" "afsasa" "fasasa" "sasasa")
+clj::clojure-first.core=> 

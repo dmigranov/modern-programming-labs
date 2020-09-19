@@ -20,19 +20,19 @@
     (list))
 )
 
-(defn traverse-list [alphabet words n]
+(defn traverse-list [alphabet words]
   (
    if (> (count words) 0)
     (concat (generate-word-list alphabet (first words))
-          (traverse-list alphabet (rest words) n))
+          (traverse-list alphabet (rest words)))
     (list)
   )
 )
 
 (defn lenghthen-words [alphabet words n]
   (if (> n 0)
-    ()
-    ()
+    (lenghthen-words alphabet (traverse-list alphabet words) (dec n))
+     (traverse-list alphabet words)
   )
 )
 
@@ -48,7 +48,8 @@
 ;!!!
 (defn main-word-function
   [alphabet n]
-  (traverse-list alphabet (generate-atomic-words alphabet) n)
+  ;(traverse-list alphabet (generate-atomic-words alphabet) n)
+  (lenghthen-words alphabet (generate-atomic-words alphabet) n)
   )
 
 
