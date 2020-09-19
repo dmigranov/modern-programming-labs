@@ -16,23 +16,26 @@
 ;   - File URLs in stacktrace frames are peekable and clickable.
 clj::user=> 
 (defn generate-word-list
-  [alphabet word n]
-  (let [first-letter (get word 0)]) ;char
-  (if (> n 1)
-    (if (> (count alphabet) 0)
-      (concat (str (first alphabet) word)
-              (generate-word-list (rest alphabet) word (dec n)))
-      (list))    ;then: взять words с n-1  и прибавить буковки слева справа
-    list    ;else
-    ))
+  [alphabet word]
+  (if (> (count alphabet) 0)
+    (concat
+     (if (not= (get word 0) (first alphabet)) (list (str (first alphabet) word)) (list))
+     (generate-word-list (rest alphabet) word))
+    (list)))
 #'clojure-first.core/generate-word-list
 clj::clojure-first.core=> 
-(defn traverse-list [alphabet words n]
+(defn traverse-list [alphabet words]
   (if (> (count words) 0)
-    (concat (generate-word-list alphabet (first words) n)
-            (traverse-list alphabet (rest words) n))
+    (concat (generate-word-list alphabet (first words))
+            (traverse-list alphabet (rest words)))
     (list)))
 #'clojure-first.core/traverse-list
+clj::clojure-first.core=> 
+(defn lenghthen-words [alphabet words n]
+  (if (>= n 1)
+    (lenghthen-words alphabet (traverse-list alphabet words) (dec n))
+    (traverse-list alphabet words)))
+#'clojure-first.core/lenghthen-words
 clj::clojure-first.core=> 
 (defn generate-atomic-words
   [alphabet]
@@ -43,341 +46,64 @@ clj::clojure-first.core=>
 clj::clojure-first.core=> 
 (defn main-word-function
   [alphabet n]
-  (traverse-list alphabet (generate-atomic-words alphabet) n)
-  )
-
-
-#'clojure-first.core/main-word-function
-clj::clojure-first.core=> 
-(defn main-word-function
-  [alphabet n]
-  (traverse-list alphabet (generate-atomic-words alphabet) n))
-#'clojure-first.core/main-word-function
-clj::clojure-first.core=> 
-(main-word-function [\a \d \f] n)
-; Syntax error compiling at (clojure-first/.calva/output-window/output.calva-repl:57:1).
-clj::clojure-first.core=> 
-(main-word-function [\a \d \f] 3)
-; Error printing return value (IllegalArgumentException) at clojure.lang.RT/seqFrom (RT.java:557).
-; Don't know how to create ISeq from: clojure.lang.PersistentList$Primordial
-clj::clojure-first.core=> 
-(main-word-function (\d \q) 3)
-; Execution error (ClassCastException) at clojure-first.core/eval2146 (REPL:64).
-; class java.lang.Character cannot be cast to class clojure.lang.IFn (java.lang.Character is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
-clj::clojure-first.core=> 
-(generate-atomic-words (\d \q))
-; Execution error (ClassCastException) at clojure-first.core/eval2228 (REPL:68).
-; class java.lang.Character cannot be cast to class clojure.lang.IFn (java.lang.Character is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
-clj::clojure-first.core=> 
-(str (first (\d \q)))
-; Execution error (ClassCastException) at clojure-first.core/eval2360 (REPL:72).
-; class java.lang.Character cannot be cast to class clojure.lang.IFn (java.lang.Character is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
-clj::clojure-first.core=> 
-first (\d \q)
-; Execution error (ClassCastException) at clojure-first.core/eval2452 (REPL:76).
-; class java.lang.Character cannot be cast to class clojure.lang.IFn (java.lang.Character is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
-clj::clojure-first.core=> 
-'(\d \q)
-(\d \q)
-clj::clojure-first.core=> 
-(generate-atomic-words '(\d \q))
-("d" "q")
-clj::clojure-first.core=> 
-
-; Execution error (ClassCastException) at clojure-first.core/eval2458 (REPL:84).
-; class java.lang.String cannot be cast to class clojure.lang.IFn (java.lang.String is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
-clj::clojure-first.core=> 
-; Execution error (ClassCastException) at clojure-first.core/eval2460 (REPL:84).
-; class java.lang.String cannot be cast to class clojure.lang.IFn (java.lang.String is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
-clj::clojure-first.core=> 
-; Execution error (ClassCastException) at clojure-first.core/eval2462 (REPL:84).
-; class java.lang.String cannot be cast to class clojure.lang.IFn (java.lang.String is in module java.base of loader 'bootstrap'; clojure.lang.IFn is in unnamed module of loader 'bootstrap')
-clj::clojure-first.core=> 
-(+ 3 2)
-5
-clj::clojure-first.core=> 
-(main-word-function '(\d \q) 3)
-; Error printing return value (IllegalArgumentException) at clojure.lang.RT/seqFrom (RT.java:557).
-; Don't know how to create ISeq from: clojure.lang.PersistentList$Primordial
-clj::clojure-first.core=> 
-(generate-word-list '(\f \s) "s" 1)
-#object[clojure.lang.PersistentList$Primordial 0x6e134c9 "clojure.lang.PersistentList$Primordial@6e134c9"]
-clj::clojure-first.core=> 
-(defn generate-word-list
-  [alphabet word n]
-  (let [first-letter (get word 0)]) ;char
-
-  (if (> (count alphabet) 0)
-    (concat (str (first alphabet) word)
-            (generate-word-list (rest alphabet) word (dec n)))
-    (list))    ;then: взять words с n-1  и прибавить буковки слева справа
-  list    ;else
-  )
-#'clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(generate-word-list '(\f \s) "s" 1)
-#object[clojure.lang.PersistentList$Primordial 0x6e134c9 "clojure.lang.PersistentList$Primordial@6e134c9"]
-clj::clojure-first.core=> (defn generate-word-list
-                            [alphabet word n]
-                            (let [first-letter (get word 0)]) ;char
-
-                            (if (> (count alphabet) 0)
-                              (concat (str (first alphabet) word)
-                                      (generate-word-list (rest alphabet) word (dec n))) ;then: взять words с n-1  и прибавить буковки слева справа
-                              (list)))
-#'clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(generate-word-list '(\f \s) "t" 1)
-(\f \s \s \s)
-clj::clojure-first.core=> (generate-word-list '(\f \s) "t" 1)
-(\f \t \s \t)
-clj::clojure-first.core=> 
-(generate-word-list '("f" "s") "t" 1)
-(\f \t \s \t)
-clj::clojure-first.core=> 
-(generate-word-list '("f" "s") "ta" 1)
-(\f \t \a \s \t \a)
-clj::clojure-first.core=> 
-(defn generate-word-list
-  [alphabet word n]
-  (let [first-letter (get word 0)]) ;char
-
-  (if (> (count alphabet) 0)
-    (cons (str (first alphabet) word)
-          (generate-word-list (rest alphabet) word n))
-    (list)))
-#'clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(generate-word-list '("f" "s") "ta" 1)
-("fta" "sta")
-clj::clojure-first.core=> 
-(main-word-function '(\d \a) 3)
-("dd" "ad" "da" "aa")
-clj::clojure-first.core=> 
-(main-word-function '(\d \a \r \q) 3)
-("dd" "ad" "rd" "qd" "da" "aa" "ra" "qa" "dr" "ar" "rr" "qr" "dq" "aq" "rq" "qq")
-clj::clojure-first.core=> 
-(defn generate-word-list
-  [alphabet word]
-  (let [first-letter (get word 0)]
-    (if (not= first-letter first alphabet)
-      ((if (> (count alphabet) 0)
-         (cons (str (first alphabet) word)
-               (generate-word-list (rest alphabet) word))
-         (list)))
-      (list))))
-#'clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(generate-word-list '("f" "s") "ta")
-; Execution error (ClassCastException) at clojure-first.core/generate-word-list (REPL:164).
-; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'bootstrap')
-clj::clojure-first.core=> 
-(defn generate-word-list
-  [alphabet word]
-  (let [first-letter (get word 0)]
-    (if (not= first-letter (first alphabet))
-      ((if (> (count alphabet) 0)
-         (cons (str (first alphabet) word)
-               (generate-word-list (rest alphabet) word))
-         (list)))
-      (list))))
-#'clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(generate-word-list '("f" "s") "ta")
-; Execution error (ClassCastException) at clojure-first.core/generate-word-list (REPL:179).
-; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'bootstrap')
-clj::clojure-first.core=> 
-(defn generate-word-list
-  [alphabet word]
-
-  (if (not= (get word 0) (first alphabet))
-    ((if (> (count alphabet) 0)
-       (cons (str (first alphabet) word)
-             (generate-word-list (rest alphabet) word))
-       (list)))
-    (list))) 
-#'clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(generate-word-list '("f" "s") "ta")
-; Execution error (ClassCastException) at clojure-first.core/generate-word-list (REPL:194).
-; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'bootstrap')
-clj::clojure-first.core=> 
-(defn generate-word-list
-  [alphabet word]
-
-  ;if (not= (get word 0) (first alphabet))
-  (if (> (count alphabet) 0)
-    (cons (str (first alphabet) word)
-          (generate-word-list (rest alphabet) word))
-    (list)))
-#'clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(generate-word-list '("f" "s") "ta")
-("fta" "sta")
-clj::clojure-first.core=> 
-(defn generate-word-list
-  [alphabet word]
-
-  (if (and (> (count alphabet) 0) (not= (get word 0) (first alphabet)))
-    (cons (str (first alphabet) word)
-          (generate-word-list (rest alphabet) word))
-    (list)))
-#'clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(generate-word-list '("f" "s") "ta")
-("fta" "sta")
-clj::clojure-first.core=> 
-(generate-word-list '("f" "s") "sa")
-("fsa" "ssa")
-clj::clojure-first.core=> 
-(generate-word-list '("f" "s") "as")
-("fas" "sas")
-clj::clojure-first.core=> 
-(get "sa" 0)
-\s
-clj::clojure-first.core=> 
-(generate-word-list '("s" "f") "as")
-("sas" "fas")
-clj::clojure-first.core=> 
-(generate-word-list '(s \f) "as")
-("sas" "fas")
-clj::clojure-first.core=> 
-(generate-word-list '(\s \f) "as")
-("sas" "fas")
-clj::clojure-first.core=> 
-(generate-word-list '(\s \f) "sa")
-()
-clj::clojure-first.core=> 
-(defn generate-word-list
-  [alphabet word]
-  ;()
-  (if (> (count alphabet) 0)
-    (cons (if (not= (get word 0) (first alphabet)) (str (first alphabet) word) (nil))
-          (generate-word-list (rest alphabet) word))
-    (list)))
-#'clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(generate-word-list '(\s \f) "sa")
-(nil "fsa")
-clj::clojure-first.core=> 
-(generate-word-list '(\e \f) "sa")
-("esa" "fsa")
-clj::clojure-first.core=> 
-(generate-word-list '(\e \f) "sa")
-("esa" "fsa")
-clj::clojure-first.core=> 
-(defn generate-word-list
-  [alphabet word]
-  ;()
-  (if (> (count alphabet) 0)
-    (cons (if (not= (get word 0) (first alphabet)) (str (first alphabet) word) (list))
-          (generate-word-list (rest alphabet) word))
-    (list)))
-#'clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(generate-word-list '(\e \f) "sa")
-("esa" "fsa")
-clj::clojure-first.core=> 
-(generate-word-list '(\s \f) "sa")
-(() "fsa")
-clj::clojure-first.core=> 
-(defn generate-word-list
-  [alphabet word]
-  ;()
-  (if (> (count alphabet) 0)
-    (concat (if (not= (get word 0) (list (first alphabet))) (str (first alphabet) word) (list))
-            (generate-word-list (rest alphabet) word))
-    (list)))
-#'clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(generate-word-list '(\s \f) "sa")
-(\s \s \a \f \s \a)
-clj::clojure-first.core=> 
-(defn generate-word-list
-  [alphabet word]
-  ;()
-  (if (> (count alphabet) 0)
-    (concat (if (not= (get word 0) (first alphabet)) (list (str (first alphabet) word)) (list))
-            (generate-word-list (rest alphabet) word))
-    (list)))
-#'clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(generate-word-list '(\s \f) "sa")
-("fsa")
-clj::clojure-first.core=> 
-(generate-word-list '(\s \f) "qa")
-("sqa" "fqa")
-clj::clojure-first.core=> 
-(generate-word-list '(\s \f \q) "qa")
-("sqa" "fqa")
-clj::clojure-first.core=> 
-(generate-word-list '(\s \f \q) "aqa")
-("saqa" "faqa" "qaqa")
-clj::clojure-first.core=> 
-(generate-word-list '(\s \f \q) "aqaq")
-("saqaq" "faqaq" "qaqaq")
-clj::clojure-first.core=> 
-(main-word-function '(\f \s \a) 3)
-; Execution error (ArityException) at clojure-first.core/traverse-list (REPL:32).
-; Wrong number of args (3) passed to: clojure-first.core/generate-word-list
-clj::clojure-first.core=> 
-(defn traverse-list [alphabet words n]
-  (if (> (count words) 0)
-    (concat (generate-word-list alphabet (first words))
-            (traverse-list alphabet (rest words) n))
-    (list)))
-#'clojure-first.core/traverse-list
-clj::clojure-first.core=> 
-(main-word-function '(\f \s \a) 3)
-("sf" "af" "fs" "as" "fa" "sa")
-clj::clojure-first.core=> 
-(defn lenghthen-words [alphabet words n]
-  (if (> n 0)
-    (lenghthen-words alphabet (traverse-list alphabet words n) (dec n))
-    (list)))
-#'clojure-first.core/lenghthen-words
-clj::clojure-first.core=> 
-(defn main-word-function
-  [alphabet n]
   ;(traverse-list alphabet (generate-atomic-words alphabet) n)
   (lenghthen-words alphabet (generate-atomic-words alphabet) n))
 #'clojure-first.core/main-word-function
 clj::clojure-first.core=> 
-(main-word-function '(\f \s \a) 3)
-()
+(main-word-function '(\f \s) 2)
+("sfsf" "fsfs")
 clj::clojure-first.core=> 
-(main-word-function '(\f \s \a) 3)
-()
+(main-word-function '(\f \s) 3)
+("fsfsf" "sfsfs")
 clj::clojure-first.core=> 
-(defn traverse-list [alphabet words]
-  (if (> (count words) 0)
-    (concat (generate-word-list alphabet (first words))
-            (traverse-list alphabet (rest words)))
-    (list)))
-#'clojure-first.core/traverse-list
+(main-word-function '(\f \s) 1)
+("fsf" "sfs")
+clj::clojure-first.core=> 
+(main-word-function '(\f \s) 0)
+("sf" "fs")
+clj::clojure-first.core=> 
+(main-word-function '(\f \s) -1)
+("sf" "fs")
 clj::clojure-first.core=> 
 (defn lenghthen-words [alphabet words n]
-  (if (> n 0)
-    (lenghthen-words alphabet (traverse-list alphabet words) (dec n))
-    (list)))
-#'clojure-first.core/lenghthen-words
-clj::clojure-first.core=> 
-
-(defn lenghthen-words [alphabet words n]
-  (if (> n 0)
+  (if (>= n 2)
     (lenghthen-words alphabet (traverse-list alphabet words) (dec n))
     (traverse-list alphabet words)))
 #'clojure-first.core/lenghthen-words
 clj::clojure-first.core=> 
-(main-word-function '(\f \s \a) 3)
-("fsfsf" "asfsf" "fafsf" "safsf" "sfasf" "afasf" "fsasf" "asasf" "fsfaf" "asfaf" "fafaf" "safaf" "sfsaf" "afsaf" "fasaf" "sasaf" "sfsfs" "afsfs" "fasfs" "sasfs" "sfafs" "afafs" "fsafs" "asafs" "fsfas" "asfas" "fafas" "safas" "sfsas" "afsas" "fasas" "sasas" "sfsfa" "afsfa" "fasfa" "sasfa" "sfafa" "afafa" "fsafa" "asafa" "fsfsa" "asfsa" "fafsa" "safsa" "sfasa" "afasa" "fsasa" "asasa")
+(main-word-function '(\f \s) -1)
+("sf" "fs")
 clj::clojure-first.core=> 
-(main-word-function '(\f \s \a) 1)
-("fsf" "asf" "faf" "saf" "sfs" "afs" "fas" "sas" "sfa" "afa" "fsa" "asa")
+(main-word-function '(\f \s) 0)
+("sf" "fs")
 clj::clojure-first.core=> 
-(main-word-function '(\f \s \a) 2)
-("sfsf" "afsf" "fasf" "sasf" "sfaf" "afaf" "fsaf" "asaf" "fsfs" "asfs" "fafs" "safs" "sfas" "afas" "fsas" "asas" "fsfa" "asfa" "fafa" "safa" "sfsa" "afsa" "fasa" "sasa")
+(main-word-function '(\f \s) 1)
+("sf" "fs")
 clj::clojure-first.core=> 
-(main-word-function '(\f \s \a) 4)
-("sfsfsf" "afsfsf" "fasfsf" "sasfsf" "sfafsf" "afafsf" "fsafsf" "asafsf" "fsfasf" "asfasf" "fafasf" "safasf" "sfsasf" "afsasf" "fasasf" "sasasf" "sfsfaf" "afsfaf" "fasfaf" "sasfaf" "sfafaf" "afafaf" "fsafaf" "asafaf" "fsfsaf" "asfsaf" "fafsaf" "safsaf" "sfasaf" "afasaf" "fsasaf" "asasaf" "fsfsfs" "asfsfs" "fafsfs" "safsfs" "sfasfs" "afasfs" "fsasfs" "asasfs" "fsfafs" "asfafs" "fafafs" "safafs" "sfsafs" "afsafs" "fasafs" "sasafs" "sfsfas" "afsfas" "fasfas" "sasfas" "sfafas" "afafas" "fsafas" "asafas" "fsfsas" "asfsas" "fafsas" "safsas" "sfasas" "afasas" "fsasas" "asasas" "fsfsfa" "asfsfa" "fafsfa" "safsfa" "sfasfa" "afasfa" "fsasfa" "asasfa" "fsfafa" "asfafa" "fafafa" "safafa" "sfsafa" "afsafa" "fasafa" "sasafa" "sfsfsa" "afsfsa" "fasfsa" "sasfsa" "sfafsa" "afafsa" "fsafsa" "asafsa" "fsfasa" "asfasa" "fafasa" "safasa" "sfsasa" "afsasa" "fasasa" "sasasa")
+(main-word-function '(\f \s) 2)
+("fsf" "sfs")
+clj::clojure-first.core=> 
+(main-word-function '(\f \s) 3)
+("sfsf" "fsfs")
+clj::clojure-first.core=> 
+(defn lenghthen-words [alphabet words n]
+  (if (>= n 3)
+    (lenghthen-words alphabet (traverse-list alphabet words) (dec n))
+    (traverse-list alphabet words)))
+#'clojure-first.core/lenghthen-words
+clj::clojure-first.core=> 
+(main-word-function '(\f \s) 1)
+("sf" "fs")
+clj::clojure-first.core=> 
+(main-word-function '(\f \s) 2)
+("sf" "fs")
+clj::clojure-first.core=> 
+(main-word-function '(\f \s) 3)
+("fsf" "sfs")
+clj::clojure-first.core=> 
+(main-word-function '(\f \s) 4)
+("sfsf" "fsfs")
+clj::clojure-first.core=> 
+(main-word-function '(\f \s \q) 2)
+("sf" "qf" "fs" "qs" "fq" "sq")
 clj::clojure-first.core=> 

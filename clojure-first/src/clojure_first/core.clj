@@ -30,7 +30,7 @@
 )
 
 (defn lenghthen-words [alphabet words n]
-  (if (> n 0)
+  (if (>= n 3)
     (lenghthen-words alphabet (traverse-list alphabet words) (dec n))
      (traverse-list alphabet words)
   )
