@@ -151,3 +151,9 @@ clj::clojure-first.core=>
 (generate-word-list '("f" "s") "ta" 1)
 ("fta" "sta")
 clj::clojure-first.core=> 
+(main-word-function '(\d \a) 3)
+("dd" "ad" "da" "aa")
+clj::clojure-first.core=> 
+(main-word-function '(\d \a \r \q) 3)
+("dd" "ad" "rd" "qd" "da" "aa" "ra" "qa" "dr" "ar" "rr" "qr" "dq" "aq" "rq" "qq")
+clj::clojure-first.core=> 
