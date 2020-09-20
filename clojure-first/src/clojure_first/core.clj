@@ -15,8 +15,8 @@
   ([word alphabet lengthened-words]
    (if (> (count alphabet) 0)
      (recur word (rest alphabet) (concat
-                                  (if (not= (get word 0) (first alphabet)) (list (str (first alphabet) word)) (list))
-                                  lengthened-words))
+                                  lengthened-words
+                                  (if (not= (get word 0) (first alphabet)) (list (str (first alphabet) word)) (list))))
      lengthened-words ;else
      )))
   
@@ -75,6 +75,6 @@
 
 
 (defn -main [& args]
-  (println (generate-words '(\a \b \c \d) 4))
-  (println (generate-words-tail '(\a \b \c \d) 4))
+  (println (generate-words-tail '(\a \b \c \d) 5))
+  (println (generate-words '(\a \b \c \d) 5))
 )
