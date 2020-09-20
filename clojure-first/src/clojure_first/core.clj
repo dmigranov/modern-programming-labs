@@ -35,6 +35,29 @@
   )
 )
 
+(defn generate-atomic-words-tail 
+  ([alphabet] (generate-atomic-words-tail alphabet (list)))
+  ([alphabet atomic-words]
+   (if (> (count alphabet) 0)
+     (recur (rest alphabet)
+            (concat atomic-words (list (str (first alphabet)))))
+     atomic-words ;else
+     ))
+)
+
+(defn inc-coll-2
+  ([coll] (inc-coll-2 coll (list)))
+  ([coll res-coll]
+   (if (> (count coll) 0)
+     (recur (rest coll)
+
+            (concat
+             res-coll
+             (list (inc (first coll)))))
+
+     res-coll
+    )))
+
 (defn generate-words [alphabet n] ;!!!entry!!!
   (lengthen-words-recursively alphabet (generate-atomic-words alphabet) n)
 )
