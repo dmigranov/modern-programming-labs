@@ -11,21 +11,25 @@
 )
 
 (defn lengthen-words-by-one [alphabet words]
-  (
-   if (> (count words) 0)
+  (if (> (count words) 0)
     (concat (multiply-and-lenghten-word (first words) alphabet)
-          (lengthen-words-by-one alphabet (rest words)))
-    (list)
+            (lengthen-words-by-one alphabet (rest words)))
+    (list)))
+
+(defn lengthen-words-by-one-tail 
+  ([alphabet words] (lengthen-words-by-one-tail alphabet words (list)))
+  ([alphabet words lengthened-words] 
+   (if (> (count words) 0)
+     (concat (multiply-and-lenghten-word (first words) alphabet)
+             (lengthen-words-by-one alphabet (rest words)))
+     (list)))
   )
-)
 
 (defn lengthen-words-recursively [alphabet words n]
-  (cond 
+  (cond
     (> n 2) (lengthen-words-recursively alphabet (lengthen-words-by-one alphabet words) (dec n))
     (= n 2) (lengthen-words-by-one alphabet words)
-    :else words
-    )
-)
+    :else words))
 
 (defn lengthen-words-recursively-tail [alphabet words n]
   (cond
@@ -48,19 +52,6 @@
      (recur (rest alphabet) (concat atomic-words (list (str (first alphabet)))))
      atomic-words ;else
      )))
-
-(defn inc-coll-2
-  ([coll] (inc-coll-2 coll (list)))
-  ([coll res-coll]
-   (if (> (count coll) 0)
-     (recur (rest coll)
-
-            (concat
-             res-coll
-             (list (inc (first coll)))))
-
-     res-coll
-    )))
 
 (defn generate-words [alphabet n] ;!!!entry!!!
   (lengthen-words-recursively alphabet (generate-atomic-words alphabet) n)
