@@ -27,6 +27,12 @@
     )
 )
 
+(defn lengthen-words-recursively-tail [alphabet words n]
+  (cond
+    (> n 2) (recur alphabet (lengthen-words-by-one alphabet words) (dec n))
+    (= n 2) (lengthen-words-by-one alphabet words)
+    :else words))
+
 (defn generate-atomic-words [alphabet]
   (
   if (> (count alphabet) 0)
@@ -39,11 +45,9 @@
   ([alphabet] (generate-atomic-words-tail alphabet (list)))
   ([alphabet atomic-words]
    (if (> (count alphabet) 0)
-     (recur (rest alphabet)
-            (concat atomic-words (list (str (first alphabet)))))
+     (recur (rest alphabet) (concat atomic-words (list (str (first alphabet)))))
      atomic-words ;else
-     ))
-)
+     )))
 
 (defn inc-coll-2
   ([coll] (inc-coll-2 coll (list)))

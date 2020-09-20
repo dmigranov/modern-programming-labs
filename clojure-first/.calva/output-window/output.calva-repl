@@ -15,3 +15,94 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - File URLs in stacktrace frames are peekable and clickable.
 clj::clojure-first.core=> 
+(defn generate-atomic-words-tail
+  ([alphabet] (generate-atomic-words-tail alphabet (list)))
+  ([alphabet atomic-words]
+   (if (> (count alphabet) 0)
+     (recur (rest alphabet) (cons (str (first alphabet)) atomic-words))
+     atomic-words ;else
+     )))
+#'clojure-first.core/generate-atomic-words-tail
+clj::clojure-first.core=> 
+(generate-atomic-words-tail '(\f \s \d))
+("d" "s" "f")
+clj::clojure-first.core=> 
+(defn generate-atomic-words-tail
+  ([alphabet] (generate-atomic-words-tail alphabet (list)))
+  ([alphabet atomic-words]
+   (if (> (count alphabet) 0)
+     (recur (rest alphabet) (conj atomic-words (str (first alphabet)) ))
+     atomic-words ;else
+     )))
+#'clojure-first.core/generate-atomic-words-tail
+clj::clojure-first.core=> 
+(generate-atomic-words-tail '(\f \s \d))
+("d" "s" "f")
+clj::clojure-first.core=> 
+(generate-atomic-words-tail '(\f \s \d))
+("d" "s" "f")
+clj::clojure-first.core=> 
+(defn generate-atomic-words-tail
+  ([alphabet] (generate-atomic-words-tail alphabet (list)))
+  ([alphabet atomic-words]
+   (if (> (count alphabet) 0)
+     (recur (rest alphabet) (cons atomic-words (str (first alphabet)) ))
+     atomic-words ;else
+     )))
+#'clojure-first.core/generate-atomic-words-tail
+clj::clojure-first.core=> 
+(generate-atomic-words-tail '(\f \s \d))
+(((() \f) \s) \d)
+clj::clojure-first.core=> 
+(defn generate-atomic-words-tail
+  ([alphabet] (generate-atomic-words-tail alphabet (list)))
+  ([alphabet atomic-words]
+   (if (> (count alphabet) 0)
+     (recur (rest alphabet) (conj (str (first alphabet)) atomic-words  ))
+     atomic-words ;else
+     )))
+#'clojure-first.core/generate-atomic-words-tail
+clj::clojure-first.core=> 
+(generate-atomic-words-tail '(\f \s \d))
+; Execution error (ClassCastException) at clojure-first.core/generate-atomic-words-tail (form-init17852935588761629418.clj:61).
+; class java.lang.String cannot be cast to class clojure.lang.IPersistentCollection (java.lang.String is in module java.base of loader 'bootstrap'; clojure.lang.IPersistentCollection is in unnamed module of loader 'app')
+clj::clojure-first.core=> 
+(defn generate-atomic-words-tail
+  ([alphabet] (generate-atomic-words-tail alphabet (list)))
+  ([alphabet atomic-words]
+   (if (> (count alphabet) 0)
+     (recur (rest alphabet) (cons (str (first alphabet)) atomic-words  ))
+     atomic-words ;else
+     )))
+#'clojure-first.core/generate-atomic-words-tail
+clj::clojure-first.core=> 
+(generate-atomic-words-tail '(\f \s \d))
+("d" "s" "f")
+clj::clojure-first.core=> 
+(defn generate-atomic-words-tail
+  ([alphabet] (generate-atomic-words-tail alphabet (list)))
+  ([alphabet atomic-words]
+   (if (> (count alphabet) 0)
+     (recur (rest alphabet) (concat atomic-words (list (str (first alphabet)))))
+     atomic-words ;else
+     )))
+#'clojure-first.core/generate-atomic-words-tail
+clj::clojure-first.core=> 
+(generate-atomic-words-tail '(\f \s \d))
+("f" "s" "d")
+clj::clojure-first.core=> 
+
+(defn lengthen-words-by-one [alphabet words]
+  (if (> (count words) 0)
+    (concat (multiply-and-lenghten-word (first words) alphabet)
+            (lengthen-words-by-one alphabet (rest words)))
+    (list)))
+#'clojure-first.core/lengthen-words-by-one
+clj::clojure-first.core=> 
+(defn lengthen-words-recursively [alphabet words n]
+  (cond
+    (> n 2) (lengthen-words-recursively alphabet (lengthen-words-by-one alphabet words) (dec n))
+    (= n 2) (lengthen-words-by-one alphabet words)
+    :else words))
+#'clojure-first.core/lengthen-words-recursively
+clj::clojure-first.core=> 
