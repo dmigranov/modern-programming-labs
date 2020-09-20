@@ -106,3 +106,34 @@ clj::clojure-first.core=>
     :else words))
 #'clojure-first.core/lengthen-words-recursively
 clj::clojure-first.core=> 
+(defn multiply-and-lenghten-word [word alphabet]
+  (if (> (count alphabet) 0)
+    (concat
+     (if (not= (get word 0) (first alphabet)) (list (str (first alphabet) word)) (list))
+     (multiply-and-lenghten-word word (rest alphabet)))
+    (list)))
+#'clojure-first.core/multiply-and-lenghten-word
+clj::clojure-first.core=> 
+(defn lengthen-words-by-one-tail
+  ([alphabet words] (lengthen-words-by-one-tail alphabet words (list)))
+  ([alphabet words lengthened-words]
+   (if (> (count words) 0)
+     ;(concat (multiply-and-lenghten-word (first words) alphabet)
+     ;        (lengthen-words-by-one alphabet (rest words)))
+     (recur alphabet (rest words) (concat lengthened-words (multiply-and-lenghten-word (first words) alphabet)))
+     lengthened-words)) ;else
+  )
+#'clojure-first.core/lengthen-words-by-one-tail
+clj::clojure-first.core=> 
+(lengthen-words-by-one-tail '(\r \s \f) '("r" "s" "f"))
+("sr" "fr" "rs" "fs" "rf" "sf")
+clj::clojure-first.core=> 
+(lengthen-words-by-one '(\r \s \f) '("r" "s" "f"))
+("sr" "fr" "rs" "fs" "rf" "sf")
+clj::clojure-first.core=> 
+(lengthen-words-by-one '(\r \s \f) '("rs" "sf" "fr"))
+("srs" "frs" "rsf" "fsf" "rfr" "sfr")
+clj::clojure-first.core=> 
+(lengthen-words-by-one-tail '(\r \s \f) '("rs" "sf" "fr"))
+("srs" "frs" "rsf" "fsf" "rfr" "sfr")
+clj::clojure-first.core=> 

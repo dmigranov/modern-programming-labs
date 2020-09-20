@@ -10,6 +10,7 @@
     (list))
 )
 
+
 (defn lengthen-words-by-one [alphabet words]
   (if (> (count words) 0)
     (concat (multiply-and-lenghten-word (first words) alphabet)
@@ -20,10 +21,10 @@
   ([alphabet words] (lengthen-words-by-one-tail alphabet words (list)))
   ([alphabet words lengthened-words] 
    (if (> (count words) 0)
-     (concat (multiply-and-lenghten-word (first words) alphabet)
-             (lengthen-words-by-one alphabet (rest words)))
-     (list)))
+     (recur alphabet (rest words) (concat lengthened-words (multiply-and-lenghten-word (first words) alphabet)))
+     lengthened-words)) ;else
   )
+
 
 (defn lengthen-words-recursively [alphabet words n]
   (cond
@@ -36,6 +37,7 @@
     (> n 2) (recur alphabet (lengthen-words-by-one alphabet words) (dec n))
     (= n 2) (lengthen-words-by-one alphabet words)
     :else words))
+
 
 (defn generate-atomic-words [alphabet]
   (
@@ -53,9 +55,14 @@
      atomic-words ;else
      )))
 
+
 (defn generate-words [alphabet n] ;!!!entry!!!
   (lengthen-words-recursively alphabet (generate-atomic-words alphabet) n)
 )
+
+(defn generate-words-tail [alphabet n] ;!!!entry!!!
+  (lengthen-words-recursively-tail alphabet (generate-atomic-words-tail alphabet) n))
+
 
 (defn -main [& args]
   (println (generate-words '(\a \b \c) 3))
