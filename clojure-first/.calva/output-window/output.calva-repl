@@ -15,125 +15,26 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - File URLs in stacktrace frames are peekable and clickable.
 clj::clojure-first.core=> 
-(defn generate-atomic-words-tail
-  ([alphabet] (generate-atomic-words-tail alphabet (list)))
-  ([alphabet atomic-words]
-   (if (> (count alphabet) 0)
-     (recur (rest alphabet) (cons (str (first alphabet)) atomic-words))
-     atomic-words ;else
-     )))
-#'clojure-first.core/generate-atomic-words-tail
+(lengthen-words-by-one
+)
+; Execution error (ArityException) at clojure-first.core/eval1649 (form-init7750193742796110264.clj:18).
+; Wrong number of args (0) passed to: clojure-first.core/lengthen-words-by-one
 clj::clojure-first.core=> 
-(generate-atomic-words-tail '(\f \s \d))
-("d" "s" "f")
+(generate-atomic-words '(\f \d \a \r))
+("f" "d" "a" "r")
 clj::clojure-first.core=> 
-(defn generate-atomic-words-tail
-  ([alphabet] (generate-atomic-words-tail alphabet (list)))
-  ([alphabet atomic-words]
-   (if (> (count alphabet) 0)
-     (recur (rest alphabet) (conj atomic-words (str (first alphabet)) ))
-     atomic-words ;else
-     )))
-#'clojure-first.core/generate-atomic-words-tail
+(generate-atomic-words-tail '(\f \d \a \r))
+("f" "d" "a" "r")
 clj::clojure-first.core=> 
-(generate-atomic-words-tail '(\f \s \d))
-("d" "s" "f")
+(lengthen-words-by-one '(\f \d \a \r) (generate-atomic-words '(\f \d \a \r))) 
+("df" "af" "rf" "fd" "ad" "rd" "fa" "da" "ra" "fr" "dr" "ar")
 clj::clojure-first.core=> 
-(generate-atomic-words-tail '(\f \s \d))
-("d" "s" "f")
+(lengthen-words-by-one-tail '(\f \d \a \r) (generate-atomic-words-tail '(\f \d \a \r)))
+("rf" "af" "df" "rd" "ad" "fd" "ra" "da" "fa" "ar" "dr" "fr")
 clj::clojure-first.core=> 
-(defn generate-atomic-words-tail
-  ([alphabet] (generate-atomic-words-tail alphabet (list)))
-  ([alphabet atomic-words]
-   (if (> (count alphabet) 0)
-     (recur (rest alphabet) (cons atomic-words (str (first alphabet)) ))
-     atomic-words ;else
-     )))
-#'clojure-first.core/generate-atomic-words-tail
+(multiply-and-lenghten-word "dfdf" '(\f \d \a \r))
+("fdfdf" "adfdf" "rdfdf")
 clj::clojure-first.core=> 
-(generate-atomic-words-tail '(\f \s \d))
-(((() \f) \s) \d)
-clj::clojure-first.core=> 
-(defn generate-atomic-words-tail
-  ([alphabet] (generate-atomic-words-tail alphabet (list)))
-  ([alphabet atomic-words]
-   (if (> (count alphabet) 0)
-     (recur (rest alphabet) (conj (str (first alphabet)) atomic-words  ))
-     atomic-words ;else
-     )))
-#'clojure-first.core/generate-atomic-words-tail
-clj::clojure-first.core=> 
-(generate-atomic-words-tail '(\f \s \d))
-; Execution error (ClassCastException) at clojure-first.core/generate-atomic-words-tail (form-init17852935588761629418.clj:61).
-; class java.lang.String cannot be cast to class clojure.lang.IPersistentCollection (java.lang.String is in module java.base of loader 'bootstrap'; clojure.lang.IPersistentCollection is in unnamed module of loader 'app')
-clj::clojure-first.core=> 
-(defn generate-atomic-words-tail
-  ([alphabet] (generate-atomic-words-tail alphabet (list)))
-  ([alphabet atomic-words]
-   (if (> (count alphabet) 0)
-     (recur (rest alphabet) (cons (str (first alphabet)) atomic-words  ))
-     atomic-words ;else
-     )))
-#'clojure-first.core/generate-atomic-words-tail
-clj::clojure-first.core=> 
-(generate-atomic-words-tail '(\f \s \d))
-("d" "s" "f")
-clj::clojure-first.core=> 
-(defn generate-atomic-words-tail
-  ([alphabet] (generate-atomic-words-tail alphabet (list)))
-  ([alphabet atomic-words]
-   (if (> (count alphabet) 0)
-     (recur (rest alphabet) (concat atomic-words (list (str (first alphabet)))))
-     atomic-words ;else
-     )))
-#'clojure-first.core/generate-atomic-words-tail
-clj::clojure-first.core=> 
-(generate-atomic-words-tail '(\f \s \d))
-("f" "s" "d")
-clj::clojure-first.core=> 
-
-(defn lengthen-words-by-one [alphabet words]
-  (if (> (count words) 0)
-    (concat (multiply-and-lenghten-word (first words) alphabet)
-            (lengthen-words-by-one alphabet (rest words)))
-    (list)))
-#'clojure-first.core/lengthen-words-by-one
-clj::clojure-first.core=> 
-(defn lengthen-words-recursively [alphabet words n]
-  (cond
-    (> n 2) (lengthen-words-recursively alphabet (lengthen-words-by-one alphabet words) (dec n))
-    (= n 2) (lengthen-words-by-one alphabet words)
-    :else words))
-#'clojure-first.core/lengthen-words-recursively
-clj::clojure-first.core=> 
-(defn multiply-and-lenghten-word [word alphabet]
-  (if (> (count alphabet) 0)
-    (concat
-     (if (not= (get word 0) (first alphabet)) (list (str (first alphabet) word)) (list))
-     (multiply-and-lenghten-word word (rest alphabet)))
-    (list)))
-#'clojure-first.core/multiply-and-lenghten-word
-clj::clojure-first.core=> 
-(defn lengthen-words-by-one-tail
-  ([alphabet words] (lengthen-words-by-one-tail alphabet words (list)))
-  ([alphabet words lengthened-words]
-   (if (> (count words) 0)
-     ;(concat (multiply-and-lenghten-word (first words) alphabet)
-     ;        (lengthen-words-by-one alphabet (rest words)))
-     (recur alphabet (rest words) (concat lengthened-words (multiply-and-lenghten-word (first words) alphabet)))
-     lengthened-words)) ;else
-  )
-#'clojure-first.core/lengthen-words-by-one-tail
-clj::clojure-first.core=> 
-(lengthen-words-by-one-tail '(\r \s \f) '("r" "s" "f"))
-("sr" "fr" "rs" "fs" "rf" "sf")
-clj::clojure-first.core=> 
-(lengthen-words-by-one '(\r \s \f) '("r" "s" "f"))
-("sr" "fr" "rs" "fs" "rf" "sf")
-clj::clojure-first.core=> 
-(lengthen-words-by-one '(\r \s \f) '("rs" "sf" "fr"))
-("srs" "frs" "rsf" "fsf" "rfr" "sfr")
-clj::clojure-first.core=> 
-(lengthen-words-by-one-tail '(\r \s \f) '("rs" "sf" "fr"))
-("srs" "frs" "rsf" "fsf" "rfr" "sfr")
+(multiply-and-lenghten-word-tail "dfdf" '(\f \d \a \r))
+("rdfdf" "adfdf" "fdfdf")
 clj::clojure-first.core=> 

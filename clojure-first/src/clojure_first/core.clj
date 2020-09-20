@@ -10,6 +10,16 @@
     (list))
 )
 
+(defn multiply-and-lenghten-word-tail
+  ([word alphabet] (multiply-and-lenghten-word-tail word alphabet (list)))
+  ([word alphabet lengthened-words]
+   (if (> (count alphabet) 0)
+     (recur word (rest alphabet) (concat
+                                  (if (not= (get word 0) (first alphabet)) (list (str (first alphabet) word)) (list))
+                                  lengthened-words))
+     lengthened-words ;else
+     )))
+  
 
 (defn lengthen-words-by-one [alphabet words]
   (if (> (count words) 0)
@@ -21,7 +31,7 @@
   ([alphabet words] (lengthen-words-by-one-tail alphabet words (list)))
   ([alphabet words lengthened-words] 
    (if (> (count words) 0)
-     (recur alphabet (rest words) (concat lengthened-words (multiply-and-lenghten-word (first words) alphabet)))
+     (recur alphabet (rest words) (concat lengthened-words (multiply-and-lenghten-word-tail (first words) alphabet)))
      lengthened-words)) ;else
   )
 
@@ -34,8 +44,8 @@
 
 (defn lengthen-words-recursively-tail [alphabet words n]
   (cond
-    (> n 2) (recur alphabet (lengthen-words-by-one alphabet words) (dec n))
-    (= n 2) (lengthen-words-by-one alphabet words)
+    (> n 2) (recur alphabet (lengthen-words-by-one-tail alphabet words) (dec n))
+    (= n 2) (lengthen-words-by-one-tail alphabet words)
     :else words))
 
 
@@ -51,7 +61,7 @@
   ([alphabet] (generate-atomic-words-tail alphabet (list)))
   ([alphabet atomic-words]
    (if (> (count alphabet) 0)
-     (recur (rest alphabet) (concat atomic-words (list (str (first alphabet)))))
+     (recur (rest alphabet) (concat atomic-words (list (str (first alphabet))))) ;передаем промежуточный результат - конкатенацию в качестве аргумента
      atomic-words ;else
      )))
 
@@ -65,5 +75,6 @@
 
 
 (defn -main [& args]
-  (println (generate-words '(\a \b \c) 3))
+  (println (generate-words '(\a \b \c \d) 4))
+  (println (generate-words-tail '(\a \b \c \d) 4))
 )
