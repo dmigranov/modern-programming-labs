@@ -1,0 +1,25 @@
+; This is the Calva evaluation results output window.
+; TIPS: The keyboard shortcut `ctrl+alt+c o` shows and focuses this window
+;   when connected to a REPL session.
+; Please see https://calva.io/output/ for more info.
+; Happy coding! ♥️
+
+; Connecting ...
+; Hooking up nREPL sessions...
+; Connected session: clj
+; TIPS: 
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - File URLs in stacktrace frames are peekable and clickable.
+clj::clojure-first.core=> 
+(-main)
+(ababa cbaba dbaba acaba bcaba dcaba adaba bdaba cdaba bacba cacba dacba abcba cbcba dbcba adcba bdcba cdcba badba cadba dadba abdba cbdba dbdba acdba bcdba dcdba abaca cbaca dbaca acaca bcaca dcaca adaca bdaca cdaca babca cabca dabca acbca bcbca dcbca adbca bdbca cdbca badca cadca dadca abdca cbdca dbdca acdca bcdca dcdca abada cbada dbada acada bcada dcada adada bdada cdada babda cabda dabda acbda bcbda dcbda adbda bdbda cdbda bacda cacda dacda abcda cbcda dbcda adcda bdcda cdcda babab cabab dabab acbab bcbab dcbab adbab bdbab cdbab bacab cacab dacab abcab cbcab dbcab adcab bdcab cdcab badab cadab dadab abdab cbdab dbdab acdab bcdab dcdab abacb cbacb dbacb acacb bcacb dcacb adacb bdacb cdacb babcb cabcb dabcb acbcb bcbcb dcbcb adbcb bdbcb cdbcb badcb cadcb dadcb abdcb cbdcb dbdcb acdcb bcdcb dcdcb abadb cbadb dbadb acadb bcadb dcadb adadb bdadb cdadb babdb cabdb dabdb acbdb bcbdb dcbdb adbdb bdbdb cdbdb bacdb cacdb dacdb abcdb cbcdb dbcdb adcdb bdcdb cdcdb babac cabac dabac acbac bcbac dcbac adbac bdbac cdb
+ac bacac cacac dacac abcac cbcac dbcac adcac bdcac cdcac badac cadac dadac abdac cbdac dbdac acdac bcdac dcdac ababc cbabc dbabc acabc bcabc dcabc adabc bdabc cdabc bacbc cacbc dacbc abcbc cbcbc dbcbc adcbc bdcbc cdcbc badbc cadbc dadbc abdbc cbdbc dbdbc acdbc bcdbc dcdbc abadc cbadc dbadc acadc bcadc dcadc adadc bdadc cdadc babdc cabdc dabdc acbdc bcbdc dcbdc adbdc bdbdc cdbdc bacdc cacdc dacdc abcdc cbcdc dbcdc adcdc bdcdc cdcdc babad cabad dabad acbad bcbad dcbad adbad bdbad cdbad bacad cacad dacad abcad cbcad dbcad adcad bdcad cdcad badad cadad dadad abdad cbdad dbdad acdad bcdad dcdad ababd cbabd dbabd acabd bcabd dcabd adabd bdabd cdabd bacbd cacbd dacbd abcbd cbcbd dbcbd adcbd bdcbd cdcbd badbd cadbd dadbd abdbd cbdbd dbdbd acdbd bcdbd dcdbd abacd cbacd dbacd acacd bcacd dcacd adacd bdacd cdacd babcd cabcd dabcd acbcd bcbcd dcbcd adbcd bdbcd cdbcd badcd cadcd dadcd abdcd cbdcd dbdcd acdcd bcdcd dcdcd)
+(ababa cbaba dbaba acaba bcaba dcaba adaba bdaba cdaba bacba cacba dacba abcba cbcba dbcba adcba bdcba cdcba badba cadba dadba abdba cbdba dbdba acdba bcdba dcdba abaca cbaca dbaca acaca bcaca dcaca adaca bdaca cdaca babca cabca dabca acbca bcbca dcbca adbca bdbca cdbca badca cadca dadca abdca cbdca dbdca acdca bcdca dcdca abada cbada dbada acada bcada dcada adada bdada cdada babda cabda dabda acbda bcbda dcbda adbda bdbda cdbda bacda cacda dacda abcda cbcda dbcda adcda bdcda cdcda babab cabab dabab acbab bcbab dcbab adbab bdbab cdbab bacab cacab dacab abcab cbcab dbcab adcab bdcab cdcab badab cadab dadab abdab cbdab dbdab acdab bcdab dcdab abacb cbacb dbacb acacb bcacb dcacb adacb bdacb cdacb babcb cabcb dabcb acbcb bcbcb dcbcb adbcb bdbcb cdbcb badcb cadcb dadcb abdcb cbdcb dbdcb acdcb bcdcb dcdcb abadb cbadb dbadb acadb bcadb dcadb adadb bdadb cdadb babdb cabdb dabdb acbdb bcbdb dcbdb adbdb bdbdb cdbdb bacdb cacdb dacdb abcdb cbcdb dbcdb adcdb bdcdb cdcdb babac cabac dabac acbac bcbac dcbac adbac bdbac cdb
+ac bacac cacac dacac abcac cbcac dbcac adcac bdcac cdcac badac cadac dadac abdac cbdac dbdac acdac bcdac dcdac ababc cbabc dbabc acabc bcabc dcabc adabc bdabc cdabc bacbc cacbc dacbc abcbc cbcbc dbcbc adcbc bdcbc cdcbc badbc cadbc dadbc abdbc cbdbc dbdbc acdbc bcdbc dcdbc abadc cbadc dbadc acadc bcadc dcadc adadc bdadc cdadc babdc cabdc dabdc acbdc bcbdc dcbdc adbdc bdbdc cdbdc bacdc cacdc dacdc abcdc cbcdc dbcdc adcdc bdcdc cdcdc babad cabad dabad acbad bcbad dcbad adbad bdbad cdbad bacad cacad dacad abcad cbcad dbcad adcad bdcad cdcad badad cadad dadad abdad cbdad dbdad acdad bcdad dcdad ababd cbabd dbabd acabd bcabd dcabd adabd bdabd cdabd bacbd cacbd dacbd abcbd cbcbd dbcbd adcbd bdcbd cdcbd badbd cadbd dadbd abdbd cbdbd dbdbd acdbd bcdbd dcdbd abacd cbacd dbacd acacd bcacd dcacd adacd bdacd cdacd babcd cabcd dabcd acbcd bcbcd dcbcd adbcd bdbcd cdbcd badcd cadcd dadcd abdcd cbdcd dbdcd acdcd bcdcd dcdcd)
+nil
+clj::clojure-first.core=> 
+; nREPL Connection was closed
