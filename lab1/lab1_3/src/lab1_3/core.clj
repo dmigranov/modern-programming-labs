@@ -10,17 +10,15 @@
   nil)
 
 (defn my-filter [pred coll]
- (reduce 
- (fn [c elem]
-   (if (pred elem)
-      (conj c elem) ; then
-      c ;else
-      )
-    )
-  (list)
-  coll
-  ))
+  (reduce
+   (fn [c elem]
+     (if (pred elem)
+       (concat c (list elem)) ; then
+       c ;else
+       ))
+   (list)
+   coll))
 
 (defn -main
   [& args]
-  (println "Hello, World!"))
+  (println (my-filter (fn [n] (= 0 (mod n 3))) (range 0 11))))
