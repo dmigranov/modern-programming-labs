@@ -1,0 +1,237 @@
+; This is the Calva evaluation results output window.
+; TIPS: The keyboard shortcut `ctrl+alt+c o` shows and focuses this window
+;   when connected to a REPL session.
+; Please see https://calva.io/output/ for more info.
+; Happy coding! ♥️
+
+; Connecting ...
+; Hooking up nREPL sessions...
+; Connected session: clj
+; TIPS: 
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - File URLs in stacktrace frames are peekable and clickable.
+clj::lab1-3.core=> 
+(my-filter
+)
+; Execution error (ArityException) at lab1-3.core/eval1633 (form-init15322513003296891437.clj:18).
+; Wrong number of args (0) passed to: lab1-3.core/my-filter
+clj::lab1-3.core=> 
+(+ 3)
+3
+clj::lab1-3.core=> 
+(my-filter (fn [n] (= 0 (mod n 3))) '(1 2 3 4 5 6 7 8 9 ))
+; Execution error (ClassCastException) at lab1-3.core/my-filter$fn (core.clj:15).
+; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'app')
+clj::lab1-3.core=> 
+(defn my-filter [pred coll]
+  (reduce
+   (fn [c elem]
+     ((if (pred elem)
+        (cons elem c) ; then
+        c ;else
+        )))
+   (list)
+   coll)
+  nil)
+#'lab1-3.core/my-filter
+clj::lab1-3.core=> 
+(my-filter (fn [n] (= 0 (mod n 3))) '(1 2 3 4 5 6 7 8 9 ))
+; Execution error (ClassCastException) at lab1-3.core/my-filter$fn (form-init15322513003296891437.clj:33).
+; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'app')
+clj::lab1-3.core=> 
+(defn my-filter [pred coll]
+  (reduce
+   (fn [elem c]
+     ((if (pred elem)
+        (cons elem c) ; then
+        c ;else
+        )))
+   (list)
+   coll)
+  nil)
+#'lab1-3.core/my-filter
+clj::lab1-3.core=> 
+(my-filter (fn [n] (= 0 (mod n 3))) '(1 2 3 4 5 6 7 8 9 ))
+; Execution error (ClassCastException) at lab1-3.core/eval2151$fn (form-init15322513003296891437.clj:58).
+; class clojure.lang.PersistentList$EmptyList cannot be cast to class java.lang.Number (clojure.lang.PersistentList$EmptyList is in unnamed module of loader 'app'; java.lang.Number is in module java.base of loader 'bootstrap')
+clj::lab1-3.core=> 
+(defn my-filter [pred coll]
+  (reduce
+   (fn [c elem]
+     ((if (pred elem)
+        (conj c elem) ; then
+        c ;else
+        )))
+   (list)
+   coll))
+#'lab1-3.core/my-filter
+clj::lab1-3.core=> 
+(my-filter (fn [n] (= 0 (mod n 3))) '(1 2 3 4 5 6 7 8 9 ))
+; Execution error (ClassCastException) at lab1-3.core/my-filter$fn (form-init15322513003296891437.clj:65).
+; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'app')
+clj::lab1-3.core=> 
+((fn [c elem]
+   ((if ((fn [n] (= 0 (mod n 3))) elem)
+      (conj c elem) ; then
+      c ;else
+      ))) '(list) 4)
+; Execution error (ClassCastException) at lab1-3.core/eval2752$fn (form-init15322513003296891437.clj:78).
+; class clojure.lang.PersistentList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList and clojure.lang.IFn are in unnamed module of loader 'app')
+clj::lab1-3.core=> 
+(reduce conj (list) '(1 2 3 4))
+(4 3 2 1)
+clj::lab1-3.core=> 
+(fn [c elem]
+  ((if (pred elem)
+     (conj c elem) ; then
+     c ;else
+     )))
+; Syntax error compiling at (.calva/output-window/output.calva-repl:89:8).
+; Unable to resolve symbol: pred in this context
+(fn [c elem]
+  ((if ((fn [n] (= 0 (mod n 3))) elem)
+     (conj c elem) ; then
+     c ;else
+     )))
+clj::lab1-3.core=> 
+#object[lab1_3.core$eval3002$fn__3003 0x8f01ac7 "lab1_3.core$eval3002$fn__3003@8f01ac7"]
+clj::lab1-3.core=> 
+((fn [c elem]
+   ((if ((fn [n] (= 0 (mod n 3))) elem)
+      (conj c elem) ; then
+      c ;else
+      ))) '(1 2) 3)
+; Execution error (ClassCastException) at lab1-3.core/eval3048$fn (form-init15322513003296891437.clj:104).
+; class clojure.lang.PersistentList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList and clojure.lang.IFn are in unnamed module of loader 'app')
+clj::lab1-3.core=> 
+(conj '(1 2) 3)
+(3 1 2)
+clj::lab1-3.core=> 
+((if ((fn [n] (= 0 (mod n 3))) 1)
+      (conj (list) 1) ; then
+      (list) ;else
+      ))
+; Execution error (ClassCastException) at lab1-3.core/eval3756 (form-init15322513003296891437.clj:114).
+; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'app')
+clj::lab1-3.core=> 
+(defn my-filter [pred coll]
+  (reduce
+   ((fn [c elem]
+      ((if (pred elem)
+         (conj c elem) ; then
+         c ;else
+         ))))
+   (list)
+   coll))
+#'lab1-3.core/my-filter
+clj::lab1-3.core=> 
+(my-filter (fn [n] (= 0 (mod n 3))) '(1 2 3 4 5 6 7 8 9 ))
+; Execution error (ArityException) at lab1-3.core/my-filter (form-init15322513003296891437.clj:123).
+; Wrong number of args (0) passed to: lab1-3.core/my-filter/fn--3900
+clj::lab1-3.core=> 
+(defn my-filter [pred coll]
+  (reduce
+   (fn [c elem]
+     ((if (pred elem)
+        (conj c elem) ; then
+        (c) ;else
+        )))
+   (list)
+   coll))
+#'lab1-3.core/my-filter
+clj::lab1-3.core=> 
+(my-filter (fn [n] (= 0 (mod n 3))) '(1 2 3 4 5 6 7 8 9 ))
+; Execution error (ClassCastException) at lab1-3.core/my-filter$fn (form-init15322513003296891437.clj:141).
+; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'app')
+clj::lab1-3.core=> 
+(defn my-filter [pred coll]
+  (reduce
+   (fn [c elem]
+     ((if (pred elem)
+        (conj c elem) ; then
+        c ;else
+        )))
+   (list)
+   coll))
+#'lab1-3.core/my-filter
+clj::lab1-3.core=> 
+(my-filter (fn [n] (= 0 (mod n 3))) '(1 2 3 4 5 6 7 8 9 ))
+; Execution error (ClassCastException) at lab1-3.core/my-filter$fn (form-init15322513003296891437.clj:154).
+; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'app')
+clj::lab1-3.core=> 
+(def pred (fn [n] (= 0 (mod n 3))))
+#'lab1-3.core/pred
+clj::lab1-3.core=> 
+(my-filter pred '(1 2 3))
+; Execution error (ClassCastException) at lab1-3.core/my-filter$fn (form-init15322513003296891437.clj:154).
+; class clojure.lang.PersistentList$EmptyList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList$EmptyList and clojure.lang.IFn are in unnamed module of loader 'app')
+clj::lab1-3.core=> 
+((fn [c elem]
+   ((if (pred elem)
+      (conj c elem) ; then
+      c ;else
+      ))) (list) 3)
+; Execution error (ClassCastException) at lab1-3.core/eval4484$fn (form-init15322513003296891437.clj:174).
+; class clojure.lang.PersistentList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList and clojure.lang.IFn are in unnamed module of loader 'app')
+clj::lab1-3.core=> 
+(if (pred 3)
+  (conj (list) 3) ; then
+  (list)c ;else
+  )
+; Syntax error compiling if at (.calva/output-window/output.calva-repl:181:1).
+; Too many arguments to if
+clj::lab1-3.core=> 
+(if (pred 3)
+  (conj (list) 3) ; then
+  (list) ;else
+  )
+(3)
+clj::lab1-3.core=> 
+(if (pred 4)
+  (conj (list) 3) ; then
+  (list) ;else
+  )
+()
+clj::lab1-3.core=> 
+(def c (list))
+#'lab1-3.core/c
+clj::lab1-3.core=> 
+(if (pred 4)
+  (conj c 3) ; then
+  c ;else
+  )
+()
+clj::lab1-3.core=> 
+(if (pred 6)
+  (conj c 6) ; then
+  c ;else
+  )
+(6)
+clj::lab1-3.core=> 
+((fn [c elem]
+   ((if (pred elem)
+      (conj c elem) ; then
+      c ;else
+      ))) (list) 3)
+; Execution error (ClassCastException) at lab1-3.core/eval4717$fn (form-init15322513003296891437.clj:216).
+; class clojure.lang.PersistentList cannot be cast to class clojure.lang.IFn (clojure.lang.PersistentList and clojure.lang.IFn are in unnamed module of loader 'app')
+clj::lab1-3.core=> (defn my-filter [pred coll]
+                     (reduce
+                      (fn [c elem]
+                        (if (pred elem)
+                          (conj c elem) ; then
+                          c ;else
+                          ))
+                      (list)
+                      coll))
+clj::lab1-3.core=> 
+(my-filter pred '(1 2 3))
+(3)
+clj::lab1-3.core=> 
+(my-filter pred '(1 2 3 4 5 6 7 8))
+(6 3)
+clj::lab1-3.core=> 
