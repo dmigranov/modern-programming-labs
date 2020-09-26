@@ -7,8 +7,10 @@
 
 (defn filter-alphabet [alphabet word]
   (filter
-   (fn [alphabet-letter] (not= (get word 0) (alphabet-letter))) ;predicate
+   (fn [alphabet-letter] (not= (get word 0) alphabet-letter)) ;predicate
    alphabet))
+
+
 
 ;map reduce filter
 (defn generate-words [alphabet n] 
