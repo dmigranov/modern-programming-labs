@@ -30,7 +30,6 @@
   ;reduce - подаем на вход список атомарных букв?
   )
 
-
 (defn -main
   [& args]
   (println "Hello, World!"))
