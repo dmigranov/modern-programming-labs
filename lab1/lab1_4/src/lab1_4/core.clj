@@ -1,7 +1,17 @@
 (ns lab1-4.core
   (:gen-class))
 
+
+(defn generate-atomic-words [alphabet]
+  (map (fn [char] (str char)) alphabet))
+
+;map reduce filter
+(defn generate-words [alphabet n] 
+  
+  
+  )
+
+
 (defn -main
-  "I don't do a whole lot ... yet."
   [& args]
   (println "Hello, World!"))
