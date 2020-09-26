@@ -15,32 +15,7 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - File URLs in stacktrace frames are peekable and clickable.
 clj::lab1-3.core=> 
-(map (fn [x] (* x x))
-     (list 1 2 3 4))
-(1 4 9 16)
+(my-map #(* 100 %) [1 2 3])
+(100 200 300)
 clj::lab1-3.core=> 
-(map (fn [x] (list x x))
-     (list 1 2 3 4))
-((1 1) (2 2) (3 3) (4 4))
-clj::lab1-3.core=> 
-
-(defn my-map [func coll]    ;для одного списка
-  (reduce
-   (fn [c elem]
-     (concat c (list (func elem))))
-   (list)
-   coll))
-#'lab1-3.core/my-map
-clj::lab1-3.core=> 
-(my-map (fn [x] (list x x))
-     (list 1 2 3 4))
-((1 1) (2 2) (3 3) (4 4))
-clj::lab1-3.core=> 
-(my-map (fn [x] (* x x))
-     (list 1 2 3 4))
-(1 4 9 16)
-clj::lab1-3.core=> 
-(my-map (fn [x] (* x x))
-     (list))
-()
-clj::lab1-3.core=> 
+; nREPL Connection was closed

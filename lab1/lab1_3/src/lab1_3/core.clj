@@ -25,6 +25,5 @@
 (defn -main
   [& args]
   (println (my-filter (fn [n] (= 0 (mod n 3))) (range 0 11)))
-  
-  
+  (println (my-map (fn [x] (* x x)) (range 0 11)))
   )
