@@ -10,12 +10,18 @@
    (fn [alphabet-letter] (not= (get word 0) alphabet-letter)) ;predicate
    alphabet))
 
+;поступает на вход список ("a" "b" "c")
+(defn reduce-func [atomic-words] 
+  
+  )
 
+(defn my-repeat [n elem]
+  (map (fn [num] elem) (range 0 n))) 
 
 ;map reduce filter
 (defn generate-words [alphabet n] 
-  
-  
+  (reduce reduce-func (my-repeat n (generate-atomic-words alphabet)))
+  ;reduce - подаем на вход список атомарных букв?
   )
 
 
