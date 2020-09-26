@@ -3,11 +3,14 @@
 
 ;(reduce f coll)
 ;(reduce f val coll)
-; использовать в качестве функции reduce - concat
 
 (defn my-map [func coll]    ;для одного списка
-
-  nil)
+  (reduce 
+   (fn [c elem]
+     (concat c (list (func elem))))
+   (list)
+   coll
+   ))
 
 (defn my-filter [pred coll]
   (reduce
@@ -21,4 +24,7 @@
 
 (defn -main
   [& args]
-  (println (my-filter (fn [n] (= 0 (mod n 3))) (range 0 11))))
+  (println (my-filter (fn [n] (= 0 (mod n 3))) (range 0 11)))
+  
+  
+  )
