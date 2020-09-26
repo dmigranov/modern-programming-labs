@@ -17,11 +17,9 @@
 
 ;поступает на вход список ("a" "b" "c")
 (defn reduce-func [words alphabet]
-  (map (fn [word] 
-         (filter-alphabet alphabet word)
-         (generate-lengthened-words word alphabet)
-         ) words)
-  )
+  (reduce concat (map (fn [word]
+                  (filter-alphabet alphabet word)
+                  (generate-lengthened-words word alphabet)) words)))
 
 (defn my-repeat [n elem]
   (map (fn [num] elem) (range 0 n))) 
