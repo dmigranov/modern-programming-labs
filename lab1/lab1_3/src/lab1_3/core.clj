@@ -6,18 +6,18 @@
 
 (defn my-map [func coll]    ;для одного списка
   (reduce 
-   (fn [c elem]
-     (concat c (list (func elem))))
+   (fn [acc elem]
+     (concat acc (list (func elem))))
    (list)
    coll
    ))
 
 (defn my-filter [pred coll]
   (reduce
-   (fn [c elem]
+   (fn [acc elem]
      (if (pred elem)
-       (concat c (list elem)) ; then
-       c ;else
+       (concat acc (list elem)) ; then
+       acc ;else
        ))
    (list)
    coll))
