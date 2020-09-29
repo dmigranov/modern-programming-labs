@@ -3,8 +3,10 @@
 
 
 ;0 to x: a = 0, b = x; h - шаг, n = x/h, тогда точки нумеруются [0, n] (включая n)
+;func(x)
 (defn integrate-func [func x h]
   
+  (* h (+ (/ (+ (func 0) (func x)) 2.) (reduce + ())))
   )
 
 
