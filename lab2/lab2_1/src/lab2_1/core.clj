@@ -4,11 +4,17 @@
 
 ;0 to x: a = 0, b = x; h - шаг, n = x/h, тогда точки нумеруются [0, n] (включая n)
 ;func(x)
-(defn integrate-func [func x h]
-  ;(+ (/ (+ (func 0) (func x)) 2.) (reduce + ()))
+;h = x/n
+(defn integrate-func [func x n]
+  (let [h (double (/ x n))]
+    (* h (reduce + (map (fn [grid-number]
+                          (if (or (= grid-number 0) (= grid-number n))
+                            (/ (func (* n h)) 2.) ;then
+                            (func (* n h))))        ;else
+                        (range 0 (inc n)))))
+    ))
 
-  (* h (reduce + (map (fn [elem] elem) (range 0 (+ x h) h))))
-  )
+(defn square [x] (* x x))
 
 
 (defn -main
