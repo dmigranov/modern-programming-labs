@@ -1,0 +1,130 @@
+; This is the Calva evaluation results output window.
+; TIPS: The keyboard shortcut `ctrl+alt+c o` shows and focuses this window
+;   when connected to a REPL session.
+; Please see https://calva.io/output/ for more info.
+; Happy coding! ♥️
+
+; Connecting ...
+; Hooking up nREPL sessions...
+; Connected session: clj
+; TIPS: 
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - File URLs in stacktrace frames are peekable and clickable.
+clj::user=> 
+(ns lab1.core
+  (:gen-class))
+
+(defn lenghten-ngram [ngram letters]
+  (if (> (count letters) 0)
+    (concat
+     (if (not= (get ngram 0) (first letters)) (list (str (first letters) ngram)) (list))
+     (lenghten-ngram ngram (rest letters)))
+    (list)))
+
+(defn lengthen-ngrams [letters n ngrams]
+  (if
+   (>= n 2)
+    (let [longer-ngrams (if (> (count ngrams) 0)
+                          (concat (lenghten-ngram (first ngrams) letters)
+                                  (lengthen-ngrams letters n (rest ngrams)))
+                          (list))]
+      (if (> n 2) (lengthen-ngrams letters (dec n) longer-ngrams) longer-ngrams))
+    ngrams))
+
+(defn generate-1grams [letters]
+  (if (> (count letters) 0)
+    (cons (str (first letters)) (generate-1grams (rest letters)))
+    (list)))
+
+(defn generate-ngrams [letters n]
+  (lengthen-ngrams letters n (generate-1grams letters)))
+
+(defn -main [& args]
+  (println (generate-ngrams '(\a \b \c) 3)))
+; Syntax error compiling at (lab1/lab1_4/.calva/output-window/output.calva-repl:47:12).
+; Unable to resolve symbol: generate-ngrams in this context
+clj::user=> 
+
+(defn lenghten-ngram [ngram letters]
+  (if (> (count letters) 0)
+    (concat
+     (if (not= (get ngram 0) (first letters)) (list (str (first letters) ngram)) (list))
+     (lenghten-ngram ngram (rest letters)))
+    (list)))
+#'user/lenghten-ngram
+clj::user=> 
+(defn lengthen-ngrams [letters n ngrams]
+  (if
+   (>= n 2)
+    (let [longer-ngrams (if (> (count ngrams) 0)
+                          (concat (lenghten-ngram (first ngrams) letters)
+                                  (lengthen-ngrams letters n (rest ngrams)))
+                          (list))]
+      (if (> n 2) (lengthen-ngrams letters (dec n) longer-ngrams) longer-ngrams))
+    ngrams))
+#'user/lengthen-ngrams
+clj::user=> 
+(defn generate-1grams [letters]
+  (if (> (count letters) 0)
+    (cons (str (first letters)) (generate-1grams (rest letters)))
+    (list)))
+#'user/generate-1grams
+clj::user=> 
+(defn generate-ngrams [letters n]
+  (lengthen-ngrams letters n (generate-1grams letters)))
+#'user/generate-ngrams
+clj::user=> 
+(defn -main [& args]
+  (println (generate-ngrams '(\a \b \c) 3)))
+#'user/-main
+clj::user=> 
+(-main)
+(aba cba aca bca abab cbab acab bcab bacb cacb abcb cbcb babac cabac acbac bcbac bacac cacac abcac cbcac ababc cbabc acabc bcabc bacbc cacbc abcbc cbcbc)
+nil
+clj::user=> (generate-ngrams '(\a \b \c) 3)
+("aba" "cba" "aca" "bca" "abab" "cbab" "acab" "bcab" "bacb" "cacb" "abcb" "cbcb" "babac" "cabac" "acbac" "bcbac" "bacac" "cacac" "abcac" "cbcac" "ababc" "cbabc" "acabc" "bcabc" "bacbc" "cacbc" "abcbc" "cbcbc")
+clj::user=> 
+
+(defn lenghten-ngram [ngram alphabet]
+  (if (> (count alphabet) 0)
+    (concat
+     (if (not= (get ngram 0) (first alphabet)) (list (str (first alphabet) ngram)) (list))
+     (lenghten-ngram ngram (rest alphabet)))
+    (list)))
+#'user/lenghten-ngram
+clj::user=> 
+(defn lengthen-ngrams [alphabet n ngrams]
+  (if
+   (>= n 2)
+    (let [longer-ngrams (if (> (count ngrams) 0)
+                          (concat (lenghten-ngram (first ngrams) alphabet)
+                                  (lengthen-ngrams alphabet n (rest ngrams)))
+                          (list))]
+      (if (> n 2) (lengthen-ngrams alphabet (dec n) longer-ngrams) longer-ngrams))
+    ngrams))
+#'user/lengthen-ngrams
+clj::user=> 
+(defn generate-1grams [alphabet]
+  (if (> (count alphabet) 0)
+    (cons (str (first alphabet)) (generate-1grams (rest alphabet)))
+    (list)))
+#'user/generate-1grams
+clj::user=> 
+
+(defn generate-ngrams [alphabet n]
+  (lengthen-ngrams alphabet n (generate-1grams alphabet)))
+#'user/generate-ngrams
+clj::user=> 
+(defn -main [& args]
+  (println (generate-ngrams '(\a \b \c) 3)))
+#'user/-main
+clj::user=> 
+(-main)
+(aba cba aca bca abab cbab acab bcab bacb cacb abcb cbcb babac cabac acbac bcbac bacac cacac abcac cbcac ababc cbabc acabc bcabc bacbc cacbc abcbc cbcbc)
+nil
+clj::user=> 
+; nREPL Connection was closed
