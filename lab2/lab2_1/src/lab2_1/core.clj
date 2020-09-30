@@ -1,6 +1,14 @@
 (ns lab2-1.core
   (:gen-class))
 
+(defn square [x] (* x x))
+
+(defn exp [x] (Math/pow Math/E x))
+
+(defn sin [x] (Math/sin x))
+
+(def pi Math/PI)
+
 
 ;0 to x: a = 0, b = x; h - шаг, n = x/h, тогда точки нумеруются [0, n] (включая n)
 ;func(x)
@@ -14,11 +22,18 @@
                         (range 0 (inc n)))))
     ))
 
+(defn integrate-simple-h [func x h]
+  ;todo
+  
+  )
+
 ;идея
 ;Есть fixed_step - Допустим, 1 - это основная сетка
 ;но если мы тыкаем в 1.5 то в качестве шага надо взять 0.5, базируясь на имеющейся уже (возможно) 1
 
 
+
+(def fixed_h 0.1)
 
 (defn integrate-memo [func x n]
  (let [h (double (/ x n))]
@@ -29,18 +44,9 @@
 
 (defn integration-operator f [func]
   (fn integrated-func [x]
-    
+    (integrate-simple-h func x fixed_h)
     ))
 
-
-
-(defn square [x] (* x x))
-
-(defn exp [x] (Math/pow Math/E x))
-
-(defn sin [x] (Math/sin x))
-
-(def pi Math/PI)
 
 (defn -main
   [& args]
