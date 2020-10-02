@@ -29,7 +29,9 @@
 (def fixed_h 0.1)
 
 (defn calculate-integral-sum-simple [func k h]
-  (+ (trapezoid-rule func (* (dec k) h) (* k h)))
+  (if (k > 0)
+    (+ (trapezoid-rule func (* (dec k) h) (* k h)) (calculate-integral-sum-simple func (dec k) h))
+    0)
 )
 
 ;в предположении что функции вызывается только для точек лежащих на сетке
