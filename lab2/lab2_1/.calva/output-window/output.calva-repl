@@ -15,98 +15,31 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - File URLs in stacktrace frames are peekable and clickable.
 clj::lab2-1.core=> 
-(def factm2
-  (memoize (fn [x] (println (str "Calculated fact " x))
-             (if (<= x 1) 1 (* x  (factm2 (- x 1)))))))
-#'lab2-1.core/factm2
+((integration-operator exp) 1)
+Calculating integral from 0 to 1.0...
+Calculating integral from 0 to 0.9...
+Calculating integral from 0 to 0.8...
+Calculating integral from 0 to 0.7000000000000001...
+Calculating integral from 0 to 0.6000000000000001...
+Calculating integral from 0 to 0.5...
+Calculating integral from 0 to 0.4...
+Calculating integral from 0 to 0.30000000000000004...
+Calculating integral from 0 to 0.2...
+Calculating integral from 0 to 0.1...
+Calculating integral from 0 to 0.0...
+1.7197134913893146
 clj::lab2-1.core=> 
-(factm2 4)
-Calculated fact 4
-Calculated fact 3
-Calculated fact 2
-Calculated fact 1
-24
+((integration-operator exp) 2)
+Calculating integral from 0 to 2.0...
+Calculating integral from 0 to 1.9000000000000001...
+Calculating integral from 0 to 1.8...
+Calculating integral from 0 to 1.7000000000000002...
+Calculating integral from 0 to 1.6...
+Calculating integral from 0 to 1.5...
+Calculating integral from 0 to 1.4000000000000001...
+Calculating integral from 0 to 1.3...
+Calculating integral from 0 to 1.2000000000000002...
+Calculating integral from 0 to 1.1...
+6.394379425188749
 clj::lab2-1.core=> 
-(factm2 5)
-Calculated fact 5
-120
-clj::lab2-1.core=> 
-(factm2 10)
-Calculated fact 10
-Calculated fact 9
-Calculated fact 8
-Calculated fact 7
-Calculated fact 6
-3628800
-clj::lab2-1.core=> 
-(time (factm2 10))
-"Elapsed time: 0.0311 msecs"
-3628800
-clj::lab2-1.core=> 
-(time (factm2 10))
-"Elapsed time: 0.0219 msecs"
-3628800
-clj::lab2-1.core=> 
-(time (factm2 10))
-"Elapsed time: 0.022 msecs"
-3628800
-clj::lab2-1.core=> 
-(time (factm2 11))
-Calculated fact 11
-"Elapsed time: 0.2391 msecs"
-39916800
-clj::lab2-1.core=> 
-(time (factm2 11))
-"Elapsed time: 0.02 msecs"
-39916800
-clj::lab2-1.core=> 
-(time (factm2 12))
-Calculated fact 12
-"Elapsed time: 0.3137 msecs"
-479001600
-clj::lab2-1.core=> 
-(defn fact [x]
-  (println (str "Calculated fact " x))
-  (if (<= x 1) 1 (* x  (fact (- x 1)))))
-#'lab2-1.core/fact
-clj::lab2-1.core=> 
-(def fact-mem (memoize fact))
-#'lab2-1.core/fact-mem
-clj::lab2-1.core=> 
-(fact-mem 3)
-Calculated fact 3
-Calculated fact 2
-Calculated fact 1
-6
-clj::lab2-1.core=> 
-(fact-mem 4)
-Calculated fact 4
-Calculated fact 3
-Calculated fact 2
-Calculated fact 1
-24
-clj::lab2-1.core=> 
-(fact-mem 6)
-Calculated fact 6
-Calculated fact 5
-Calculated fact 4
-Calculated fact 3
-Calculated fact 2
-Calculated fact 1
-720
-clj::lab2-1.core=> 
-(+ 2)
-2
-clj::lab2-1.core-test=> 
-(+ 2.)
-2.0
-clj::lab2-1.core-test=> 
-(- 4.5 1.5)
-3.0
-clj::lab2-1.core-test=> 
-(- 4.8 1.6)
-3.1999999999999997
-clj::lab2-1.core-test=> 
-(* 2 1.6)
-3.2
-clj::lab2-1.core-test=> 
+; nREPL Connection was closed

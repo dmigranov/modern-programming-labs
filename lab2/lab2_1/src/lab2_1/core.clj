@@ -26,26 +26,24 @@
 ;Есть fixed_step - Допустим, 1 - это основная сетка
 ;но если мы тыкаем в 1.5 то в качестве шага надо взять 0.5, базируясь на имеющейся уже (возможно) 1
 ;
-(def fixed_h 0.1)
-
-(defn calculate-integral-sum-simple [func k h]
-  (println (str "Calculating integral from 0 to " (* k h) "..."))
-  (if (k > 0)
-    (+ (trapezoid-rule func (* (dec k) h) (* k h)) (calculate-integral-sum-simple func (dec k) h))
-    0)
-)
 
 ;в предположении что функции вызывается только для точек лежащих на сетке
 ;значит x - гарантированно делится на h; в качестве значений берем и мемоизируем kh
+(def calculate-integral-sum-simple (memoize (fn [func k h] (println (str "Calculating integral from 0 to " (* k h) "..."))
+                                      (if (> k 0)
+                                        (+ (trapezoid-rule func (* (dec k) h) (* k h)) (calculate-integral-sum-simple func (dec k) h))
+                                        0))))
+
 (defn integrate-memo-simple [func x h]
-  (let [n (Math/round (/ x h))]
-    
-    
+  (let [k (Math/round (/ x h))]
+    (calculate-integral-sum-simple func k h)
     ))
 
-(defn integration-operator f [func]
-  (fn integrated-func [x]
-    (integrate-memo func x fixed_h)
+(def fixed_h 0.1)
+
+(defn integration-operator [func]
+  (fn [x]
+    (integrate-memo-simple func x fixed_h)
     ))
 
 
