@@ -15,74 +15,98 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - File URLs in stacktrace frames are peekable and clickable.
 clj::lab2-1.core=> 
-(def m-fib
-  (memoize (fn [n]
-             (condp = n
-               0 1
-               1 1
-               (+ (m-fib (dec n)) (m-fib (- n 2)))))))
-#'lab2-1.core/m-fib
+(def factm2
+  (memoize (fn [x] (println (str "Calculated fact " x))
+             (if (<= x 1) 1 (* x  (factm2 (- x 1)))))))
+#'lab2-1.core/factm2
 clj::lab2-1.core=> 
-(time (m-fib 30))
-"Elapsed time: 0.2313 msecs"
-1346269
+(factm2 4)
+Calculated fact 4
+Calculated fact 3
+Calculated fact 2
+Calculated fact 1
+24
 clj::lab2-1.core=> 
-(time (m-fib 31))
-"Elapsed time: 0.0362 msecs"
-2178309
+(factm2 5)
+Calculated fact 5
+120
 clj::lab2-1.core=> 
-(time (m-fib 32))
-"Elapsed time: 0.0363 msecs"
-3524578
+(factm2 10)
+Calculated fact 10
+Calculated fact 9
+Calculated fact 8
+Calculated fact 7
+Calculated fact 6
+3628800
 clj::lab2-1.core=> 
-(defn fib [n]
-  (condp = n
-    0 1
-    1 1
-    (+ (fib (dec n)) (fib (- n 2)))))
-#'lab2-1.core/fib
+(time (factm2 10))
+"Elapsed time: 0.0311 msecs"
+3628800
 clj::lab2-1.core=> 
-(time (fib 32))
-"Elapsed time: 642.3184 msecs"
-3524578
+(time (factm2 10))
+"Elapsed time: 0.0219 msecs"
+3628800
 clj::lab2-1.core=> 
-"Elapsed time: 661.3323 msecs"
-3524578
+(time (factm2 10))
+"Elapsed time: 0.022 msecs"
+3628800
 clj::lab2-1.core=> 
-(time (m-fib 32))
-"Elapsed time: 0.0232 msecs"
-3524578
+(time (factm2 11))
+Calculated fact 11
+"Elapsed time: 0.2391 msecs"
+39916800
 clj::lab2-1.core=> 
-(time (fib 32))
-"Elapsed time: 630.9765 msecs"
-3524578
+(time (factm2 11))
+"Elapsed time: 0.02 msecs"
+39916800
 clj::lab2-1.core=> 
-(time (fib 32))
-"Elapsed time: 630.9765 msecs"
+(time (factm2 12))
+Calculated fact 12
+"Elapsed time: 0.3137 msecs"
+479001600
 clj::lab2-1.core=> 
-(time (fib 32))
-"Elapsed time: 633.3402 msecs"
-3524578
+(defn fact [x]
+  (println (str "Calculated fact " x))
+  (if (<= x 1) 1 (* x  (fact (- x 1)))))
+#'lab2-1.core/fact
 clj::lab2-1.core=> 
-(time (m-fib 35))
-"Elapsed time: 0.0377 msecs"
-14930352
+(def fact-mem (memoize fact))
+#'lab2-1.core/fact-mem
 clj::lab2-1.core=> 
-(time (m-fib 50))
-"Elapsed time: 0.0676 msecs"
-20365011074
+(fact-mem 3)
+Calculated fact 3
+Calculated fact 2
+Calculated fact 1
+6
 clj::lab2-1.core=> 
-(time (m-fib 60))
-"Elapsed time: 0.0941 msecs"
-2504730781961
+(fact-mem 4)
+Calculated fact 4
+Calculated fact 3
+Calculated fact 2
+Calculated fact 1
+24
 clj::lab2-1.core=> 
-(time (m-fib 100))
-; Execution error (ArithmeticException) at lab2-1.core/fn (form-init13295053122962765865.clj:23).
-; integer overflow
+(fact-mem 6)
+Calculated fact 6
+Calculated fact 5
+Calculated fact 4
+Calculated fact 3
+Calculated fact 2
+Calculated fact 1
+720
 clj::lab2-1.core=> 
-(time (m-fib 89))
-"Elapsed time: 0.0254 msecs"
-2880067194370816120
-clj::lab2-1.core=> 
-(time (m-fib 89))
-; nREPL Connection was closed
+(+ 2)
+2
+clj::lab2-1.core-test=> 
+(+ 2.)
+2.0
+clj::lab2-1.core-test=> 
+(- 4.5 1.5)
+3.0
+clj::lab2-1.core-test=> 
+(- 4.8 1.6)
+3.1999999999999997
+clj::lab2-1.core-test=> 
+(* 2 1.6)
+3.2
+clj::lab2-1.core-test=> 
