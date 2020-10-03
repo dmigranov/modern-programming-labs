@@ -58,10 +58,12 @@
 
 
 (defn calc-integral-graphic-memo [func graphic-step end-x]
-  (map (integration-operator-memo func) (range 0 (+ end-x graphic-step) graphic-step)))
+  (map (integration-operator-memo func) (range 0 (+ end-x graphic-step) graphic-step))
+  )
 
 (defn calc-integral-graphic-no-memo [func graphic-step end-x]
-  (map (integration-operator-no-memo func) (range 0 (+ end-x graphic-step) graphic-step)))
+  (map (integration-operator-no-memo func) (range 0 (+ end-x graphic-step) graphic-step))
+  )
 
 
 
@@ -70,10 +72,30 @@
   (let [graphic-step 0.1
         border 100]
     (println (str "Graphic of cos from 0 to " border " with step " graphic-step " (integration step 0.1)"))
-    (println "NO MEMO:")
-    (println (time (calc-integral-graphic-no-memo cos graphic-step border)))
+    (doall (calc-integral-graphic-no-memo cos graphic-step 0.2))
+    (doall (calc-integral-graphic-memo cos graphic-step 0.2))
+    
     (println "MEMO:")
-    (println (time (calc-integral-graphic-memo cos graphic-step border)))
-    
-    
-    ))
+    (time (doall (calc-integral-graphic-memo cos graphic-step border)))
+    (println "NO MEMO:")
+    (time (doall (calc-integral-graphic-no-memo cos graphic-step border)))))
+
+
+;Time testing:
+;Graphic of cos from 0 to 20 with step 0.02 (integration step 0.1)
+;MEMO:
+;"Elapsed time: 41.1018 msecs"
+;NO MEMO:
+;"Elapsed time: 54.0139 msecs"
+;Time testing:
+;Graphic of cos from 0 to 40 with step 0.02 (integration step 0.1)
+;MEMO:
+;"Elapsed time: 61.5915 msecs"
+;NO MEMO:
+;"Elapsed time: 151.2749 msecs"
+;Time testing:
+;Graphic of cos from 0 to 40 with step 0.02 (integration step 0.1)
+;MEMO:
+;"Elapsed time: 61.5915 msecs"
+;NO MEMO:
+;"Elapsed time: 151.2749 msecs"
