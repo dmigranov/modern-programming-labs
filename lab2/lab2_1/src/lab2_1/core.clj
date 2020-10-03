@@ -57,31 +57,23 @@
 
 
 
-(defn calc-integral-graphic-memo [func h end-x]
-  (map (integration-operator-memo func) (range 0 (+ end-x h) h))
-  )
+(defn calc-integral-graphic-memo [func graphic-step end-x]
+  (map (integration-operator-memo func) (range 0 (+ end-x graphic-step) graphic-step)))
 
-(defn calc-integral-graphic-no-memo [func h end-x]
-  (map (integration-operator-no-memo func) (range 0 (+ end-x h) h))
-  )
+(defn calc-integral-graphic-no-memo [func graphic-step end-x]
+  (map (integration-operator-no-memo func) (range 0 (+ end-x graphic-step) graphic-step)))
 
 
 
-(defn -main
-  [& args]
-  (let [values (range 0.0 0.5 0.02)]
-    ;откомментить в правиле трапеции
-    (println "No memo vs memo")
-    (println "No memo:")
-    ((integration-operator-no-memo exp) 1.35)
-    ((integration-operator-no-memo exp) 1.85)
-    (println "Memo:")
-    ((integration-operator-memo exp) 1.35)
-    ((integration-operator-memo exp) 1.85)
-
-    (println "Time testing:")
-    
-    
+(defn -main [& args]
+  (println "Time testing:")
+  (let [graphic-step 0.1
+        border 100]
+    (println (str "Graphic of cos from 0 to " border " with step " graphic-step " (integration step 0.1)"))
+    (println "NO MEMO:")
+    (println (time (calc-integral-graphic-no-memo cos graphic-step border)))
+    (println "MEMO:")
+    (println (time (calc-integral-graphic-memo cos graphic-step border)))
     
     
     ))
