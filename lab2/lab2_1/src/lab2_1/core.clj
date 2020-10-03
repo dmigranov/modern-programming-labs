@@ -7,15 +7,6 @@
 (defn cos [x] (Math/cos x))
 (def pi Math/PI)
 
-;0 to x: a = 0, b = x; h - шаг, n = x/h (h = x/n), тогда точки нумеруются [0, n] (включая n)
-(defn integrate-no-memo-dumb [func x n]
-  (let [h (double (/ x n))]
-    (* h (reduce + (map (fn [grid-number]
-                          (if (or (= grid-number 0) (= grid-number n))
-                            (/ (func (* grid-number h)) 2.) ;then
-                            (func (* grid-number h))))        ;else
-                        (range 0 (inc n)))))))
-
 ;даёт площадь куска под функцией от a до b
 (defn trapezoid-rule [f a b]
   ;(println (str "Calculating integral from "  a " to " b "...")) ;закоментить при замерах времени
