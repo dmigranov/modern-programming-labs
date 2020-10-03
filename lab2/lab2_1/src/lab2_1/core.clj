@@ -7,30 +7,22 @@
 (defn cos [x] (Math/cos x))
 (def pi Math/PI)
 
-;даёт площадь куска под функцией от a до b
-(defn trapezoid-rule [f a b]
-  ;(println (str "Calculating integral from "  a " to " b "...")) ;закоментить при замерах времени
-  (* (- b a) (/ (+ (f a) (f b)) 2.)))
-
-(def calculate-integral-sum-memo (memoize (fn [func k h] 
-                                      (if (> k 0)
-                                        (+ (trapezoid-rule func (* (dec k) h) (* k h)) (calculate-integral-sum-memo func (dec k) h))
-                                        0))))
-
-;тупой вариант
-;в предположении что функции вызывается только для точек лежащих на сетке
-;значит x - гарантированно делится на h; в качестве значений берем и мемоизируем kh
-(defn integrate-memo-simple [func x h]
-  (let [k (Math/round (/ x h))]
-    (calculate-integral-sum-memo func k h)
-    ))
 
 (def fixed_h 0.1)
 (def epsilon (* fixed_h 1e-5))
 (defn close [x y] (< (Math/abs (- x y)) epsilon))
 
-;похоже, но если мы тыкаем за сетку, то досчитывается и прибавляется значение от ближайшего значения сетки 
-;(но оно не мемоизируется, мемоизируется только значения интеграал для узлов сетки)
+
+;площадь куска под функцией от a до b
+(defn trapezoid-rule [f a b]
+  ;(println (str "Calculating integral from "  a " to " b "...")) ;закоментить при замерах времени
+  (* (- b a) (/ (+ (f a) (f b)) 2.)))
+
+
+(def calculate-integral-sum-memo (memoize (fn [func k h]
+                                            (if (> k 0)
+                                              (+ (trapezoid-rule func (* (dec k) h) (* k h)) (calculate-integral-sum-memo func (dec k) h))
+                                              0))))
 (defn integrate-memo [func x h]
   (let [k (Math/round (/ x h))] ;это если будет, например, x = 7.9999 при h = 1. сокращать вниз сразу нельзя
     (if (close x (* k h))
@@ -42,8 +34,6 @@
   ([func step] (fn [x]
                  (integrate-memo func x step)))
   ([func] (integration-operator-memo func fixed_h)))
-
-
 
 
 
@@ -63,6 +53,17 @@
   ([func step] (fn [x]
                  (integrate-no-memo func x step)))
   ([func] (integration-operator-no-memo func fixed_h)))
+
+
+
+(defn calc-graphic-memo [h end-x]
+  
+  )
+
+(defn calc-graphic-no-memo [h end-x]
+  
+  )
+
 
 (defn -main
   [& args]
