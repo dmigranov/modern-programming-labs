@@ -4,6 +4,7 @@
 (defn square [x] (* x x))
 (defn exp [x] (Math/pow Math/E x))
 (defn sin [x] (Math/sin x))
+(defn cos [x] (Math/cos x))
 (def pi Math/PI)
 
 ;0 to x: a = 0, b = x; h - шаг, n = x/h (h = x/n), тогда точки нумеруются [0, n] (включая n)
@@ -79,5 +80,9 @@
 (defn -main
   [& args]
   (let [values (range 0.0 0.5 0.02)]
+    (println "e^x: expected vs what we got")
     (println (map dec (map exp values)))
-    (println (map (integration-operator exp) values))))
+    (println (map (integration-operator exp) values))
+    (println "cos(x): expected vs what we got")
+    (println (map sin values)) ;интеграл косинуса - синус
+    (println (map (integration-operator cos) values))))
