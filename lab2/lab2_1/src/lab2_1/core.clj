@@ -9,8 +9,7 @@
 
 
 (def fixed_h 0.1)
-(def epsilon (* fixed_h 1e-5))
-(defn close [x y] (< (Math/abs (- x y)) epsilon))
+(defn close [x y epsilon] (< (Math/abs (- x y)) epsilon))
 
 
 ;площадь куска под функцией от a до b
@@ -25,7 +24,7 @@
                                               0))))
 (defn integrate-memo [func x h]
   (let [k (Math/round (/ x h))] ;это если будет, например, x = 7.9999 при h = 1. сокращать вниз сразу нельзя
-    (if (close x (* k h))
+    (if (close x (* k h) (* h 1e-5))
       (calculate-integral-sum-memo func k h) ;если пренебрежимо близко - то попали в сетку
       (let [l (Math/floor (/ x h))]    ;иначе округляем x/h вниз (l) и считаем интеграл от l*h до x и плюсуем 
         (+ (calculate-integral-sum-memo func l h) (trapezoid-rule func (* l h) x))))))
@@ -44,7 +43,7 @@
 
 (defn integrate-no-memo [func x h]
   (let [k (Math/round (/ x h))]
-    (if (close x (* k h))
+    (if (close x (* k h) (* h 1e-5))
       (calculate-integral-sum-no-memo func k h)
       (let [l (Math/floor (/ x h))]
         (+ (calculate-integral-sum-no-memo func l h) (trapezoid-rule func (* l h) x))))))
@@ -76,14 +75,6 @@
     (println "Memo:")
     ((integration-operator-memo exp) 1.35)
     ((integration-operator-memo exp) 1.85)
-
-    ;перенести в тесты
-    ;(println "e^x: expected vs what we got")
-    ;(println (map dec (map exp values)))
-    ;(println (map (integration-operator-memo exp) values))
-    ;(println "cos(x): expected vs what we got")
-    ;(println (map sin values)) ;интеграл косинуса - синус
-    ;(println (map (integration-operator-memo cos) values))
     ))
 
 
