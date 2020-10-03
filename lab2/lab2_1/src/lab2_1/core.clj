@@ -58,7 +58,12 @@
   (let [k (Math/round (/ x h))] ;это если будет, например, x = 7.9999 при h = 1. сокращать вниз сразу нельзя
     (if (close x (* k h))
       (calculate-integral-sum-memo func k h) ;если пренебрежимо близко - то попали в сетку
-      42
+      (let [l (Math/floor (/ x h))]    ;иначе округляем x/h вниз (l) и считаем интеграл от l*h до x и плюсуем 
+
+        (+ 
+         (calculate-integral-sum-memo func l h)
+         0 ;интеграо от l*h до x
+         ))
       )
     ))
 
