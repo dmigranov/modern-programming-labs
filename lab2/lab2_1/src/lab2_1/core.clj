@@ -42,12 +42,17 @@
     (calculate-integral-sum-simple func k h)
     ))
 
+(defn integrate-memo [func x h]
+  (let [k (Math/round (/ x h))]
+    (calculate-integral-sum-simple func k h)))
+
 (def fixed_h 0.1)
 
-(defn integration-operator-simple [func]
-  (fn [x]
-    (integrate-memo-simple func x fixed_h)
-    ))
+(defn integration-operator
+  ([func step] (fn [x]
+                 (integrate-memo func x step)))
+  ([func] (integration-operator func fixed_h))
+  )
 
 
 (defn -main
