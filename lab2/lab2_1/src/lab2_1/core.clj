@@ -45,15 +45,24 @@
     (calculate-integral-sum-memo func k h)
     ))
 
+
+(def fixed_h 0.1)
+(def epsilon (* fixed_h 1e-5))
+
+(defn close [x y]
+  (< (Math/abs (- x y)) epsilon)
+  )
 ;похоже, но если мы тыкаем за сетку, то досчитывается и прибавляется значение от ближайшего значения сетки 
 ;(но оно не мемоизируется, мемоизируется только значения интеграал для узлов сетки)
 (defn integrate-memo [func x h]
-  (let [k (Math/round (/ x h))]
-    ;todo
+  (let [k (Math/round (/ x h))] ;это если будет, например, x = 7.9999 при h = 1. сокращать вниз сразу нельзя
+    (if (close x (* k h))
+      () ;если пренебрежимо близко - то попали в сетку
+      ()
+      )
     (calculate-integral-sum-memo func k h)
     ))
 
-(def fixed_h 0.1)
 (defn integration-operator
   ([func step] (fn [x]
                  (integrate-memo func x step)))
