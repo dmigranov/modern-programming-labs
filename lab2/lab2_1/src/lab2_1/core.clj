@@ -12,6 +12,8 @@
 (defn close [x y epsilon] (< (Math/abs (- x y)) epsilon))
 
 
+
+(def h-eps 1e-5) ;множитель на который умножается эпсилон при проверке близости к сетке
 ;площадь куска под функцией от a до b
 (defn trapezoid-rule [f a b]
   ;(println (str "Calculating integral from "  a " to " b "...")) ;закоментить при замерах времени
@@ -24,7 +26,7 @@
                                               0))))
 (defn integrate-memo [func x h]
   (let [k (Math/round (/ x h))] ;это если будет, например, x = 7.9999 при h = 1. сокращать вниз сразу нельзя
-    (if (close x (* k h) (* h 1e-5))
+    (if (close x (* k h) (* h h-eps))
       (calculate-integral-sum-memo func k h) ;если пренебрежимо близко - то попали в сетку
       (let [l (Math/floor (/ x h))]    ;иначе округляем x/h вниз (l) и считаем интеграл от l*h до x и плюсуем 
         (+ (calculate-integral-sum-memo func l h) (trapezoid-rule func (* l h) x))))))
@@ -43,7 +45,7 @@
 
 (defn integrate-no-memo [func x h]
   (let [k (Math/round (/ x h))]
-    (if (close x (* k h) (* h 1e-5))
+    (if (close x (* k h) (* h h-eps))
       (calculate-integral-sum-no-memo func k h)
       (let [l (Math/floor (/ x h))]
         (+ (calculate-integral-sum-no-memo func l h) (trapezoid-rule func (* l h) x))))))
@@ -56,12 +58,13 @@
 
 
 (defn calc-graphic-memo [h end-x]
-  
+  ;todo
   )
 
 (defn calc-graphic-no-memo [h end-x]
-  
+  ;todo
   )
+
 
 
 (defn -main
@@ -75,6 +78,10 @@
     (println "Memo:")
     ((integration-operator-memo exp) 1.35)
     ((integration-operator-memo exp) 1.85)
+
+    (println "Time testing:")
+    
+    
+    
+    
     ))
-
-

@@ -7,6 +7,7 @@
 (defn close? [x y] (< (Math/abs (- x y)) epsilon-test))
 
 
+
 (defn exp-integral-expected [x] (dec (exp x)))
 (deftest integration-operator-test-exp
   (testing "exponent integration" ;testing is for accumulating groups of assertions
@@ -30,3 +31,10 @@
       (is (close? (cos-integral-expected 0.2) (cos-integral-got 0.2)))
       (is (close? (cos-integral-expected 1) (cos-integral-got 1))))
     ))
+
+(deftest trapezoid-rule-test
+  (testing "trapezoid rule"
+    (letfn [(one-func [x] 1)]
+      (is (close? (trapezoid-rule one-func 4 9) 5))
+      (is (close? (trapezoid-rule one-func -4 6) 10))
+      (is (close? (trapezoid-rule one-func -0.2 0.7) 0.9)))))
