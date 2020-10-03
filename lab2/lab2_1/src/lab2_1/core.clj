@@ -19,35 +19,41 @@
                         (range 0 (inc n)))))
     ))
 
-;даёт площадь куска от a до b - не надо мемоизировать, мемоизировать над суммы таких кусков?
+;даёт площадь куска под функцией от a до b
 (defn trapezoid-rule [f a b]
-  (println (str "Calculating integral from "  a " to " b "..."))
   (* (- b a) (/ (+ (f a) (f b)) 2.)))
 
-;идея
-;Есть fixed_step - Допустим, 1 - это основная сетка
-;но если мы тыкаем в 1.5 то в качестве шага надо взять 0.5, базируясь на имеющейся уже (возможно) 1
+(defn trapezoid-rule-debug [f a b]
+  (println (str "Calculating integral from "  a " to " b "..."))
+  (trapezoid-rule f a b))
 
+(defn calculate-integral-sum-no-memo [func k h]
+  (if (> k 0)
+    (+ (trapezoid-rule-debug func (* (dec k) h) (* k h)) (calculate-integral-sum-no-memo func (dec k) h))
+    0))
+
+(def calculate-integral-sum-memo (memoize (fn [func k h] 
+                                      (if (> k 0)
+                                        (+ (trapezoid-rule func (* (dec k) h) (* k h)) (calculate-integral-sum-memo func (dec k) h))
+                                        0))))
 
 ;тупой вариант
 ;в предположении что функции вызывается только для точек лежащих на сетке
 ;значит x - гарантированно делится на h; в качестве значений берем и мемоизируем kh
-(def calculate-integral-sum-simple (memoize (fn [func k h] 
-                                      (if (> k 0)
-                                        (+ (trapezoid-rule func (* (dec k) h) (* k h)) (calculate-integral-sum-simple func (dec k) h))
-                                        0))))
-
 (defn integrate-memo-simple [func x h]
   (let [k (Math/round (/ x h))]
-    (calculate-integral-sum-simple func k h)
+    (calculate-integral-sum-memo func k h)
     ))
 
+;похоже, но если мы тыкаем за сетку, то досчитывается и прибавляется значение от ближайшего значения сетки 
+;(но оно не мемоизируется, мемоизируется только значения интеграал для узлов сетки)
 (defn integrate-memo [func x h]
   (let [k (Math/round (/ x h))]
-    (calculate-integral-sum-simple func k h)))
+    ;todo
+    (calculate-integral-sum-memo func k h)
+    ))
 
 (def fixed_h 0.1)
-
 (defn integration-operator
   ([func step] (fn [x]
                  (integrate-memo func x step)))
