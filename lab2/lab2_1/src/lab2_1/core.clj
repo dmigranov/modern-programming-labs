@@ -67,9 +67,22 @@
 (defn -main
   [& args]
   (let [values (range 0.0 0.5 0.02)]
-    (println "e^x: expected vs what we got")
-    (println (map dec (map exp values)))
-    (println (map (integration-operator-memo exp) values))
-    (println "cos(x): expected vs what we got")
-    (println (map sin values)) ;интеграл косинуса - синус
-    (println (map (integration-operator-memo cos) values))))
+    ;откомментить в правиле трапеции
+    (println "No memo vs memo")
+    (println "No memo:")
+    ((integration-operator-no-memo exp) 1.35)
+    ((integration-operator-no-memo exp) 1.85)
+    (println "Memo:")
+    ((integration-operator-memo exp) 1.35)
+    ((integration-operator-memo exp) 1.85)
+
+    ;перенести в тесты
+    ;(println "e^x: expected vs what we got")
+    ;(println (map dec (map exp values)))
+    ;(println (map (integration-operator-memo exp) values))
+    ;(println "cos(x): expected vs what we got")
+    ;(println (map sin values)) ;интеграл косинуса - синус
+    ;(println (map (integration-operator-memo cos) values))
+    ))
+
+
