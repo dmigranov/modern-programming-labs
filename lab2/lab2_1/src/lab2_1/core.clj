@@ -57,12 +57,12 @@
 
 
 
-(defn calc-graphic-memo [h end-x]
-  ;todo
+(defn calc-integral-graphic-memo [func h end-x]
+  (map (integration-operator-memo func) (range 0 (+ end-x h) h))
   )
 
-(defn calc-graphic-no-memo [h end-x]
-  ;todo
+(defn calc-integral-graphic-no-memo [func h end-x]
+  (map (integration-operator-no-memo func) (range 0 (+ end-x h) h))
   )
 
 
