@@ -59,10 +59,9 @@
     (if (close x (* k h))
       (calculate-integral-sum-memo func k h) ;если пренебрежимо близко - то попали в сетку
       (let [l (Math/floor (/ x h))]    ;иначе округляем x/h вниз (l) и считаем интеграл от l*h до x и плюсуем 
-
         (+ 
          (calculate-integral-sum-memo func l h)
-         0 ;интеграо от l*h до x
+         (trapezoid-rule func (* l h) x) ;интеграл от l*h до x
          ))
       )
     ))
