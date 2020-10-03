@@ -16,7 +16,9 @@
       (is (close? (exp-integral-expected 0.1) (exp-integral-got 0.1)))
       (is (close? (exp-integral-expected 0.12) (exp-integral-got 0.12)))
       (is (close? (exp-integral-expected 0.15) (exp-integral-got 0.15)))
+      (is (close? (exp-integral-expected 0.199) (exp-integral-got 0.199)))
       (is (close? (exp-integral-expected 0.2) (exp-integral-got 0.2)))
+      (is (close? (exp-integral-expected 0.201) (exp-integral-got 0.201)))
       (is (close? (exp-integral-expected 1) (exp-integral-got 1))))
     ))
 
@@ -28,7 +30,9 @@
       (is (close? (cos-integral-expected 0.1) (cos-integral-got 0.1)))
       (is (close? (cos-integral-expected 0.12) (cos-integral-got 0.12)))
       (is (close? (cos-integral-expected 0.15) (cos-integral-got 0.15)))
+      (is (close? (cos-integral-expected 0.199) (cos-integral-got 0.199)))
       (is (close? (cos-integral-expected 0.2) (cos-integral-got 0.2)))
+      (is (close? (cos-integral-expected 0.201) (cos-integral-got 0.201)))
       (is (close? (cos-integral-expected 1) (cos-integral-got 1))))
     ))
 
