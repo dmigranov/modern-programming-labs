@@ -65,8 +65,6 @@
   (map (integration-operator-no-memo func) (range 0 (+ end-x graphic-step) graphic-step))
   )
 
-
-
 (defn -main [& args]
   (println "Time testing:")
   (let [graphic-step 0.1
@@ -79,7 +77,6 @@
     (time (doall (calc-integral-graphic-memo cos graphic-step border)))
     (println "NO MEMO:")
     (time (doall (calc-integral-graphic-no-memo cos graphic-step border)))))
-
 
 ;Time testing:
 ;Graphic of cos from 0 to 20 with step 0.02 (integration step 0.1)
