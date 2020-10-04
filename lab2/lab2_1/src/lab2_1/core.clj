@@ -10,13 +10,12 @@
 
 (def fixed_h 0.1)
 (defn close [x y epsilon] (< (Math/abs (- x y)) epsilon))
-
-
-
 (def h-eps 1e-5) ;множитель на который умножается эпсилон при проверке близости к сетке
+
+
 ;площадь куска под функцией от a до b
 (defn trapezoid-rule [f a b]
-  ;(println (str "Calculating integral from "  a " to " b "...")) ;закоментить при замерах времени
+  ;(println (str "Calculating integral from "  a " to " b "..."))
   (* (- b a) (/ (+ (f a) (f b)) 2.)))
 
 
@@ -24,6 +23,7 @@
                                             (if (> k 0)
                                               (+ (trapezoid-rule func (* (dec k) h) (* k h)) (calculate-integral-sum-memo func (dec k) h))
                                               0))))
+
 (defn integrate-memo [func x h]
   (let [k (Math/round (/ x h))] ;это если будет, например, x = 7.9999 при h = 1. сокращать вниз сразу нельзя
     (if (close x (* k h) (* h h-eps))
