@@ -9,18 +9,15 @@
 
 
 
+(defn lazy-list-of-integral-sums [func h]
+   (iterate (fn [pair] (+ (second pair) (trapezoid-rule func (first pair) (+ (first pair) h)))) [0 0.])
+  )
+
 (defn integrate-lazy [func x h]
 
-  (let 
-   [
-    ;lazy-integral-sums (lazy-seq ())
-    lazy-integral-sums (iterate (fn [current-integral-sum] (+ current-integral-sum)) 0)
-    ]
-    
-    
-    
-    
-    ))
+
+
+    )
 
 (def fixed_h 0.1)
 (defn integration-operator
