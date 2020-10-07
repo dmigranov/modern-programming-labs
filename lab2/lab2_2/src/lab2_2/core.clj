@@ -45,7 +45,6 @@
   ([func] (integration-operator func fixed_h)))
 
 
-
 (defn -main
   [& args]
   (println "Hello, World!"))
