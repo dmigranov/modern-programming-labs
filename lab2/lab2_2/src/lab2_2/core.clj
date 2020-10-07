@@ -17,7 +17,7 @@
 
 
 (defn trapezoid-rule [f a b]
-  ;(println (str "Calculating integral from "  a " to " b "..."))
+  (println (str "Calculating integral from "  a " to " b "..."))
   (* (- b a) (/ (+ (f a) (f b)) 2.)))
 
 (defn lazy-list-of-integral-sums [func h]
@@ -30,9 +30,10 @@
    (map second))
   )
 
-(defn integrate-lazy [func x h]
+(defn integrate-lazy [func x h lazy-sums]
   (let [k (Math/round (/ x h))
-        lazy-sums (lazy-list-of-integral-sums func h)]  
+        ;lazy-sums (lazy-list-of-integral-sums func h)
+        ]  
     (if (close x (* k h) (* h h-eps))
       (nth lazy-sums k) ;then - просто тупо берем из списка
       (let [l (Math/floor (/ x h))] (+ (nth lazy-sums l) (trapezoid-rule func (* l h) x))) 
@@ -41,7 +42,7 @@
 
 (defn integration-operator
   ([func step] (fn [x]
-                 (integrate-lazy func x step)))
+                 (integrate-lazy func x step (lazy-list-of-integral-sums func step))))
   ([func] (integration-operator func fixed_h)))
 
 (defn calc-integral-graphic-lazy [func integration-step graphic-step end-x]
