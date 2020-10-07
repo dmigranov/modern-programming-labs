@@ -21,9 +21,12 @@
   (* (- b a) (/ (+ (f a) (f b)) 2.)))
 
 (defn lazy-list-of-integral-sums [func h]
-  ;можно хранить пары не с n, а сразу nh?
   (->>
-   (iterate (fn [pair] [(inc (first pair)) (+ (second pair) (trapezoid-rule func (* (first pair) h) (* (inc (first pair)) h)))]) [0 0.])
+   ;(iterate (fn [pair] [(inc (first pair)) (+ (second pair) (trapezoid-rule func (* (first pair) h) (* (inc (first pair)) h)))]) [0 0.]) ;[nh, ...]
+   (iterate (fn [pair] (let [new-x (+ (first pair) h)]
+                         [new-x
+                          (+ (second pair) (trapezoid-rule func (first pair) new-x))])) 
+            [0., 0.])
    (map second))
   )
 
