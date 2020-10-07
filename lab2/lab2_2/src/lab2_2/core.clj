@@ -30,7 +30,8 @@
    (map second))
   )
 
-(defn integrate-lazy [func x h lazy-sums]
+(declare lazy-sums)
+(defn integrate-lazy [func x h]
   (let [k (Math/round (/ x h))
         ;lazy-sums (lazy-list-of-integral-sums func h)
         ]  
@@ -41,11 +42,13 @@
     ))
 
 (defn integration-operator
+  ([func step lazy-sums] )
   ([func step] (fn [x]
-                 (integrate-lazy func x step (lazy-list-of-integral-sums func step))))
+                 (integrate-lazy func x step)))
   ([func] (integration-operator func fixed_h)))
 
 (defn calc-integral-graphic-lazy [func integration-step graphic-step end-x]
+  (def lazy-sums (lazy-list-of-integral-sums func integration-step))
   (map (integration-operator func integration-step) (range 0 (+ end-x graphic-step) graphic-step))
 
   )
