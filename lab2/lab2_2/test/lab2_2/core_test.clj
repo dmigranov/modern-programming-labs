@@ -2,6 +2,9 @@
   (:require [clojure.test :refer :all]
             [lab2-2.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
+
+(defn exp-integral-expected [x] (dec (exp x)))
+
+(deftest integration-operator-test-exp
+  (testing "exponent integration"
     (is (= 0 1))))
