@@ -7,11 +7,9 @@
 (defn cos [x] (Math/cos x))
 
 
-;площадь куска под функцией от a до b
 (defn trapezoid-rule [f a b]
   ;(println (str "Calculating integral from "  a " to " b "..."))
   (* (- b a) (/ (+ (f a) (f b)) 2.)))
-
 
 
 (defn lazy-list-of-integral-sums [func h]
@@ -20,7 +18,6 @@
   )
 
 (defn integrate-lazy [func x h]
-
 
 
     )
