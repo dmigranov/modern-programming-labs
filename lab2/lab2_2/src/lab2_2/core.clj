@@ -2,6 +2,11 @@
   (:gen-class))
 
 
+(defn exp [x] (Math/pow Math/E x))
+(defn sin [x] (Math/sin x))
+(defn cos [x] (Math/cos x))
+
+
 ;площадь куска под функцией от a до b
 (defn trapezoid-rule [f a b]
   ;(println (str "Calculating integral from "  a " to " b "..."))
@@ -10,7 +15,8 @@
 
 
 (defn lazy-list-of-integral-sums [func h]
-   (iterate (fn [pair] (+ (second pair) (trapezoid-rule func (first pair) (+ (first pair) h)))) [0 0.])
+  ;можно хранить пары не с n, а сразу nh?
+   (iterate (fn [pair] [(inc (first pair)) (+ (second pair) (trapezoid-rule func (* (first pair) h) (* (inc (first pair)) h)))]) [0 0.])
   )
 
 (defn integrate-lazy [func x h]
