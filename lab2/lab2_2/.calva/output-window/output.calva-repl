@@ -15,15 +15,38 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - File URLs in stacktrace frames are peekable and clickable.
 clj::lab2-2.core=> 
-; Syntax error compiling at (src/lab2_2/core.clj:47:34).
+((integration-operator exp 0.1 (lazy-list-of-integral-sums exp 0.1)) 1)
+lazy-list-of-integral-sums called
+1.7197134913893142
+clj::lab2-2.core=> 
+(map (integration-operator exp 0.1 (lazy-list-of-integral-sums exp 0.1)) (range 0 1 0.1))
+lazy-list-of-integral-sums called
+(0.0 0.10525854590378239 0.22158722971557326 0.350150308002382 0.49223448326324565 0.6492617816803156 0.8228037852348474 1.0145973606278966 1.2265620424260437 1.4608192444085146 1.7197134913893142)
+clj::lab2-2.core=> 
+(map (fn [x] (integrate-lazy func x step (lazy-list-of-integral-sums func step))) (range 0 1 0.1))
+; Syntax error compiling at (.calva/output-window/output.calva-repl:26:14).
+; Unable to resolve symbol: integrate-lazy in this context
+clj::lab2-2.core=> 
+(integrate-lazy)
+; Execution error (ArityException) at lab2-2.core/eval1992 (form-init15319315400474014129.clj:30).
+; Wrong number of args (0) passed to: lab2-2.core/integrate-lazy
+clj::lab2-2.core=> 
+(map (fn [x] (integrate-lazy func x step (lazy-list-of-integral-sums func step))) (range 0 1 0.1))
+; Syntax error compiling at (.calva/output-window/output.calva-repl:34:14).
 ; Unable to resolve symbol: func in this context
 clj::lab2-2.core=> 
-; Syntax error compiling at (src/lab2_2/core.clj:48:16).
-; Unable to resolve symbol: func in this context
-clj::lab2-2.core=> 
-; Syntax error compiling at (src/lab2_2/core.clj:48:16).
-; Unable to resolve symbol: func in this context
-clj::lab2-2.core=> 
-#'lab2-2.core/integration-operator
+(map (fn [x] (integrate-lazy exp x 0.1 (lazy-list-of-integral-sums exp 0.1))) (range 0 1 0.1))
+lazy-list-of-integral-sums called
+lazy-list-of-integral-sums called
+lazy-list-of-integral-sums called
+lazy-list-of-integral-sums called
+lazy-list-of-integral-sums called
+lazy-list-of-integral-sums called
+lazy-list-of-integral-sums called
+lazy-list-of-integral-sums called
+lazy-list-of-integral-sums called
+lazy-list-of-integral-sums called
+lazy-list-of-integral-sums called
+(0.0 0.10525854590378239 0.22158722971557326 0.350150308002382 0.49223448326324565 0.6492617816803156 0.8228037852348474 1.0145973606278966 1.2265620424260437 1.4608192444085146 1.7197134913893142)
 clj::lab2-2.core=> 
 ; nREPL Connection was closed

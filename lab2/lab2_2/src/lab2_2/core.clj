@@ -40,12 +40,18 @@
 ; два варианта
 ; 1-ый (плохой, тк считает повторно):
 ; lazy-list-of-integral-sums вызывается много раз
+; для каждого вызова возвращенной ФУНКЦИИ fn (lazy-list-of-integral-sums func step) вызывается ЗАНОВО (так она определена!)
+; то есть при применении к каждому элементу в map!
 (defn integration-operator-slow
   ([func step] (fn [x] (integrate-lazy func x step (lazy-list-of-integral-sums func step))))
   ([func] (integration-operator-slow func fixed_h)))
 
 ; 2-ый - повторного пересчитывания нет, все считается оптимально:
 ; (lazy-list-of-integral-sums func step) вызывается единожды для всех вызовов
+; почему так будет тут: при вызове варианта с двумя аргументами 
+; сначала вычислятся func, step и (lazy-list-of-integral-sums func step)
+; затем к ним применится integration-operator
+; возвращающая функцию, зависящую от уже вычисленной lazy-sums = (lazy-list-of-integral-sums func step)
 (defn integration-operator
   ([func step lazy-sums] (fn [x] (integrate-lazy func x step lazy-sums)))
   ([func step] (integration-operator func step (lazy-list-of-integral-sums func step)))
@@ -91,8 +97,9 @@
     (doall (calc-integral-graphic-no-opti cos integration-step graphic-step 0.2))
     (doall (calc-integral-graphic-lazy cos integration-step graphic-step 0.2))
 
-    (println "LAZY SEQ AND ITERATE:")
-    (time (doall (calc-integral-graphic-lazy cos integration-step graphic-step border)))
-
     (println "NO LAZY:")
-    (time (doall (calc-integral-graphic-no-opti cos integration-step graphic-step border)))))
+    (time (doall (calc-integral-graphic-no-opti cos integration-step graphic-step border)))
+    (println "LAZY SEQ - ITERATE:")
+    (time (doall (calc-integral-graphic-lazy cos integration-step graphic-step border)))))
+
+
