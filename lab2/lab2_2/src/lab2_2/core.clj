@@ -32,14 +32,11 @@
 
 (defn integrate-lazy [func x h]
   (let [k (Math/round (/ x h))
-        lazy-sums (lazy-list-of-integral-sums func h)]
-    
+        lazy-sums (lazy-list-of-integral-sums func h)]  
     (if (close x (* k h) (* h h-eps))
       (nth lazy-sums k) ;then - просто тупо берем из списка
-      () ;else - берем из списка и добавляем кусок)
+      (let [l (Math/floor (/ x h))] (+ (nth lazy-sums l) (trapezoid-rule func (* l h) x))) 
       )
-    
-    
     ))
 
 (defn integration-operator
