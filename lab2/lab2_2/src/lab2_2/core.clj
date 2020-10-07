@@ -44,6 +44,31 @@
                  (integrate-lazy func x step)))
   ([func] (integration-operator func fixed_h)))
 
+(defn calc-integral-graphic-lazy [func integration-step graphic-step end-x]
+  (map (integration-operator func integration-step) (range 0 (+ end-x graphic-step) graphic-step)))
+
+
+
+(defn calculate-integral-sum-no-opti [func k h]
+  (if (> k 0)
+    (+ (trapezoid-rule func (* (dec k) h) (* k h)) (calculate-integral-sum-no-opti func (dec k) h))
+    0))
+
+(defn integrate-no-opti [func x h]
+  (let [k (Math/round (/ x h))]
+    (if (close x (* k h) (* h h-eps))
+      (calculate-integral-sum-no-opti func k h)
+      (let [l (Math/floor (/ x h))]
+        (+ (calculate-integral-sum-no-opti func l h) (trapezoid-rule func (* l h) x))))))
+
+(defn integration-operator-no-opti
+  ([func step] (fn [x]
+                 (integrate-no-opti func x step)))
+  ([func] (integration-operator-no-opti func fixed_h)))
+
+(defn calc-integral-graphic-no-opti [func integration-step graphic-step end-x]
+  (map (integration-operator-no-opti func integration-step) (range 0 (+ end-x graphic-step) graphic-step)))
+
 
 (defn -main
   [& args]
