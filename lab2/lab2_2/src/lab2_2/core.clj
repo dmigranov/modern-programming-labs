@@ -45,7 +45,9 @@
   ([func] (integration-operator func fixed_h)))
 
 (defn calc-integral-graphic-lazy [func integration-step graphic-step end-x]
-  (map (integration-operator func integration-step) (range 0 (+ end-x graphic-step) graphic-step)))
+  (map (integration-operator func integration-step) (range 0 (+ end-x graphic-step) graphic-step))
+
+  )
 
 
 
@@ -70,6 +72,17 @@
   (map (integration-operator-no-opti func integration-step) (range 0 (+ end-x graphic-step) graphic-step)))
 
 
-(defn -main
-  [& args]
-  (println "Hello, World!"))
+(defn -main [& args]
+  (println "Time testing:")
+  (let [graphic-step 0.1
+        integration-step 0.1
+        border 1000]
+    (println (str "Graphic of cos from 0 to " border " with step " graphic-step "; integration step " integration-step))
+    (doall (calc-integral-graphic-no-opti cos integration-step graphic-step 0.2))
+    (doall (calc-integral-graphic-lazy cos integration-step graphic-step 0.2))
+
+    (println "LAZY SEQ AND ITERATE:")
+    (time (doall (calc-integral-graphic-lazy cos integration-step graphic-step border)))
+
+    (println "NO LAZY:")
+    (time (doall (calc-integral-graphic-no-opti cos integration-step graphic-step border)))))
