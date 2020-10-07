@@ -25,34 +25,38 @@
    ;(iterate (fn [pair] [(inc (first pair)) (+ (second pair) (trapezoid-rule func (* (first pair) h) (* (inc (first pair)) h)))]) [0 0.]) ;[nh, ...]
    (iterate (fn [pair] (let [new-x (+ (first pair) h)]
                          [new-x
-                          (+ (second pair) (trapezoid-rule func (first pair) new-x))])) 
+                          (+ (second pair) (trapezoid-rule func (first pair) new-x))]))
             [0., 0.])
-   (map second))
-  )
+   (map second)))
 
-(declare lazy-sums)
-(defn integrate-lazy [func x h]
-  (let [k (Math/round (/ x h))
-        ;lazy-sums (lazy-list-of-integral-sums func h)
-        ]  
+;(declare lazy-sums)
+(defn integrate-lazy [func x h lazy-sums]
+  (let [k (Math/round (/ x h))]
     (if (close x (* k h) (* h h-eps))
       (nth lazy-sums k) ;then - просто тупо берем из списка
-      (let [l (Math/floor (/ x h))] (+ (nth lazy-sums l) (trapezoid-rule func (* l h) x))) 
-      )
-    ))
+      (let [l (Math/floor (/ x h))] (+ (nth lazy-sums l) (trapezoid-rule func (* l h) x))))))
 
-(defn integration-operator
-  ([func step lazy-sums] )
+; два варианта
+; 1-ый (плохой, тк считает повторно):
+(defn integration-operator-slow
   ([func step] (fn [x]
-                 (integrate-lazy func x step)))
+                 (integrate-lazy func x step (lazy-list-of-integral-sums func step))))
+  ([func] (integration-operator-slow func fixed_h)))
+
+; 2-ый - повторного пересчитывания нет, все считается оптимально:
+(defn integration-operator
+  ([func step lazy-sums] (fn [x]
+                           (integrate-lazy func x step lazy-sums)))
+  ([func step] (integration-operator func step (lazy-list-of-integral-sums func step)))
   ([func] (integration-operator func fixed_h)))
 
 (defn calc-integral-graphic-lazy [func integration-step graphic-step end-x]
-  (def lazy-sums (lazy-list-of-integral-sums func integration-step))
-  (map (integration-operator func integration-step) (range 0 (+ end-x graphic-step) graphic-step))
 
-  )
+    (map (integration-operator func integration-step) (range 0 (+ end-x graphic-step) graphic-step)))
 
+(defn calc-integral-graphic-lazy-slow [func integration-step graphic-step end-x]
+
+    (map (integration-operator-slow func integration-step) (range 0 (+ end-x graphic-step) graphic-step)))
 
 
 (defn calculate-integral-sum-no-opti [func k h]
