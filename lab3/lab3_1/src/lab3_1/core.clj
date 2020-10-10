@@ -20,8 +20,12 @@
   (divide-collection n (list) coll))
 
 
+
 (defn my-filter-future [pred coll]
-  (my-partition (Math/ceil (/ (count coll) thread-count)) coll)
+  (->>
+   (my-partition (Math/ceil (/ (count coll) thread-count)) coll)
+   (map (fn [elem] (my-filter pred elem)))
+   (reduce concat))
   )
 
 
