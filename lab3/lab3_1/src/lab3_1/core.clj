@@ -1,8 +1,15 @@
 (ns lab3-1.core
   (:gen-class))
 
-(defn filter-future [pred coll]
-  
+(defn my-filter [pred coll]
+  (reduce
+   (fn [acc elem]
+     (if (pred elem)
+       (concat acc (list elem))
+       acc))
+   (list) coll))
+
+(defn my-filter-future [pred coll]
   )
 
 (defn divide-collection [n acc rest]
