@@ -20,11 +20,13 @@
   (divide-collection n (list) coll))
 
 
-
+;todo: сделать форму с числом тредов
 (defn my-filter-future [pred coll]
   (->>
    (my-partition (Math/ceil (/ (count coll) thread-count)) coll)
-   (map (fn [elem] (my-filter pred elem)))
+   (map (fn [elem] (future (my-filter pred elem))))
+   (doall)
+   (map deref)
    (reduce concat))
   )
 
@@ -32,6 +34,37 @@
 ;deref = @
 ;When applied to a future, will block if computation not complete. then return value
 
+
+
+;todo: затестить на восьми тредах
 (defn -main
   [& args]
-  (println "Hello, World!"))
+  (println "TIME TEST")
+  (my-filter even? (range 0 10))
+  (my-filter-future even? (range 0 10))
+  (let [n 500]
+    (println "NO FUTURE," n "elems:")
+    (time (doall (my-filter even? (range 0 n))))
+
+    (println "WITH FUTURE," n "elems," thread-count "threads")
+    (time (doall (my-filter-future even? (range 0 n)))))
+
+  (println)
+
+  (let [n 1000]
+    (println "NO FUTURE," n "elems:")
+    (time (doall (my-filter even? (range 0 n))))
+
+    (println "WITH FUTURE," n "elems," thread-count "threads")
+    (time (doall (my-filter-future even? (range 0 n)))))
+
+  (println)
+
+  (let [n 2000]
+    (println "NO FUTURE," n "elems:")
+    (time (doall (my-filter even? (range 0 n))))
+
+    (println "WITH FUTURE," n "elems," thread-count "threads")
+    (time (doall (my-filter-future even? (range 0 n)))))
+
+  (shutdown-agents))
