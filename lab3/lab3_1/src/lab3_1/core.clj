@@ -29,8 +29,6 @@
                               (reduce concat)))
   ([pred coll] (my-filter-future pred coll base-thread-number))
   )
-
-
 ;deref = @
 ;When applied to a future, will block if computation not complete. then return value
 
@@ -40,31 +38,35 @@
 (defn -main
   [& args]
   (println "TIME TEST")
-  (my-filter even? (range 0 10))
-  (my-filter-future even? (range 0 10))
-  (let [n 500]
+  (doall (my-filter even? (range 0 2000)))
+  (doall (my-filter-future even? (range 0 2000) 4))
+  (doall (my-filter-future even? (range 0 2000) 8))
+  
+  (let [n 500, thread-number 4, thread-number-double (* 2 thread-number)]
     (println "NO FUTURE," n "elems:")
     (time (doall (my-filter even? (range 0 n))))
+    (println "WITH FUTURE," n "elems," thread-number "threads")
+    (time (doall (my-filter-future even? (range 0 n) thread-number)))
+    (println "WITH FUTURE," n "elems," thread-number-double "threads")
+    (time (doall (my-filter-future even? (range 0 n) thread-number-double)))
+    (println))
 
-    (println "WITH FUTURE," n "elems," thread-count "threads")
-    (time (doall (my-filter-future even? (range 0 n)))))
-
-  (println)
-
-  (let [n 1000]
+  (let [n 2000, thread-number 4, thread-number-double (* 2 thread-number)]
     (println "NO FUTURE," n "elems:")
     (time (doall (my-filter even? (range 0 n))))
-
-    (println "WITH FUTURE," n "elems," thread-count "threads")
-    (time (doall (my-filter-future even? (range 0 n)))))
-
-  (println)
-
-  (let [n 2000]
+    (println "WITH FUTURE," n "elems," thread-number "threads")
+    (time (doall (my-filter-future even? (range 0 n) thread-number)))
+    (println "WITH FUTURE," n "elems," thread-number-double "threads")
+    (time (doall (my-filter-future even? (range 0 n) thread-number-double)))
+    (println))
+  
+  (let [n 4000, thread-number 4, thread-number-double (* 2 thread-number)]
     (println "NO FUTURE," n "elems:")
     (time (doall (my-filter even? (range 0 n))))
-
-    (println "WITH FUTURE," n "elems," thread-count "threads")
-    (time (doall (my-filter-future even? (range 0 n)))))
+    (println "WITH FUTURE," n "elems," thread-number "threads")
+    (time (doall (my-filter-future even? (range 0 n) thread-number)))
+    (println "WITH FUTURE," n "elems," thread-number-double "threads")
+    (time (doall (my-filter-future even? (range 0 n) thread-number-double)))
+    (println))
 
   (shutdown-agents))
