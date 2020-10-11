@@ -19,7 +19,6 @@
 (defn my-partition [n coll] ;каждый кусок из n элементов NOT LAZY
   (divide-collection n (list) coll))
 
-
 (defn my-filter-future
   ([pred coll thread-number] (->>
                               (my-partition (Math/ceil (/ (count coll) thread-number)) coll)
@@ -27,11 +26,7 @@
                               (doall)
                               (map deref)
                               (reduce concat)))
-  ([pred coll] (my-filter-future pred coll base-thread-number))
-  )
-;deref = @
-;When applied to a future, will block if computation not complete. then return value
-
+  ([pred coll] (my-filter-future pred coll base-thread-number)))
 
 (defn -main
   [& args]
