@@ -33,8 +33,6 @@
 ;When applied to a future, will block if computation not complete. then return value
 
 
-
-;todo: затестить на восьми тредах
 (defn -main
   [& args]
   (println "TIME TEST")

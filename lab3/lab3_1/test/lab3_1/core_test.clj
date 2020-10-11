@@ -10,6 +10,22 @@
       (is (= (my-partition 3 list-a) '((1 2 3) (4 5 6) (7 8 9))))
       (is (= (my-partition 4 list-b) '((1 2 3 4) (5 6 7 8) (9 10))))
       (is (= (my-partition 4 (list)) '()))
-      (is (= (my-partition 4 (list 1)) '((1))))
-      )
-    ))
+      (is (= (my-partition 4 (list 1)) '((1)))))))
+
+(deftest my-filter-test
+  (testing "Filtering using my-filter"
+    (let [list-a (range 1 10)
+          list-b (range 1 11)]
+      (is (= (my-filter even? list-a) '(2 4 6 8)))
+      (is (= (my-filter even? list-b) '(2 4 6 8 10)))
+      (is (= (my-filter odd? list-a) '(1 3 5 7 9)))
+      (is (= (my-filter odd? list-b) '(1 3 5 7 9))))))
+
+(deftest my-filter-future-test
+  (testing "Filtering using my-filter-future"
+    (let [list-a (range 1 10)
+          list-b (range 1 11)]
+      (is (= (my-filter-future even? list-a) '(2 4 6 8)))
+      (is (= (my-filter-future even? list-b) '(2 4 6 8 10)))
+      (is (= (my-filter-future odd? list-a) '(1 3 5 7 9)))
+      (is (= (my-filter-future odd? list-b) '(1 3 5 7 9))))))
