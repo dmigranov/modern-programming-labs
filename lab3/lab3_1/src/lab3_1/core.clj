@@ -16,7 +16,7 @@
     (recur n (concat acc (list (take n rest))) (drop n rest))
     acc))
 
-(defn my-partition [n coll] ;каждый кусок из n элементов NOT LAZY
+(defn my-partition [n coll]
   (divide-collection n (list) coll))
 
 (defn my-filter-future
