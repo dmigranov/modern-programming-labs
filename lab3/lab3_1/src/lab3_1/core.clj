@@ -1,7 +1,7 @@
 (ns lab3-1.core
   (:gen-class))
 
-(def thread-count 4)
+(def base-thread-number 4)
 
 (defn my-filter [pred coll]
   (reduce
@@ -20,14 +20,14 @@
   (divide-collection n (list) coll))
 
 
-;todo: сделать форму с числом тредов
-(defn my-filter-future [pred coll]
-  (->>
-   (my-partition (Math/ceil (/ (count coll) thread-count)) coll)
-   (map (fn [elem] (future (my-filter pred elem))))
-   (doall)
-   (map deref)
-   (reduce concat))
+(defn my-filter-future
+  ([pred coll thread-number] (->>
+                              (my-partition (Math/ceil (/ (count coll) thread-number)) coll)
+                              (map (fn [elem] (future (my-filter pred elem))))
+                              (doall)
+                              (map deref)
+                              (reduce concat)))
+  ([pred coll] (my-filter-future pred coll base-thread-number))
   )
 
 
