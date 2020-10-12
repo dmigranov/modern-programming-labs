@@ -53,16 +53,30 @@
 (defn log-false? [expr]
   (= ::false (first expr)))
 
+;избавление ото всех нестандартных операций типа импликации
+;в виде списка чтобы можно было добавлять новые
+(declare to-dnf-tier-1)
+(def tier-1-rules (list
+                   [(fn [expr] (implication? expr)), 
+                    (fn [expr]
+                      (let [vars (rest expr), x (first vars), y (second vars)] (disjunction (negation (to-dnf-tier-1 x)) (to-dnf-tier-1 y))))]
+                   )) 
 
-(def to-dnf-rules (list
-                   []
-                   []))
+
+(defn to-dnf-tier-1 [expr]
+  ((some (fn [rule]
+           (if ((first rule) expr)
+             (second rule) ; это функция
+             false)) tier-1-rules) expr))
+
 
 (defn to-dnf [expr]
-  ;kill implication
-  )
+  (->> expr
+       to-dnf-tier-1))
 
 (defn args [expr] (rest expr))
+
+;todo signify expr var val
 
 (defn -main
   [& args]
