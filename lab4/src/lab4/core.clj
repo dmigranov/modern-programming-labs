@@ -11,7 +11,7 @@
   (= (first expr) ::var))
 
 (defn variable-name [var]
-  (second name))
+  (second var))
 
 (defn same-variables? [v1 v2]
   (and 

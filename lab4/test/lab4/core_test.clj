@@ -2,6 +2,13 @@
   (:require [clojure.test :refer :all]
             [lab4.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(deftest variable-test
+  (testing "Variables"
+    (is (variable? (variable ::x)))
+    (is (= ::x (variable-name (variable ::x))))
+    (is (same-variables?
+         (variable :x)
+         (variable :x)))
+    (is (not (same-variables?
+                   (variable :x)
+                   (variable :y))))))
