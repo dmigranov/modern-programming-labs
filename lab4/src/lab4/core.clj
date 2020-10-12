@@ -85,7 +85,11 @@
                    [(fn [expr] (and (negation? expr) (disjunction (second expr))))
                     (fn [expr])]
                    ))
-
+(defn to-dnf-tier-2 [expr]
+  ((some (fn [[rule-cond rule-transform]]
+           (if (rule-cond expr)
+             rule-transform ; это функция
+             false)) tier-2-rules) expr))
 
 (defn to-dnf [expr]
   (->> expr
