@@ -78,15 +78,14 @@
 (def tier-2-rules (list
                    [(fn [expr] (and (negation? expr) (conjunction? (second expr))))
                     (fn [expr] (let [neg-arg (second expr)] (apply disjunction (->> (args neg-arg)
-                                                                                  (map to-dnf-tier-2)
-                                                                                  (map (fn [elem] (negation elem)))))))]
+                                                                                    (map to-dnf-tier-2)
+                                                                                    (map (fn [elem] (negation elem)))))))]
                    [(fn [expr] (and (negation? expr) (disjunction? (second expr))))
                     (fn [expr] (let [neg-arg (second expr)] (apply conjunction (->> (args neg-arg)
                                                                                     (map to-dnf-tier-2)
                                                                                     (map (fn [elem] (negation elem)))))))]  ; TODO
-
-
-
+                   [(fn [expr] (and (negation? expr) (negation? (second expr))))
+                    (fn [expr] (let [arg (args (second expr))] (map to-dnf-tier-2 arg)))]
                    [(fn [expr] (conjunction? expr))
                     (fn [expr] (let [e-args (args expr)] (apply conjunction (map to-dnf-tier-2 e-args))))]
                    [(fn [expr] (disjunction? expr))
