@@ -19,8 +19,6 @@
    (variable? v2)
    (= (variable-name v1) (variable-name v2))))
 
-;constant logical values (false and true) as operators of arity zero...
-
 (defn disjunction [expr rest]
   (cons ::disj (cons expr rest)))
 
@@ -44,6 +42,16 @@
 
 (defn negation? [expr]
   (= ::neg (first expr)))
+
+(def log-true (list ::true))
+
+(defn log-true? [expr] 
+  (= ::true (first expr)))
+
+(def log-false (list ::false))
+
+(defn log-false? [expr]
+  (= ::false (first expr)))
 
 (defn args [expr] (rest expr))
 
