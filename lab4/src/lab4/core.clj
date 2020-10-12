@@ -84,6 +84,16 @@
                     (fn [expr] (let [neg-arg (second expr)] (apply conjunction (->> (args neg-arg)
                                                                                     (map to-dnf-tier-2)
                                                                                     (map (fn [elem] (negation elem)))))))]  ; TODO
+                   ;todo: дистрибутивность
+                   [(fn [expr] (and (conjunction? expr) (disjunction? (second expr))))
+                    (fn [expr] expr)] ;todo
+                   
+                   ;todo: добавить второй закон дистрибутивности, где дизъюнкция не первым аргументом
+                   ;может, вернуться к случаю с двумя аргументами?
+                   ;тогда для внешнего пользования вариант с n аргументами можно оставить
+                   ;но внутри это будет (or a (or b (or c d)))
+                   ;а в конце можно раскрыть скобки для красивого вывода
+                   
                    [(fn [expr] (and (negation? expr) (negation? (second expr))))
                     (fn [expr] (let [arg (args (second expr))] (map to-dnf-tier-2 arg)))]
                    [(fn [expr] (conjunction? expr))
