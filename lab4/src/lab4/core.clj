@@ -59,13 +59,16 @@
 ;надо все правила проработать
 (declare to-dnf-tier-1)
 (def tier-1-rules (list
-                   [(fn [expr] (implication? expr)), 
+                   [(fn [expr] (implication? expr))
                     (fn [expr] (let [vars (rest expr), x (first vars), y (second vars)] (disjunction (negation (to-dnf-tier-1 x)) (to-dnf-tier-1 y))))]
-                   
-                   
+                   [(fn [expr] (conjunction? expr))
+                    (fn [expr] (let [vars (rest expr), x (first vars), y (second vars)] (conjunction (to-dnf-tier-1 x) (to-dnf-tier-1 y))))]
+                   [(fn [expr] (disjunction? expr))
+                    (fn [expr] (let [vars (rest expr), x (first vars), y (second vars)] (disjunction (to-dnf-tier-1 x) (to-dnf-tier-1 y))))]
+                   [(fn [expr] (negation? expr))
+                    (fn [expr] (let [x (second expr)] (negation (to-dnf-tier-1 x))))]
                    [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
-                    (fn [expr] expr)]
-                   )) 
+                    (fn [expr] expr)])) 
 
 
 (defn to-dnf-tier-1 [expr]
