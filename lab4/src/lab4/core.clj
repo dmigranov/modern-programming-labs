@@ -19,7 +19,7 @@
    (variable? v2)
    (= (variable-name v1) (variable-name v2))))
 
-(defn disjunction [expr rest]
+(defn disjunction [expr & rest]
   (cons ::disj (cons expr rest)))
 
 (defn disjunction? [expr] 

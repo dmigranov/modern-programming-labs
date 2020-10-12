@@ -25,3 +25,6 @@ clj::lab4.core=>
 (to-dnf (implication (implication (variable ::x) (variable ::y)) (variable ::z)))
 (:lab4.core/disj (:lab4.core/neg (:lab4.core/disj (:lab4.core/neg (:lab4.core/var :lab4.core/x)) :lab4.core/var :lab4.core/y)) :lab4.core/var :lab4.core/z)
 clj::lab4.core=> 
+(to-dnf (disjunction (variable ::x) (variable ::y)))
+(:lab4.core/disj (:lab4.core/var :lab4.core/x) :lab4.core/var :lab4.core/y)
+clj::lab4.core=> 
