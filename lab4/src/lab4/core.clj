@@ -21,12 +21,17 @@
 
 ;constant logical values (false and true) as operators of arity zero...
 
-(defn log-or [expr1 expr2]
-  (list ::or expr1 expr2)
-  )
+(defn log-or [expr1 expr2 & rest]
+  (concat (list ::or expr1 expr2) rest))
 
 (defn log-or? [expr] 
-  (= ::sum (first expr)))
+  (= ::or (first expr)))
+
+(defn log-and [expr1 expr2 & rest]
+  (concat (list ::and expr1 expr2) rest))
+
+(defn log-and? [expr]
+  (= ::and (first expr)))
 
 (defn args [expr] (rest expr))
 
