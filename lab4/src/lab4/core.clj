@@ -53,6 +53,15 @@
 (defn log-false? [expr]
   (= ::false (first expr)))
 
+
+(def to-dnf-rules (list
+                   []
+                   []))
+
+(defn to-dnf [expr]
+  ;kill implication
+  )
+
 (defn args [expr] (rest expr))
 
 (defn -main
