@@ -80,7 +80,7 @@
                     (fn [expr] (let [neg-arg (second expr)] (apply disjunction (->> (args neg-arg)
                                                                                   (map to-dnf-tier-2)
                                                                                   (map (fn [elem] (negation elem)))))))]
-                   [(fn [expr] (and (negation? expr) (disjunction (second expr))))
+                   [(fn [expr] (and (negation? expr) (disjunction? (second expr))))
                     (fn [expr] (let [neg-arg (second expr)] (apply conjunction (->> (args neg-arg)
                                                                                     (map to-dnf-tier-2)
                                                                                     (map (fn [elem] (negation elem)))))))]  ; TODO
