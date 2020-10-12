@@ -21,23 +21,29 @@
 
 ;constant logical values (false and true) as operators of arity zero...
 
-(defn log-or [expr rest]
-  (cons ::or (cons expr rest)))
+(defn disjunction [expr rest]
+  (cons ::disj (cons expr rest)))
 
-(defn log-or? [expr] 
-  (= ::or (first expr)))
+(defn disjunction? [expr] 
+  (= ::disj (first expr)))
 
-(defn log-and [expr & rest]
-  (cons ::and (cons expr rest)))
+(defn conjunction [expr & rest]
+  (cons ::conj (cons expr rest)))
 
-(defn log-and? [expr]
-  (= ::and (first expr)))
+(defn conjunction? [expr]
+  (= ::conj (first expr)))
 
-(defn log-impl [expr1 expr2]
+(defn implication [expr1 expr2]
   (list ::impl expr1 expr2))
 
-(defn log-impl? [expr]
+(defn implication? [expr]
   (= ::impl (first expr)))
+
+(defn negation [expr]
+  (list ::neg expr))
+
+(defn negation? [expr]
+  (= ::neg (first expr)))
 
 (defn args [expr] (rest expr))
 
