@@ -64,10 +64,15 @@
 
 
 (defn to-dnf-tier-1 [expr]
-  ((some (fn [rule]
-           (if ((first rule) expr)
-             (second rule) ; это функция
-             false)) tier-1-rules) expr))
+  (let [transform (some (fn [[rule-cond rule-transform]]
+                 (if (rule-cond expr)
+                   rule-transform ; это функция
+                   false)) tier-1-rules)]
+    (if (= transform nil)
+      expr
+      (transform expr))
+    )
+  )
 
 
 (defn to-dnf [expr]

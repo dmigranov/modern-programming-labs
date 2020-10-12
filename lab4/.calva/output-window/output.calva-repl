@@ -15,26 +15,13 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - File URLs in stacktrace frames are peekable and clickable.
 clj::lab4.core=> 
-(to-dnf-tier-1 (implication (implication (variable ::x) (variable ::y)) (variable ::z)))
-; Execution error (NullPointerException) at lab4.core/to-dnf-tier-1 (core.clj:67).
-; null
-clj::lab4.core=> 
-(to-dnf-tier-1 (implication (implication (variable ::x) (variable ::y)) (variable ::z)))
-; Execution error (NullPointerException) at lab4.core/to-dnf-tier-1 (core.clj:67).
-clj::lab4.core=> 
-(to-dnf (implication (implication (variable ::x) (variable ::y)) (variable ::z)))
-; Execution error (NullPointerException) at lab4.core/to-dnf-tier-1 (core.clj:67).
-; null
-clj::lab4.core=> 
-(to-dnf (implication (implication (variable ::x) (variable ::y)) (variable ::z)))
-; Execution error (NullPointerException) at lab4.core/to-dnf-tier-1 (core.clj:67).
-; null
-clj::lab4.core=> 
-(to-dnf (implication (implication (variable ::x) (variable ::y)) (variable ::z)))
-; Execution error (NullPointerException) at lab4.core/to-dnf-tier-1 (core.clj:67).
-; null
+(nil (variable ::x))
+; Syntax error (IllegalArgumentException) compiling at (.calva/output-window/output.calva-repl:18:1).
+; Can't call nil, form: (nil (variable :lab4.core/x))
 clj::lab4.core=> 
 (to-dnf (variable ::x))
-; Execution error (NullPointerException) at lab4.core/to-dnf-tier-1 (core.clj:67).
-; null
+(:lab4.core/var :lab4.core/x)
+clj::lab4.core=> 
+(to-dnf (implication (implication (variable ::x) (variable ::y)) (variable ::z)))
+(:lab4.core/disj (:lab4.core/neg (:lab4.core/disj (:lab4.core/neg (:lab4.core/var :lab4.core/x)) :lab4.core/var :lab4.core/y)) :lab4.core/var :lab4.core/z)
 clj::lab4.core=> 
