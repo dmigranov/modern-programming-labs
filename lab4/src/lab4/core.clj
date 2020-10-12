@@ -63,14 +63,13 @@
 (declare to-dnf-tier-1)
 (def tier-1-rules (list
                    [(fn [expr] (implication? expr))
-                    (fn [expr] (let [vars (rest expr), x (first vars), y (second vars)] (disjunction (negation (to-dnf-tier-1 x)) (to-dnf-tier-1 y))))]
-                   ;todo: неправильно, только для двух аргументов
+                    (fn [expr] (let [e-args (args expr), x (first e-args), y (second e-args)] (disjunction (negation (to-dnf-tier-1 x)) (to-dnf-tier-1 y))))]
                    [(fn [expr] (conjunction? expr))
-                    (fn [expr] (let [vars (rest expr)] (apply conjunction (map to-dnf-tier-1 vars))))]
+                    (fn [expr] (let [e-args (args expr)] (apply conjunction (map to-dnf-tier-1 e-args))))]
                    [(fn [expr] (disjunction? expr))
-                    (fn [expr] (let [vars (rest expr)] (apply disjunction (map to-dnf-tier-1 vars))))]
+                    (fn [expr] (let [e-args (args expr)] (apply disjunction (map to-dnf-tier-1 e-args))))]
                    [(fn [expr] (negation? expr))
-                    (fn [expr] (let [x (second expr)] (negation (to-dnf-tier-1 x))))]
+                    (fn [expr] (let [arg (second expr)] (negation (to-dnf-tier-1 arg))))]
                    [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
                     (fn [expr] expr)])) 
 
@@ -97,7 +96,7 @@
 (defn to-dnf [expr]
   (->> expr
        to-dnf-tier-1
-       to-dnf-tier-2))
+       ))
 
 
 
