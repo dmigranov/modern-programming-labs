@@ -55,24 +55,33 @@
 
 ;избавление ото всех нестандартных операций типа импликации
 ;в виде списка чтобы можно было добавлять новые
+;проблема: так не получится с импликацийй вложенной внутрь!
+;надо все правила проработать
 (declare to-dnf-tier-1)
 (def tier-1-rules (list
                    [(fn [expr] (implication? expr)), 
-                    (fn [expr]
-                      (let [vars (rest expr), x (first vars), y (second vars)] (disjunction (negation (to-dnf-tier-1 x)) (to-dnf-tier-1 y))))]
+                    (fn [expr] (let [vars (rest expr), x (first vars), y (second vars)] (disjunction (negation (to-dnf-tier-1 x)) (to-dnf-tier-1 y))))]
+                   
+                   
+                   [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
+                    (fn [expr] expr)]
                    )) 
 
 
 (defn to-dnf-tier-1 [expr]
-  (let [transform (some (fn [[rule-cond rule-transform]]
-                 (if (rule-cond expr)
-                   rule-transform ; это функция
-                   false)) tier-1-rules)]
-    (if (= transform nil)
-      expr
-      (transform expr))
-    )
-  )
+  ((some (fn [[rule-cond rule-transform]]
+           (if (rule-cond expr)
+             rule-transform ; это функция
+             false)) tier-1-rules) expr))
+    
+
+(declare to-dnf-tier-2)
+(def tier-2-rules (list
+                   [(fn [expr] (and (negation? expr) (conjunction? (second expr))))
+                    (fn [expr])]
+                   [(fn [expr] (and (negation? expr) (disjunction (second expr))))
+                    (fn [expr])]
+                   ))
 
 
 (defn to-dnf [expr]
