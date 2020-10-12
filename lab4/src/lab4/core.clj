@@ -70,30 +70,30 @@
                    [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
                     (fn [expr] expr)])) 
 
-
-(defn to-dnf-tier-1 [expr]
-  ((some (fn [[rule-cond rule-transform]]
-           (if (rule-cond expr)
-             rule-transform ; это функция
-             false)) tier-1-rules) expr))
-    
-
+;а тут может можно объединить законы де моргана и двойное отрицание?
 (declare to-dnf-tier-2)
 (def tier-2-rules (list
                    [(fn [expr] (and (negation? expr) (conjunction? (second expr))))
-                    (fn [expr])]
+                    (fn [expr] expr)]  ; TODO
                    [(fn [expr] (and (negation? expr) (disjunction (second expr))))
-                    (fn [expr])]
+                    (fn [expr] expr)]  ; TODO
                    ))
-(defn to-dnf-tier-2 [expr]
+
+
+
+(defn to-dnf-tier [expr rules]
   ((some (fn [[rule-cond rule-transform]]
            (if (rule-cond expr)
              rule-transform ; это функция
-             false)) tier-2-rules) expr))
+             false)) rules) expr))
+
+(defn to-dnf-tier-1 [expr] (to-dnf-tier expr tier-1-rules))
+(defn to-dnf-tier-2 [expr] (to-dnf-tier expr tier-2-rules))
 
 (defn to-dnf [expr]
   (->> expr
-       to-dnf-tier-1))
+       to-dnf-tier-1
+       to-dnf-tier-2))
 
 (defn args [expr] (rest expr))
 
