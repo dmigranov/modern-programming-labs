@@ -14,13 +14,9 @@
 
 ;todo: make lazy
 (defn my-filter-lazy [pred coll]
-  (lazy-seq ((fn filt [f-pred f-coll] 
-               (when-let [coll-seq (seq f-coll)]
-                 (if (pred (first coll-seq))
-                   ()
-                   ())
-                 )
-               ) pred coll))
+  (lazy-seq (when-let [s (seq coll)]
+              (if (pred (first s)))
+              )
   )
 
 ;lazy: iterate [текущая-часть, хвост]
