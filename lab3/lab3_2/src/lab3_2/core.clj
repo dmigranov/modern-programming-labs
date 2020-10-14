@@ -3,29 +3,23 @@
 
 (def base-thread-number 4)
 
-;for testing
+;бесконечная последовательность натуральных чисел
 (def naturals
   (lazy-seq
    (cons 1 (map inc naturals))))
 
-(defn my-filter [pred coll] 
-  (reduce
-   (fn [acc elem]
-     (if (pred elem)
-       (concat acc (list elem))
-       acc))
-   (list) coll))
-;(def filt-nat (my-filter even? naturals))
-;(take 10 filt-nat)
-;Error printing return value (StackOverflowError) (он пытается реализовать всю коллекцию в reduce)
-;todo: make lazy
 
+;из 3.1: не lazy, так как reduce и он будет пытаться всё размотать - StackOverflow
+(defn my-filter [pred coll] (reduce
+   (fn [acc elem] (if (pred elem) (concat acc (list elem)) acc))
+   (list) coll))
+
+;lazy
 (defn my-filter-lazy [pred coll]
   (lazy-seq (when-let [s (seq coll)]
               (if (pred (first s))
                 (cons (first s) (my-filter-lazy pred (rest s)))
                 (my-filter-lazy pred (rest s))))))
-;а тут все работает
 
 
 ;lazy: iterate [текущая-часть, хвост]
