@@ -11,10 +11,11 @@
 ;  )
 ;превращает конечную в бесконечную...
 
-(defn my-partition [n coll]
-(lazy-seq ))
-;todo
 
+(defn my-partition [n coll]
+  ;(seq x) is the recommended idiom for testing if a collection is not empty
+  (lazy-seq (when-let [s (seq coll)]
+              (cons (take n s) (my-partition n (drop n s))))))
 
 (defn -main
   [& args]
