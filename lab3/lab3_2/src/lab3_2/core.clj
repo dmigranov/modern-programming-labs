@@ -3,6 +3,26 @@
 
 (def base-thread-number 4)
 
+
+(defn my-filter [pred coll] 
+  (reduce
+   (fn [acc elem]
+     (if (pred elem)
+       (concat acc (list elem))
+       acc))
+   (list) coll))
+
+;todo: make lazy
+(defn my-filter-lazy [pred coll]
+  (lazy-seq ((fn filt [f-pred f-coll] 
+               (when-let [coll-seq (seq f-coll)]
+                 (if (pred (first coll-seq))
+                   ()
+                   ())
+                 )
+               ) pred coll))
+  )
+
 ;lazy: iterate [текущая-часть, хвост]
 ;(defn my-partition [n coll]
 ;  (->>
@@ -12,6 +32,7 @@
 ;   ) ;если конечная - то take k - количество списков
 ;  )
 ;превращает конечную в бесконечную...
+
 
 (defn my-partition [n coll]
   ;(seq x) is the recommended idiom for testing if a collection is not empty
