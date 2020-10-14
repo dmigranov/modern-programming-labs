@@ -14,7 +14,8 @@
    (fn [acc elem] (if (pred elem) (concat acc (list elem)) acc))
    (list) coll))
 
-;lazy
+;lazy; (seq x) is the recommended idiom for testing if a collection is not empty
+;if the test fails when-let return nil, and lazy-sequence is terminated
 (defn my-filter-lazy [pred coll]
   (lazy-seq (when-let [s (seq coll)]
               (if (pred (first s))
@@ -22,7 +23,7 @@
                 (my-filter-lazy pred (rest s))))))
 
 
-;lazy: iterate [текущая-часть, хвост]
+;плохо: превращает конечную в бесконечную
 ;(defn my-partition [n coll]
 ;  (->>
 ;   (iterate (fn [[current-part tail]] [(take n tail), (drop n tail)]) [(take n coll) (drop n coll)])
@@ -30,11 +31,9 @@
 ;   (map (fn [elem] (if (= elem (list)) nil elem)))
 ;   ) ;если конечная - то take k - количество списков
 ;  )
-;превращает конечную в бесконечную...
 
 
 (defn my-partition [n coll]
-  ;(seq x) is the recommended idiom for testing if a collection is not empty
   (lazy-seq (when-let [s (seq coll)]
               (cons (take n s) (my-partition n (drop n s))))))
 
