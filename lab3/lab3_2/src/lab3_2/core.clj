@@ -1,6 +1,8 @@
 (ns lab3-2.core
   (:gen-class))
 
+(def base-thread-number 4)
+
 ;lazy: iterate [текущая-часть, хвост]
 ;(defn my-partition [n coll]
 ;  (->>
@@ -11,11 +13,16 @@
 ;  )
 ;превращает конечную в бесконечную...
 
-
 (defn my-partition [n coll]
   ;(seq x) is the recommended idiom for testing if a collection is not empty
   (lazy-seq (when-let [s (seq coll)]
               (cons (take n s) (my-partition n (drop n s))))))
+
+(defn my-filter-future-lazy
+  ([pred coll thread-number] (->>
+                              ))
+  ([pred coll] (my-filter-future-lazy pred coll base-thread-number)))
+
 
 (defn -main
   [& args]
