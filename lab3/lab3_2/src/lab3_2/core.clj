@@ -1,7 +1,7 @@
 (ns lab3-2.core
   (:gen-class))
 
-(def base-thread-number 4)
+
 
 ;бесконечная последовательность натуральных чисел
 (def naturals
@@ -35,10 +35,16 @@
   (lazy-seq (when-let [s (seq coll)]
               (cons (take n s) (my-partition n (drop n s))))))
 
-;(defn my-filter-future-lazy
-;  ([pred coll thread-number] (->>
-;                              ))
-;  ([pred coll] (my-filter-future-lazy pred coll base-thread-number)))
+(def base-thread-number 4)
+(def base-batch-size 1000)
+(defn my-filter-future-lazy
+  ([pred coll thread-number] (->>
+                              (my-partition (if-let [test (nth coll base-batch-size nil)]
+                                              2 ;если существует элемент на позиции base-batch-size
+                                              3 ;если не существует элемент, то есть точно конечная
+                                              ) coll)
+                              ))
+  ([pred coll] (my-filter-future-lazy pred coll base-thread-number)))
 
 
 (defn -main
