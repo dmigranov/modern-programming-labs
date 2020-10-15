@@ -47,7 +47,7 @@
                               (map (fn [elem] (future (my-filter pred elem))))
                               (doall)
                               (map deref)
-                              (reduce concat)
+                              ;плохо, нельзя использовать reduce надо как-то рекурсивно делать
                               )
    
    
