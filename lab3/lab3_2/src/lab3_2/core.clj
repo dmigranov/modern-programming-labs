@@ -36,14 +36,22 @@
               (cons (take n s) (my-partition n (drop n s))))))
 
 (def base-thread-number 4)
+(def infinite-size 4000)
 (def base-batch-size 1000)
 (defn my-filter-future-lazy
   ([pred coll thread-number] (->>
-                              (my-partition (if-let [test (nth coll base-batch-size nil)]
-                                              2 ;если существует элемент на позиции base-batch-size
-                                              3 ;если не существует элемент, то есть точно конечная
-                                              ) coll)
-                              ))
+                              (my-partition (if-let [test (nth coll infinite-size nil)]
+                                              base-batch-size ;если существует элемент на позиции infinite-size, делим на куски по batch-size
+                                              (Math/ceil (/ (count coll) thread-number)) ;если не существует элемент, то есть точно конечная и можно поделить поровну
+                                              )coll)
+                              (map (fn [elem] (future (my-filter pred elem))))
+                              (doall)
+                              (map deref)
+                              (reduce concat)
+                              )
+   
+   
+   )
   ([pred coll] (my-filter-future-lazy pred coll base-thread-number)))
 
 
