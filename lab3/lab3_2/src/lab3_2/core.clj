@@ -21,38 +21,39 @@
                 (cons (first s) (my-filter-lazy pred (rest s)))
                 (my-filter-lazy pred (rest s))))))
 
-(comment ;плохо: превращает конечную в бесконечную
-(defn my-partition-old [n coll]
+(defn my-partition-old [n coll] ;плохо: превращает конечную в бесконечную
   (->>
    (iterate (fn [[current-part tail]] [(take n tail), (drop n tail)]) [(take n coll) (drop n coll)])
    (map first)
-   (map (fn [elem] (if (= elem (list)) nil elem)))
-   ) ;если конечная - то take k - количество списков
+   (map (fn [elem] (if (= elem (list)) nil elem)))) 
   )
- )
 
 (defn my-partition [n coll]
   (lazy-seq (when-let [s (seq coll)]
               (cons (take n s) (my-partition n (drop n s))))))
 
 (def base-thread-number 4)
-(def infinite-size 4000)
-(def base-batch-size 1000)
+(def base-batch-size 4000)
+
+;идея: взять take некий батч размером и отфильтроват ппраллельно его bass-thread-number тредами, потом так же следующий кусок)
+;todo: распареллилть батчи (брать count batch = (take base-batch-size s))
 (defn my-filter-future-lazy
-  ([pred coll thread-number] (->>
-                              (my-partition (if-let [test (nth coll infinite-size nil)]
-                                              base-batch-size ;если существует элемент на позиции infinite-size, делим на куски по batch-size
-                                              (Math/ceil (/ (count coll) thread-number)) ;если не существует элемент, то есть точно конечная и можно поделить поровну
-                                              )coll)
-                              (map (fn [elem] (future (my-filter pred elem))))
-                              (doall)
-                              (map deref)
-                              ;плохо, нельзя использовать reduce надо как-то рекурсивно делать
-                              )
-   
-   
-   )
+  ([pred coll thread-number]
+   (lazy-seq (when-let [s (seq coll)]
+               (concat (my-filter-lazy pred (take base-batch-size s)) (my-filter-future-lazy pred (drop base-batch-size s) thread-number)))))
   ([pred coll] (my-filter-future-lazy pred coll base-thread-number)))
+
+
+ (defn my-filter-future-lazy-bad
+   ([pred coll thread-number] (->>
+                               (my-partition (if-let [test (nth coll infinite-size nil)]
+                                               base-batch-size ;если существует элемент на позиции infinite-size, делим на куски по batch-size
+                                               (Math/ceil (/ (count coll) thread-number)) ;если не существует элемент, то есть точно конечная и можно поделить поровну
+                                               )coll)
+                               (map (fn [elem] (future (my-filter pred elem))))
+                               (map deref))))
+  ([pred coll] (my-filter-future-lazy pred coll base-thread-number)))
+
 
 
 (defn -main
