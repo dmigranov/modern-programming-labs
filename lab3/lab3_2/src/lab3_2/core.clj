@@ -48,7 +48,8 @@
 (defn my-filter-future-lazy
   ([pred coll thread-number]
    (lazy-seq (when-let [s (seq coll)]
-               (concat (my-filter-lazy pred (take base-batch-size s)) (my-filter-future-lazy pred (drop base-batch-size s) thread-number)))))
+               ;(concat (my-filter-lazy pred (take base-batch-size s)) (my-filter-future-lazy pred (drop base-batch-size s) thread-number)))))
+               (concat (my-filter-future-lazy-finite pred (take base-batch-size s)) (my-filter-future-lazy pred (drop base-batch-size s) thread-number)))))
   ([pred coll] (my-filter-future-lazy pred coll base-thread-number)))
 
 
