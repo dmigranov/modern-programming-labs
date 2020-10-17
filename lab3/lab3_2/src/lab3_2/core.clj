@@ -48,7 +48,7 @@
                 (my-filter-lazy pred (rest s))))))
 
 (defn my-partition-lazy [n coll]
-  ;todo: 0?
+  ;0?
   (lazy-seq (when-let [s (seq coll)]
               (cons (take n s) (my-partition-lazy n (drop n s))))))
 
