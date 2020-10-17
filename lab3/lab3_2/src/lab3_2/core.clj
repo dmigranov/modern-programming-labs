@@ -44,6 +44,13 @@
    (map deref)
    (apply concat)))
 
+(defn my-filter-lazy-no-parallel
+  ([pred coll thread-number]
+   (lazy-seq (when-let [s (seq coll)]
+               (concat (my-filter-lazy pred (take base-batch-size s)) (my-filter-lazy-no-parallel pred (drop base-batch-size s) thread-number)))))
+  ([pred coll] (my-filter-lazy-no-parallel pred coll base-thread-number)))
+
+
 ;идея: взять take некий батч размером и отфильтроват ппраллельно его bass-thread-number тредами, потом так же следующий кусок)
 ;todo: распареллилть батчи (брать count batch = (take base-batch-size s))
 (defn my-filter-future-lazy
