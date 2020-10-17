@@ -37,9 +37,6 @@
                               (reduce concat)))
   ([pred coll] (my-filter-parallel-no-lazy pred coll base-thread-number)))
 
-
-;lazy; (seq x) is the recommended idiom for testing if a collection is not empty
-;if the test fails when-let return nil, and lazy-sequence is terminated
 (defn my-filter-lazy [pred coll]
   ;(println "THREAD"  (. (Thread/currentThread) getName))
   (lazy-seq (when-let [s (seq coll)]
@@ -51,17 +48,6 @@
   (lazy-seq (when-let [s (seq coll)]
               (cons (take n s) (my-partition-lazy n (drop n s))))))
 
-
-
-
-(defn my-filter-lazy-no-parallel [pred coll ]
-  (when-let [s (seq coll)]
-    (lazy-cat (my-filter-lazy pred (take base-batch-size s)) (my-filter-lazy-no-parallel pred (drop base-batch-size s)))))
-   
-
-
-;идея: взять take некий батч размером и отфильтроват ппраллельно его bass-thread-number тредами, потом так же следующий кусок)
-;todo: распареллилть батчи (брать count batch = (take base-batch-size s))
 (defn my-filter-future-finite [pred coll thread-number]
   (->>
    coll
@@ -71,6 +57,7 @@
    (mapcat deref) ;(map deref) (apply concat)
    (doall)))    
 
+;идея: взять take некий батч размером и отфильтроват ппраллельно его bass-thread-number тредами, потом так же следующий кусок)
 (defn my-filter-lazy-parallel
   ([pred coll thread-number]
    (when-let [s (seq coll)]
@@ -89,7 +76,6 @@
 ;                              (map (fn [elem] (future (my-filter pred elem))))
 ;                              (map deref)))
 ;  ([pred coll] (my-filter-future-lazy-bad pred coll base-thread-number)))
-
 
 
 (defn -main
