@@ -40,14 +40,6 @@
 (def base-thread-number 4)
 (def base-batch-size 4000)
 
-(defn my-filter-future-lazy-finite [pred coll thread-number]
-  (->>
-   (my-partition (Math/ceil (/ (count coll) thread-number)) coll)
-   (map (fn [elem] (future (my-filter-lazy pred elem))))
-   (doall)
-   (map deref)
-   (apply concat)))
-
 (defn my-filter-lazy-no-parallel
   ([pred coll thread-number]
    (lazy-seq (when-let [s (seq coll)]
@@ -57,12 +49,21 @@
 
 ;идея: взять take некий батч размером и отфильтроват ппраллельно его bass-thread-number тредами, потом так же следующий кусок)
 ;todo: распареллилть батчи (брать count batch = (take base-batch-size s))
+
+(defn my-filter-future-no-lazy-finite [pred coll thread-number]
+  (->>
+   (my-partition (Math/ceil (/ (count coll) thread-number)) coll)
+   (map (fn [elem] (future (my-filter-lazy pred elem))))
+   (doall)
+   (map deref)
+   (apply concat)))
+
+
 (defn my-filter-lazy-parallel
   ([pred coll thread-number]
-   (lazy-seq (when-let [s (seq coll)]
-               ;(concat (my-filter-lazy pred (take base-batch-size s)) (my-filter-future-lazy pred (drop base-batch-size s) thread-number)))))
-               (concat (my-filter-future-lazy-finite pred (take base-batch-size s) thread-number) (my-filter-lazy-parallel pred (drop base-batch-size s) thread-number)))))
-  ([pred coll] (my-filter-lazy-parallel pred coll base-thread-number)))
+   (when-let [s (seq coll)]
+     (lazy-cat (my-filter-future-no-lazy-finite pred (take base-batch-size s) thread-number) (my-filter-lazy-parallel pred (drop base-batch-size s) thread-number))))
+   ([pred coll] (my-filter-lazy-parallel pred coll base-thread-number)))
 
 
 
@@ -87,7 +88,7 @@
   (doall (my-filter-lazy-parallel even? (range 0 8000) 4))
   (doall (my-filter-lazy-parallel even? (range 0 8000) 8))
   
-   (let [n 20000, thread-number 4, thread-number-double (* 2 thread-number)]
+   (let [n 10000, thread-number 4, thread-number-double (* 2 thread-number)]
 
      (println "LAZY, NO PARALLEL," n "elems," thread-number "threads")
      (time (doall (my-filter-lazy-no-parallel even? (range 0 n) thread-number)))
