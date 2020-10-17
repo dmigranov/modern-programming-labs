@@ -1,6 +1,13 @@
 (ns lab3-2.core
   (:gen-class))
 
+(defn my-partition-old [n coll] ;плохо: превращает конечную в бесконечную
+  (->>
+   (iterate (fn [[current-part tail]] [(take n tail), (drop n tail)]) [(take n coll) (drop n coll)])
+   (map first)
+   (map (fn [elem] (if (= elem (list)) nil elem)))))
+
+
 
 
 ;бесконечная последовательность натуральных чисел
@@ -20,12 +27,6 @@
               (if (pred (first s))
                 (cons (first s) (my-filter-lazy pred (rest s)))
                 (my-filter-lazy pred (rest s))))))
-
-(defn my-partition-old [n coll] ;плохо: превращает конечную в бесконечную
-  (->>
-   (iterate (fn [[current-part tail]] [(take n tail), (drop n tail)]) [(take n coll) (drop n coll)])
-   (map first)
-   (map (fn [elem] (if (= elem (list)) nil elem)))))
 
 (defn my-partition [n coll]
   (lazy-seq (when-let [s (seq coll)]
@@ -49,7 +50,7 @@
   ([pred coll thread-number]
    (lazy-seq (when-let [s (seq coll)]
                ;(concat (my-filter-lazy pred (take base-batch-size s)) (my-filter-future-lazy pred (drop base-batch-size s) thread-number)))))
-               (concat (my-filter-future-lazy-finite pred (take base-batch-size s)) (my-filter-future-lazy pred (drop base-batch-size s) thread-number)))))
+               (concat (my-filter-future-lazy-finite pred (take base-batch-size s) thread-number) (my-filter-future-lazy pred (drop base-batch-size s) thread-number)))))
   ([pred coll] (my-filter-future-lazy pred coll base-thread-number)))
 
 
