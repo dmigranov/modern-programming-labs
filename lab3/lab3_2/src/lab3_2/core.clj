@@ -25,44 +25,46 @@
 ;lazy; (seq x) is the recommended idiom for testing if a collection is not empty
 ;if the test fails when-let return nil, and lazy-sequence is terminated
 (defn my-filter-lazy [pred coll]
+    (println  "THREAD NEW!")
   (lazy-seq (when-let [s (seq coll)]
               (if (pred (first s))
                 (cons (first s) (my-filter-lazy pred (rest s)))
                 (my-filter-lazy pred (rest s))))))
 
-
-
-(defn my-partition [n coll]
+(defn my-partition-lazy [n coll]
   (lazy-seq (when-let [s (seq coll)]
-              (cons (take n s) (my-partition n (drop n s))))))
+              (cons (take n s) (my-partition-lazy n (drop n s))))))
 
 
 (def base-thread-number 4)
-(def base-batch-size 4000)
+(def base-batch-size 10000)
 
 (defn my-filter-lazy-no-parallel
   ([pred coll thread-number]
-   (lazy-seq (when-let [s (seq coll)]
-               (concat (my-filter-lazy pred (take base-batch-size s)) (my-filter-lazy-no-parallel pred (drop base-batch-size s) thread-number)))))
+   (when-let [s (seq coll)]
+               (lazy-cat (my-filter-lazy pred (take base-batch-size s)) (my-filter-lazy-no-parallel pred (drop base-batch-size s) thread-number))))
   ([pred coll] (my-filter-lazy-no-parallel pred coll base-thread-number)))
 
 
 ;идея: взять take некий батч размером и отфильтроват ппраллельно его bass-thread-number тредами, потом так же следующий кусок)
 ;todo: распареллилть батчи (брать count batch = (take base-batch-size s))
 
-(defn my-filter-future-no-lazy-finite [pred coll thread-number]
+(defn my-filter-future-finite [pred coll thread-number]
+  (println thread-number "threads")
   (->>
-   (my-partition (Math/ceil (/ (count coll) thread-number)) coll)
+   (my-partition-lazy (Math/ceil (/ (count coll) thread-number)) coll)
    (map (fn [elem] (future (my-filter-lazy pred elem))))
    (doall)
-   (map deref)
-   (apply concat)))
+   ;(map deref)
+   ;(apply concat)
+   (mapcat deref)
+   ))
 
 
 (defn my-filter-lazy-parallel
   ([pred coll thread-number]
    (when-let [s (seq coll)]
-     (lazy-cat (my-filter-future-no-lazy-finite pred (take base-batch-size s) thread-number) (my-filter-lazy-parallel pred (drop base-batch-size s) thread-number))))
+     (lazy-cat (my-filter-future-finite pred (take base-batch-size s) thread-number) (my-filter-lazy-parallel pred (drop base-batch-size s) thread-number))))
    ([pred coll] (my-filter-lazy-parallel pred coll base-thread-number)))
 
 
@@ -88,17 +90,19 @@
   (doall (my-filter-lazy-parallel even? (range 0 8000) 4))
   (doall (my-filter-lazy-parallel even? (range 0 8000) 8))
   
-   (let [n 10000, thread-number 4, thread-number-double (* 2 thread-number)]
+   (let [n 40000, thread-number 4, thread-number-double (* 2 thread-number), thread-number-4 (* 4 thread-number)]
 
-     (println "LAZY, NO PARALLEL," n "elems," thread-number "threads")
-     (time (doall (my-filter-lazy-no-parallel even? (range 0 n) thread-number)))
-     (println "LAZY, NO PARALLEL," n "elems," thread-number-double "threads")
-     (time (doall (my-filter-lazy-no-parallel even? (range 0 n) thread-number-double)))
+
+     (println "LAZY, NO PARALLEL," n "elems")
+     (time (doall (my-filter-lazy-no-parallel even? (range 0 n))))
      (println "LAZY, PARALLEL," n "elems," thread-number "threads")
      (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number)))
      (println "LAZY, PARALLEL," n "elems," thread-number-double "threads")
      (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number-double)))
+     (println "LAZY, PARALLEL," n "elems," thread-number-4 "threads")
+     (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number-4)))
      (println)
+
 
 
 
