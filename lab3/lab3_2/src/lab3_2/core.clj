@@ -1,7 +1,7 @@
 (ns lab3-2.core
   (:gen-class))
 
-(defn my-partition-old [n coll] ;плохо: превращает конечную в бесконечную
+(defn --my-partition-old [n coll] ;плохо: превращает конечную в бесконечную
   (->>
    (iterate (fn [[current-part tail]] [(take n tail), (drop n tail)]) [(take n coll) (drop n coll)])
    (map first)
@@ -15,6 +15,7 @@
 
 (def base-thread-number 2)
 (def base-batch-size 4000)
+
 
 
 ;из 3.1: не lazy, так как reduce и он будет пытаться всё размотать - StackOverflow
@@ -37,6 +38,8 @@
                               (reduce concat)))
   ([pred coll] (my-filter-parallel-no-lazy pred coll base-thread-number)))
 
+
+
 (defn my-filter-lazy [pred coll]
   ;(println "THREAD"  (. (Thread/currentThread) getName))
   (lazy-seq (when-let [s (seq coll)]
@@ -45,13 +48,14 @@
                 (my-filter-lazy pred (rest s))))))
 
 (defn my-partition-lazy [n coll]
+  ;todo: 0?
   (lazy-seq (when-let [s (seq coll)]
               (cons (take n s) (my-partition-lazy n (drop n s))))))
 
 (defn my-filter-future-finite [pred coll thread-number]
   (->>
    coll
-   (my-partition-lazy (Math/ceil (/ (count coll) thread-number))) ;todo: случай нуля
+   (my-partition-lazy (Math/ceil (/ (count coll) thread-number)))
    (map (fn [elem] (future (doall (my-filter-lazy pred elem)))))
    (doall)
    (mapcat deref) ;(map deref) (apply concat)
@@ -123,7 +127,6 @@
   (println "TIME TEST, INFINITE")
 
   (let [n 20000, thread-number 2, thread-number-double (* 2 thread-number), thread-number-4 (* 4 thread-number)
-        lnp (my-filter-lazy-no-parallel even? naturals)
         lp (my-filter-lazy-parallel even? naturals thread-number)
         lp2 (my-filter-lazy-parallel even? naturals thread-number-double)
         lp4 (my-filter-lazy-parallel even? naturals thread-number-4)]
