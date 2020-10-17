@@ -62,13 +62,14 @@
    (doall)))    
 
 ;идея: взять take некий батч размером и отфильтроват ппраллельно его bass-thread-number тредами, потом так же следующий кусок)
-(defn my-filter-lazy-parallel
-  ([pred coll thread-number]
+(defn my-filter-lazy-parallel-not-empty [pred coll thread-number]
    (when-let [s (seq coll)]
-     (lazy-cat (my-filter-future-finite pred (take base-batch-size s) thread-number) (my-filter-lazy-parallel pred (drop base-batch-size s) thread-number))))
-   ([pred coll] (my-filter-lazy-parallel pred coll base-thread-number)))
-
-
+     (lazy-cat (my-filter-future-finite pred (take base-batch-size s) thread-number) (my-filter-lazy-parallel-not-empty pred (drop base-batch-size s) thread-number))))
+  
+(defn my-filter-lazy-parallel
+  ([pred coll thread-number] (if (empty? coll) (list) (my-filter-lazy-parallel-not-empty pred coll thread-number)))
+  ([pred coll] (my-filter-lazy-parallel pred coll base-thread-number)))
+  
 
 ;(def infinite-size 4000)
 ;(defn my-filter-future-lazy-bad
