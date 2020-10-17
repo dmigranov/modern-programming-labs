@@ -37,7 +37,7 @@
 
 
 (def base-thread-number 2)
-(def base-batch-size 20000)
+(def base-batch-size 4000)
 
 (defn my-filter-lazy-no-parallel [pred coll ]
   (when-let [s (seq coll)]
@@ -47,17 +47,14 @@
 
 ;идея: взять take некий батч размером и отфильтроват ппраллельно его bass-thread-number тредами, потом так же следующий кусок)
 ;todo: распареллилть батчи (брать count batch = (take base-batch-size s))
-
 (defn my-filter-future-finite [pred coll thread-number]
   (->>
    coll
-   ;todo: случай нуля
-   (my-partition-lazy (Math/ceil (/ (count coll) thread-number)))
+   (my-partition-lazy (Math/ceil (/ (count coll) thread-number))) ;todo: случай нуля
    (map (fn [elem] (future (doall (my-filter-lazy pred elem)))))
    (doall)
-   ;(map deref)
-   ;(apply concat)
-   (mapcat deref)))
+   (mapcat deref) ;(map deref) (apply concat)
+   (doall)))    
 
 (defn my-filter-lazy-parallel
   ([pred coll thread-number]
@@ -83,42 +80,35 @@
 (defn -main
   [& args]
   (println "TIME TEST")
+   
+   (let [n 20000, thread-number 2, thread-number-double (* 2 thread-number), thread-number-4 (* 4 thread-number)
+         lnp (my-filter-lazy-no-parallel even? naturals)
+         lp (my-filter-lazy-parallel even? naturals thread-number)
+         lp2 (my-filter-lazy-parallel even? naturals thread-number-double)
+         lp4 (my-filter-lazy-parallel even? naturals thread-number-4)]
 
-  
-   (let [n 40000, thread-number 2, thread-number-double (* 2 thread-number), thread-number-4 (* 4 thread-number)]
-
-     (doall (my-filter-lazy-no-parallel even? (range 0 n)))
-     (doall (my-filter-lazy-parallel even? (range 0 n) thread-number))
-     (doall (my-filter-lazy-parallel even? (range 0 n) thread-number-double))
-     (doall (my-filter-lazy-parallel even? (range 0 n) thread-number-4))
-
-     (println "LAZY, NO PARALLEL," n "elems")
-     (time (doall (my-filter-lazy-no-parallel even? (range 0 n))))
-     (time (doall (my-filter-lazy-no-parallel even? (range 0 n))))
-     (time (doall (my-filter-lazy-no-parallel even? (range 0 n))))
-     (time (doall (my-filter-lazy-no-parallel even? (range 0 n))))
-     (time (doall (my-filter-lazy-no-parallel even? (range 0 n))))
-
+     (doall (take n (my-filter-lazy-no-parallel even? naturals)))
+     (doall (take n (my-filter-lazy-parallel even? naturals thread-number)))
+     (doall (take n (my-filter-lazy-parallel even? naturals thread-number-double)))
+     (doall (take n (my-filter-lazy-parallel even? naturals thread-number-4)))
 
      (println "LAZY, PARALLEL," n "elems," thread-number "threads")
-     (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number)))
-     (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number)))
-     (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number)))
-     (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number)))
-     (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number)))
-     
+     (time (doall (take n (my-filter-lazy-parallel even? naturals thread-number))))
+     (time (doall (take n (my-filter-lazy-parallel even? naturals thread-number))))
+     (time (doall (take n (my-filter-lazy-parallel even? naturals thread-number))))
 
      (println "LAZY, PARALLEL," n "elems," thread-number-double "threads")
-     (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number-double)))
-     (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number-double)))
-     (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number-double)))
-
+     (time (doall (take n (my-filter-lazy-parallel even? naturals thread-number-double))))
+     (time (doall (take n (my-filter-lazy-parallel even? naturals thread-number-double))))
+     (time (doall (take n (my-filter-lazy-parallel even? naturals thread-number-double))))
+     
      (println "LAZY, PARALLEL," n "elems," thread-number-4 "threads")
-     (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number-4)))
-     (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number-4)))
-     (time (doall (my-filter-lazy-parallel even? (range 0 n) thread-number-4)))
+     (time (doall (take n (my-filter-lazy-parallel even? naturals thread-number-4))))
+     (time (doall (take n (my-filter-lazy-parallel even? naturals thread-number-4))))
+     (time (doall (take n (my-filter-lazy-parallel even? naturals thread-number-4))))
 
      (println))
+   
    
    (shutdown-agents)
   )
