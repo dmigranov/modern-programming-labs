@@ -9,9 +9,7 @@
 
 
 ;бесконечная последовательность натуральных чисел
-(def naturals
-  (lazy-seq
-   (cons 1 (map inc naturals))))
+(def naturals (iterate inc 1))
 
 (def base-thread-number 2)
 (def base-batch-size 10000)
@@ -64,17 +62,17 @@
    ))    
 
 ;идея: взять take некий батч размером и отфильтроват ппраллельно его bass-thread-number тредами, потом так же следующий кусок)
-(defn my-filter-lazy-parallel-not-empty [pred coll thread-number]
-   (when-let [s (seq coll)]
-     (lazy-cat (my-filter-future-finite pred thread-number (take base-batch-size s)) (my-filter-lazy-parallel-not-empty pred (drop base-batch-size s) thread-number))))
-
-
 ;(defn my-filter-lazy-parallel-not-empty [pred coll thread-number]
-;  (->>
-;   coll
-;   (my-partition-lazy base-batch-size)
-;   (map (fn [batch] (my-filter-future-finite pred thread-number batch)))
-;   (apply concat)))
+;   (when-let [s (seq coll)]
+;     (lazy-cat (my-filter-future-finite pred thread-number (take base-batch-size s)) (my-filter-lazy-parallel-not-empty pred (drop base-batch-size s) thread-number))))
+
+
+(defn my-filter-lazy-parallel-not-empty [pred coll thread-number]
+  (->>
+   coll
+   (my-partition-lazy base-batch-size)
+   (map (fn [batch] (my-filter-future-finite pred thread-number batch)))
+   (apply concat)))
 
   
 (defn my-filter-lazy-parallel
