@@ -103,16 +103,23 @@
                     (fn [expr] (let [neg-arg (second expr)] (apply conjunction (->> (args neg-arg)
                                                                                     (map to-dnf-tier-2)
                                                                                     (map (fn [elem] (negation elem)))))))]  ; TODO
-                   ;todo: дистрибутивность
+                   ;дистрибутивность слева
                    [(fn [expr] (and (conjunction? expr) (disjunction? (second expr))))
-                    (fn [expr] expr)] ;todo
+                    (fn [expr] (let [expr1 (), expr2 ()]
+                                 (disjunction)
+                                 
+                                 ))] ;todo
+                   
+                   ;дистрибутивность справа
+                   [(fn [expr] (and (conjunction? expr) (disjunction? (nth expr 2))))
+                    (fn [expr] (disjunction))] ;todo
+
                    ;todo: добавить второй закон дистрибутивности, где дизъюнкция не первым аргументом
                    ;может, вернуться к случаю с двумя аргументами?
                    ;тогда для внешнего пользования вариант с n аргументами можно оставить
                    ;но внутри это будет (or a (or b (or c d)))
                    ;а в конце можно раскрыть скобки для красивого вывода
 
-                   ;todo: исправить ошибку
                    [(fn [expr] (and (negation? expr) (negation? (second expr))))
                     (fn [expr] (let [arg (first (args (second expr)))] (to-dnf-tier-2 arg)))]
                    [(fn [expr] (conjunction? expr))
@@ -143,7 +150,9 @@
 
 
 
-(defn signify [expr var val])
+(defn signify [expr var val]
+  ;todo: найти все вхождения переменной var, заменить на val и привести к нормальной форме
+  )
 
 (defn -main
   [& args]
