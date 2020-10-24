@@ -101,16 +101,14 @@
                    [(fn [expr] (and (negation? expr) (disjunction? (second expr))))
                     (fn [expr] (let [neg-arg (second expr)] (apply conjunction (->> (args neg-arg)
                                                                                     (map to-dnf-tier-2)
-                                                                                    (map (fn [elem] (negation elem)))))))]  ; TODO
-                   
-                   ;todo: эти формулы нерекурсивны исправить!
+                                                                                    (map (fn [elem] (negation elem)))))))]
                    
                    ;дистрибутивность слева
                    ;(и (или a b) c)
                    [(fn [expr] (and (conjunction? expr) (disjunction? (second expr))))
                     (fn [expr] (let [conj-args (args expr), disj (first conj-args), disj-args (args disj)
                                      a (first disj-args), b (second disj-args), c (second conj-args)]
-                                 (disjunction (conjunction a c) (conjunction b c))
+                                 (to-dnf-tier-2 (disjunction (conjunction a c) (conjunction b c)))
                                  ))] 
                    
                    ;дистрибутивность справа
@@ -118,14 +116,8 @@
                    [(fn [expr] (and (conjunction? expr) (disjunction? (nth expr 2))))
                     (fn [expr] (let [conj-args (args expr), disj (second conj-args), disj-args (args disj)
                                      a (first disj-args), b (second disj-args), c (first conj-args)]
-                                 (disjunction (conjunction c a) (conjunction c b)))
+                                 (to-dnf-tier-2 (disjunction (conjunction c a) (conjunction c b))))
                       )]
-
-                   ;todo: добавить второй закон дистрибутивности, где дизъюнкция не первым аргументом
-                   ;может, вернуться к случаю с двумя аргументами?
-                   ;тогда для внешнего пользования вариант с n аргументами можно оставить
-                   ;но внутри это будет (or a (or b (or c d)))
-                   ;а в конце можно раскрыть скобки для красивого вывода
 
                    [(fn [expr] (and (negation? expr) (negation? (second expr))))
                     (fn [expr] (let [arg (first (args (second expr)))] (to-dnf-tier-2 arg)))]
@@ -152,7 +144,11 @@
 (defn to-dnf [expr]
   (->> expr
        to-dnf-tier-1
-       to-dnf-tier-2))
+       to-dnf-tier-2
+       ;todo: tier3 - пребразовать штуки типа (или а (или б с)) и т.д. в форму с n аргументами (или а б с) для дальнешего удобства
+       ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
+       
+       ))
 
 
 
