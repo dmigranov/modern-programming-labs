@@ -7,19 +7,32 @@
     (is (variable? (variable ::x)))
     (is (= ::x (variable-name (variable ::x))))
     (is (same-variables?
-         (variable :x)
-         (variable :x)))
+         (variable ::x)
+         (variable ::x)))
     (is (not (same-variables?
-                   (variable :x)
-                   (variable :y))))))
+                   (variable ::x)
+                   (variable ::y))))))
 
 (deftest implication-test
   (testing "Implication"
-    (is (implication? (implication ::x ::y)))
-    (is (= ::x (first (args (implication ::x ::y)))))
+    (is (implication? (implication (variable :x) (variable :y))))
+    (is (= :x (variable-name (first (args (implication (variable :x) (variable :y)))))))
     ))
 
 (deftest negation-test
   (testing "Negation"
-    (is (negation? (negation ::x)))
-    (is (= ::x (first (args (negation ::x)))))))
+    (is (negation? (negation (variable :x))))
+    (is (= :x (variable-name (first (args (negation (variable :x)))))))))
+
+(deftest disjunction-test
+  (testing "Disjunction"
+    (is (disjunction? (disjunction (variable :x) (variable :y))))
+    (is (disjunction? (disjunction-many (variable :x) (variable :y))))
+    (is (= :x (variable-name (first (args (disjunction-many (variable :x) (variable :y) (variable :z)))))))
+    ))
+
+(deftest conjunction-test
+  (testing "Conjunction"
+    (is (conjunction? (conjunction (variable :x) (variable :y))))
+    (is (conjunction? (conjunction-many (variable :x) (variable :y))))
+    (is (= :x (variable-name (first (args (conjunction-many (variable :x) (variable :y) (variable :z)))))))))

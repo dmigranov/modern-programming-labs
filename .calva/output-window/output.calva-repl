@@ -44,3 +44,4 @@ clj::lab4.core=>
 (:lab4.core/disj (:lab4.core/var :lab4.core/x) (:lab4.core/disj (:lab4.core/var :lab4.core/y) (:lab4.core/var :lab4.core/z)))
 clj::lab4.core=> 
 exit
+; nREPL Connection was closed
