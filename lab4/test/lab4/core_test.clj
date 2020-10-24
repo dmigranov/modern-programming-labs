@@ -12,3 +12,14 @@
     (is (not (same-variables?
                    (variable :x)
                    (variable :y))))))
+
+(deftest implication-test
+  (testing "Implication"
+    (is (implication? (implication ::x ::y)))
+    (is (= ::x (first (args (implication ::x ::y)))))
+    ))
+
+(deftest negation-test
+  (testing "Negation"
+    (is (negation? (negation ::x)))
+    (is (= ::x (first (args (negation ::x)))))))
