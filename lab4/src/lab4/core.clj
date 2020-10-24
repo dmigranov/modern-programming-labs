@@ -27,7 +27,7 @@
 
 (defn disjunction-many [expr & others]
   (if (not-empty others)
-    (disjunction expr (disjunction-many others))
+    (disjunction expr (apply disjunction-many others))
     expr
     )
   )
@@ -40,6 +40,12 @@
 
 (defn conjunction [expr1 expr2]
   (list ::conj expr1 expr2))
+
+(defn conjunction-many [expr & others]
+  (if (not-empty others)
+    (conjunction expr (apply conjunction-many others))
+    expr))
+
 
 (defn conjunction? [expr]
   (= ::conj (first expr)))

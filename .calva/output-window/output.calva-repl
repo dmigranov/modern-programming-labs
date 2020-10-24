@@ -31,3 +31,16 @@ clj::lab4.core=>
 nil
 (:lab4.core/disj (:lab4.core/var :lab4.core/x) ((:lab4.core/var :lab4.core/y) (:lab4.core/var :lab4.core/z)))
 clj::lab4.core=> 
+(defn disjunction-many [expr & others]
+  (if (not-empty others)
+    (disjunction expr (apply disjunction-many others))
+    expr))
+#'lab4.core/disjunction-many
+clj::lab4.core=> 
+(disjunction-many (variable ::x) (variable ::y))
+(:lab4.core/disj (:lab4.core/var :lab4.core/x) (:lab4.core/var :lab4.core/y))
+clj::lab4.core=> 
+(disjunction-many (variable ::x) (variable ::y) (variable ::z))
+(:lab4.core/disj (:lab4.core/var :lab4.core/x) (:lab4.core/disj (:lab4.core/var :lab4.core/y) (:lab4.core/var :lab4.core/z)))
+clj::lab4.core=> 
+exit
