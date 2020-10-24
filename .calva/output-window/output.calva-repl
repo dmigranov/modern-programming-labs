@@ -11,11 +11,40 @@
 ;   - You can edit the contents here. Use it as a REPL if you like.
 ;   - `alt+enter` evaluates the current top level form.
 ;   - `ctrl+enter` evaluates the current form.
-;   - `alt+up` and `alt+down` traverse up and down the REPL command history
 ;      when the cursor is after the last contents at the prompt
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
 ;   - File URLs in stacktrace frames are peekable and clickable.
 clj::lab4.core=> 
 (to-dnf (conjunction (disjunction (variable ::a) (variable ::b)) (variable ::c)))
 (:disj (:conj (:var :lab4.core/a) (:var :lab4.core/c)) (:conj (:var :lab4.core/b) (:var :lab4.core/c)))
+clj::lab4.core=> 
+(to-dnf (conjunction (variable ::c) (disjunction (variable ::a) (variable ::b))))
+(:disj (:conj (:var :lab4.core/c) (:var :lab4.core/a)) (:conj (:var :lab4.core/c) (:var :lab4.core/b)))
+clj::lab4.core=> 
+; Execution error (ArityException) at lab4.core/eval1744 (form-init10473638979387440077.clj:24).
+; Wrong number of args (2) passed to: lab4.core/to-dnf
+clj::lab4.core=> 
+(to-dnf (disjunction (variable ::c) (variable ::d)) (disjunction (variable ::a) (variable ::b)))
+(to-dnf (disjunction (variable ::c
+                               ) (variable ::d)) (disjunction (variable ::a) (variable ::b))))
+; Execution error (ArityException) at lab4.core/eval1756 (form-init10473638979387440077.clj:28).
+; Wrong number of args (2) passed to: lab4.core/to-dnf
+clj::lab4.core=> 
+(to-dnf (conjunction (disjunction (variable ::a) (variable ::b)) (variable ::c)))
+
+
+
+(+ 2 3)
+#object[clojure.core$_PLUS_ 0x5cf79d02 "clojure.core$_PLUS_@5cf79d02"]
+clj::lab4.core=> 
+(to-dnf (conjunction (variable ::c) (disjunction (variable ::a) (variable ::b))))
+(:disj (:conj (:var :lab4.core/c) (:var :lab4.core/a)) (:conj (:var :lab4.core/c) (:var :lab4.core/b)))
+clj::lab4.core=> 
+(to-dnf (disjunction (variable ::c) (variable ::d)) (disjunction (variable ::a) (variable ::b)))
+; Execution error (ArityException) at lab4.core/eval1760 (form-init10473638979387440077.clj:43).
+; Wrong number of args (2) passed to: lab4.core/to-dnf
+clj::lab4.core=> 
+(to-dnf (conjunction (disjunction (variable ::a) (variable ::b)) (disjunction (variable ::c) (variable ::d))))
+(:disj (:conj (:var :lab4.core/a) (:disj (:var :lab4.core/c) (:var :lab4.core/d))) (:conj (:var :lab4.core/b) (:disj (:var :lab4.core/c) (:var :lab4.core/d))))
 clj::lab4.core=> 
 ; nREPL Connection was closed

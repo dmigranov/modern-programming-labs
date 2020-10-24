@@ -102,6 +102,9 @@
                     (fn [expr] (let [neg-arg (second expr)] (apply conjunction (->> (args neg-arg)
                                                                                     (map to-dnf-tier-2)
                                                                                     (map (fn [elem] (negation elem)))))))]  ; TODO
+                   
+                   ;todo: эти формулы нерекурсивны исправить!
+                   
                    ;дистрибутивность слева
                    ;(и (или a b) c)
                    [(fn [expr] (and (conjunction? expr) (disjunction? (second expr))))
@@ -111,8 +114,12 @@
                                  ))] 
                    
                    ;дистрибутивность справа
+                   ;(и c (или a b))
                    [(fn [expr] (and (conjunction? expr) (disjunction? (nth expr 2))))
-                    (fn [expr] ())] ;todo
+                    (fn [expr] (let [conj-args (args expr), disj (second conj-args), disj-args (args disj)
+                                     a (first disj-args), b (second disj-args), c (first conj-args)]
+                                 (disjunction (conjunction c a) (conjunction c b)))
+                      )]
 
                    ;todo: добавить второй закон дистрибутивности, где дизъюнкция не первым аргументом
                    ;может, вернуться к случаю с двумя аргументами?
