@@ -26,7 +26,10 @@
   (list ::disj expr1 expr2))
 
 (defn disjunction-many [expr & others]
-  (disjunction expr (disjunction-many (first others) (rest others)))
+  (if (not-empty others)
+    (disjunction expr (disjunction-many others))
+    expr
+    )
   )
 
 (defn disjunction? [expr]
@@ -138,3 +141,4 @@
 (defn -main
   [& args]
   (println "Hello, World!"))
+()
