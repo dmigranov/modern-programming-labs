@@ -15,14 +15,6 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - File URLs in stacktrace frames are peekable and clickable.
 clj::lab4.core=> 
-(to-dnf (negation (negation (negation (variable ::X)))))
-(:lab4.core/neg (:lab4.core/var :lab4.core/X))
+(to-dnf (conjunction (disjunction (variable ::a) (variable ::b)) (variable ::c)))
+(:lab4.core/disj (:lab4.core/conj (:lab4.core/var :lab4.core/a) (:lab4.core/var :lab4.core/c)) (:lab4.core/conj (:lab4.core/var :lab4.core/b) (:lab4.core/var :lab4.core/c)))
 clj::lab4.core=> 
-(to-dnf (negation (negation (variable :x))))
-(:lab4.core/var :x)
-clj::lab4.core=> 
-(to-dnf (negation (negation (variable :x))))
-(:lab4.core/var :x)
-clj::lab4.core=> 
-i
-; nREPL Connection was closed

@@ -104,15 +104,16 @@
                                                                                     (map to-dnf-tier-2)
                                                                                     (map (fn [elem] (negation elem)))))))]  ; TODO
                    ;дистрибутивность слева
+                   ;(и (или a b) c)
                    [(fn [expr] (and (conjunction? expr) (disjunction? (second expr))))
-                    (fn [expr] (let [expr1 (), expr2 ()]
-                                 (disjunction)
-                                 
-                                 ))] ;todo
+                    (fn [expr] (let [conj-args (args expr), disj (first conj-args), disj-args (args disj)
+                                     a (first disj-args), b (second disj-args), c (second conj-args)]
+                                 (disjunction (conjunction a c) (conjunction b c))
+                                 ))] 
                    
                    ;дистрибутивность справа
                    [(fn [expr] (and (conjunction? expr) (disjunction? (nth expr 2))))
-                    (fn [expr] (disjunction))] ;todo
+                    (fn [expr] ())] ;todo
 
                    ;todo: добавить второй закон дистрибутивности, где дизъюнкция не первым аргументом
                    ;может, вернуться к случаю с двумя аргументами?
