@@ -112,8 +112,9 @@
                    ;но внутри это будет (or a (or b (or c d)))
                    ;а в конце можно раскрыть скобки для красивого вывода
 
+                   ;todo: исправить ошибку
                    [(fn [expr] (and (negation? expr) (negation? (second expr))))
-                    (fn [expr] (let [arg (args (second expr))] (map to-dnf-tier-2 arg)))]
+                    (fn [expr] (let [arg (first (args (second expr)))] (to-dnf-tier-2 arg)))]
                    [(fn [expr] (conjunction? expr))
                     (fn [expr] (let [e-args (args expr)] (apply conjunction (map to-dnf-tier-2 e-args))))]
                    [(fn [expr] (disjunction? expr))

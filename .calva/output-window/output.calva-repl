@@ -5,7 +5,6 @@
 ; Happy coding! ♥️
 
 ; Connecting ...
-; nREPL Connection was closed
 ; Hooking up nREPL sessions...
 ; Connected session: clj
 ; TIPS: 
@@ -16,32 +15,14 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - File URLs in stacktrace frames are peekable and clickable.
 clj::lab4.core=> 
-(disjunction-many (variable ::x) (variable ::y))
-((:lab4.core/var :lab4.core/y))
-nil
-(:lab4.core/disj (:lab4.core/var :lab4.core/x) ((:lab4.core/var :lab4.core/y)))
-(disjunction-many (variable ::x) (variable ::y) (variable ::y))
+(to-dnf (negation (negation (negation (variable ::X)))))
+(:lab4.core/neg (:lab4.core/var :lab4.core/X))
 clj::lab4.core=> 
-((:lab4.core/var :lab4.core/y) (:lab4.core/var :lab4.core/y))
-nil
-(:lab4.core/disj (:lab4.core/var :lab4.core/x) ((:lab4.core/var :lab4.core/y) (:lab4.core/var :lab4.core/y)))
+(to-dnf (negation (negation (variable :x))))
+(:lab4.core/var :x)
 clj::lab4.core=> 
-(disjunction-many (variable ::x) (variable ::y) (variable ::z))
-((:lab4.core/var :lab4.core/y) (:lab4.core/var :lab4.core/z))
-nil
-(:lab4.core/disj (:lab4.core/var :lab4.core/x) ((:lab4.core/var :lab4.core/y) (:lab4.core/var :lab4.core/z)))
+(to-dnf (negation (negation (variable :x))))
+(:lab4.core/var :x)
 clj::lab4.core=> 
-(defn disjunction-many [expr & others]
-  (if (not-empty others)
-    (disjunction expr (apply disjunction-many others))
-    expr))
-#'lab4.core/disjunction-many
-clj::lab4.core=> 
-(disjunction-many (variable ::x) (variable ::y))
-(:lab4.core/disj (:lab4.core/var :lab4.core/x) (:lab4.core/var :lab4.core/y))
-clj::lab4.core=> 
-(disjunction-many (variable ::x) (variable ::y) (variable ::z))
-(:lab4.core/disj (:lab4.core/var :lab4.core/x) (:lab4.core/disj (:lab4.core/var :lab4.core/y) (:lab4.core/var :lab4.core/z)))
-clj::lab4.core=> 
-exit
+i
 ; nREPL Connection was closed
