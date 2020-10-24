@@ -14,19 +14,25 @@
   (second var))
 
 (defn same-variables? [v1 v2]
-  (and 
+  (and
    (variable? v1)
    (variable? v2)
    (= (variable-name v1) (variable-name v2))))
 
-(defn disjunction [expr & rest]
-  (cons ::disj (cons expr rest)))
+;(defn disjunction [expr & rest]
+;  (cons ::disj (cons expr rest)))
 
-(defn disjunction? [expr] 
+(defn disjunction [expr1 expr2]
+  (list ::disj expr1 expr2))
+
+(defn disjunction? [expr]
   (= ::disj (first expr)))
 
-(defn conjunction [expr & rest]
-  (cons ::conj (cons expr rest)))
+;(defn conjunction [expr & rest]
+;  (cons ::conj (cons expr rest)))  
+
+(defn conjunction [expr1 expr2]
+  (list ::conj expr1 expr2))
 
 (defn conjunction? [expr]
   (= ::conj (first expr)))
@@ -45,7 +51,7 @@
 
 (def log-true (list ::true))
 
-(defn log-true? [expr] 
+(defn log-true? [expr]
   (= ::true (first expr)))
 
 (def log-false (list ::false))
@@ -71,7 +77,7 @@
                    [(fn [expr] (negation? expr))
                     (fn [expr] (let [arg (second expr)] (negation (to-dnf-tier-1 arg))))]
                    [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
-                    (fn [expr] expr)])) 
+                    (fn [expr] expr)]))
 
 ;а тут может можно объединить законы де моргана и двойное отрицание?
 (declare to-dnf-tier-2)
@@ -87,13 +93,12 @@
                    ;todo: дистрибутивность
                    [(fn [expr] (and (conjunction? expr) (disjunction? (second expr))))
                     (fn [expr] expr)] ;todo
-                   
                    ;todo: добавить второй закон дистрибутивности, где дизъюнкция не первым аргументом
                    ;может, вернуться к случаю с двумя аргументами?
                    ;тогда для внешнего пользования вариант с n аргументами можно оставить
                    ;но внутри это будет (or a (or b (or c d)))
                    ;а в конце можно раскрыть скобки для красивого вывода
-                   
+
                    [(fn [expr] (and (negation? expr) (negation? (second expr))))
                     (fn [expr] (let [arg (args (second expr))] (map to-dnf-tier-2 arg)))]
                    [(fn [expr] (conjunction? expr))
@@ -119,12 +124,12 @@
 (defn to-dnf [expr]
   (->> expr
        to-dnf-tier-1
-       to-dnf-tier-2
-       ))
+       to-dnf-tier-2))
 
 
 
-;todo signify expr var val
+
+(defn signify [expr var val])
 
 (defn -main
   [& args]
