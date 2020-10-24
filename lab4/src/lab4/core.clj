@@ -25,6 +25,10 @@
 (defn disjunction [expr1 expr2]
   (list ::disj expr1 expr2))
 
+(defn disjunction-many [expr & others]
+  (disjunction expr (disjunction-many (first others) (rest others)))
+  )
+
 (defn disjunction? [expr]
   (= ::disj (first expr)))
 
