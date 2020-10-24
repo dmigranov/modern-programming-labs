@@ -5,10 +5,10 @@
 
 (defn variable [name]
   {:pre [(keyword? name)]}
-  (list ::var name))
+  (list :var name))
 
 (defn variable? [expr]
-  (= (first expr) ::var))
+  (= (first expr) :var))
 
 (defn variable-name [var]
   (second var))
@@ -20,10 +20,10 @@
    (= (variable-name v1) (variable-name v2))))
 
 ;(defn disjunction [expr & rest]
-;  (cons ::disj (cons expr rest)))
+;  (cons :disj (cons expr rest)))
 
 (defn disjunction [expr1 expr2]
-  (list ::disj expr1 expr2))
+  (list :disj expr1 expr2))
 
 (defn disjunction-many [expr & others]
   (if (not-empty others)
@@ -33,44 +33,43 @@
   )
 
 (defn disjunction? [expr]
-  (= ::disj (first expr)))
+  (= :disj (first expr)))
 
 ;(defn conjunction [expr & rest]
-;  (cons ::conj (cons expr rest)))  
+;  (cons :conj (cons expr rest)))  
 
 (defn conjunction [expr1 expr2]
-  (list ::conj expr1 expr2))
+  (list :conj expr1 expr2))
 
 (defn conjunction-many [expr & others]
   (if (not-empty others)
     (conjunction expr (apply conjunction-many others))
     expr))
 
-
 (defn conjunction? [expr]
-  (= ::conj (first expr)))
+  (= :conj (first expr)))
 
 (defn implication [expr1 expr2]
-  (list ::impl expr1 expr2))
+  (list :impl expr1 expr2))
 
 (defn implication? [expr]
-  (= ::impl (first expr)))
+  (= :impl (first expr)))
 
 (defn negation [expr]
-  (list ::neg expr))
+  (list :neg expr))
 
 (defn negation? [expr]
-  (= ::neg (first expr)))
+  (= :neg (first expr)))
 
-(def log-true (list ::true))
+(def log-true (list :true))
 
 (defn log-true? [expr]
-  (= ::true (first expr)))
+  (= :true (first expr)))
 
-(def log-false (list ::false))
+(def log-false (list :false))
 
 (defn log-false? [expr]
-  (= ::false (first expr)))
+  (= :false (first expr)))
 
 (defn args [expr] (rest expr))
 
