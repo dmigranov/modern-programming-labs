@@ -192,5 +192,7 @@
 
 (defn -main
   [& args]
-  (println "Hello, World!"))
-()
+  (println "Hello, World!")
+  (to-dnf (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z))))))
+
+  )
