@@ -173,10 +173,16 @@
 (defn to-dnf-tier-2 [expr] (to-dnf-tier expr tier-2-rules))
 (defn to-dnf-tier-unite [expr] (to-dnf-tier expr tier-unite-rules))
 
+;это необходимо, поскольку при использовании правила отрицания; но должно гарантировано закончится
+(defn to-dnf-tier-2-cycle
+  
+  )
+
 (defn to-dnf [expr]
   (->> expr
        to-dnf-tier-1
-       to-dnf-tier-2
+       to-dnf-tier-2-cycle
+
        ;to-dnf-tier-unite
        ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
        

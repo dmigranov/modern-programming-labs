@@ -16,31 +16,7 @@
 ;   - Clojure lines in stack traces are peekable and clickable.
 clj::lab4.core=> 
 (to-dnf (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z))))))
-(:conj (:disj (:neg (:var :lab4.core/y)) (:var :lab4.core/z)) (:var :lab4.core/x) (:neg (:var :lab4.core/y)))
-clj::lab4.core=> 
-(to-dnf (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z))))))
-(:conj (:disj (:neg (:var :lab4.core/y)) (:var :lab4.core/z)) (:var :lab4.core/x) (:neg (:var :lab4.core/y)))
-clj::lab4.core=> 
-(to-dnf (conjunction (conjunction (variable ::x) (variable ::y)) (conjunction (variable ::z) (variable ::w))))
-(:conj (:var :lab4.core/x) (:var :lab4.core/y) (:var :lab4.core/z) (:var :lab4.core/w))
-clj::lab4.core=> 
-(to-dnf (conjunction (disjunction (variable ::x) (variable ::y)) (disjunction (variable ::z) (variable ::w))))
 here
-here
-(:disj (:conj (:var :lab4.core/x) (:var :lab4.core/z)) (:conj (:var :lab4.core/x) (:var :lab4.core/w)) (:conj (:var :lab4.core/y) (:var :lab4.core/z)) (:conj (:var :lab4.core/y) (:var :lab4.core/w)))
+(:disj (:conj (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y))) (:neg (:var :lab4.core/y))) (:conj (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y))) (:var :lab4.core/z)))
 clj::lab4.core=> 
-(to-dnf (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z))))))
-(:conj (:disj (:neg (:var :lab4.core/y)) (:var :lab4.core/z)) (:var :lab4.core/x) (:neg (:var :lab4.core/y)))
-clj::lab4.core=> 
-(defn to-dnf [expr]
-  (->> expr
-       to-dnf-tier-1
-       to-dnf-tier-2
-       ;to-dnf-tier-unite
-       ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
-       ))
-#'lab4.core/to-dnf
-clj::lab4.core=> 
-(to-dnf (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z))))))
-(:conj (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y))) (:disj (:neg (:var :lab4.core/y)) (:var :lab4.core/z)))
-clj::lab4.core=> 
+; nREPL Connection was closed
