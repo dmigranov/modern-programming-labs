@@ -19,8 +19,8 @@
    (variable? v2)
    (= (variable-name v1) (variable-name v2))))
 
-;(defn disjunction [expr & rest]
-;  (cons :disj (cons expr rest)))
+(defn disjunction-internal [expr & rest]
+  (cons :disj (cons expr rest)))
 
 (defn disjunction [expr1 expr2]
   (list :disj expr1 expr2))
@@ -35,8 +35,8 @@
 (defn disjunction? [expr]
   (= :disj (first expr)))
 
-;(defn conjunction [expr & rest]
-;  (cons :conj (cons expr rest)))  
+(defn conjunction-internal [expr & rest]
+  (cons :conj (cons expr rest)))  
 
 (defn conjunction [expr1 expr2]
   (list :conj expr1 expr2))
@@ -131,6 +131,31 @@
                     (fn [expr] expr)]))
 
 
+(declare to-dnf-tier-unite)
+(def tier-unite-rules (list
+
+                       [(fn [expr] (and (conjunction? expr) (conjunction? (first (args expr)))))
+                        (fn [expr] (let [conj (first (args expr)), conj-args (args conj), 
+                                         a (first conj-args), b (second conj-args), c (second (args expr))]
+                                     (to-dnf-tier-unite (conjunction-internal a b c))))]
+                       [(fn [expr] (and (conjunction? expr) (conjunction? (second (args expr)))))
+                        (fn [expr] (let [conj (second (args expr)), conj-args (args conj)
+                                         a (first conj-args), b (second conj-args), c (first (args expr))]
+                                     (to-dnf-tier-unite (conjunction-internal c a b))))]
+
+
+
+
+        
+                       [(fn [expr] (conjunction? expr))
+                        (fn [expr] (let [e-args (args expr)] (apply conjunction-internal (map to-dnf-tier-2 e-args))))]
+                       [(fn [expr] (disjunction? expr))
+                        (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-2 e-args))))]
+                       [(fn [expr] (negation? expr))
+                        (fn [expr] (let [arg (second expr)] (negation (to-dnf-tier-2 arg))))]
+                       [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
+                        (fn [expr] expr)]))
+
 
 (defn to-dnf-tier [expr rules]
   ((some (fn [[rule-cond rule-transform]]
@@ -140,12 +165,13 @@
 
 (defn to-dnf-tier-1 [expr] (to-dnf-tier expr tier-1-rules))
 (defn to-dnf-tier-2 [expr] (to-dnf-tier expr tier-2-rules))
+(defn to-dnf-tier-unite [expr] (to-dnf-tier expr tier-unite-rules))
 
 (defn to-dnf [expr]
   (->> expr
        to-dnf-tier-1
        to-dnf-tier-2
-       ;todo: tier3 - пребразовать штуки типа (или а (или б с)) и т.д. в форму с n аргументами (или а б с) для дальнешего удобства
+       to-dnf-tier-unite
        ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
        
        ))

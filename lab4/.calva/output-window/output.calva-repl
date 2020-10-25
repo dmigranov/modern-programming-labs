@@ -13,22 +13,12 @@
 ;   - `ctrl+enter` evaluates the current form.
 ;   - `alt+up` and `alt+down` traverse up and down the REPL command history
 ;      when the cursor is after the last contents at the prompt
-;   - File URLs in stacktrace frames are peekable and clickable.
+;   - Clojure lines in stack traces are peekable and clickable.
 clj::lab4.core=> 
-(to-dnf (implication (conjunction (variable ::x) (variable ::y)) (variable ::y)))
-(:lab4.core/disj (:lab4.core/disj (:lab4.core/neg (:lab4.core/var :lab4.core/x)) (:lab4.core/neg (:lab4.core/var :lab4.core/y))) (:lab4.core/var :lab4.core/y))
+(to-dnf (conjunction-many (variable ::x) (variable ::y) (variable ::z)))
+(:conj (:var :lab4.core/x) (:var :lab4.core/y) (:var :lab4.core/z))
 clj::lab4.core=> 
-(to-dnf (negation (negation (variable ::X))))
-((:lab4.core/var :lab4.core/X))
-clj::lab4.core=> 
-(to-dnf (negation (negation (variable ::x))))
-((:lab4.core/var :lab4.core/x))
-clj::lab4.core=> 
-(to-dnf (negation (negation (variable :x))))
-((:lab4.core/var :x))
-()
-clj::lab4.core=> 
-(to-dnf (negation (negation (negation (variable :x)))))
-((:lab4.core/neg (:lab4.core/var :x)))
+(to-dnf (conjunction (conjunction (variable ::x) (variable ::y)) (conjunction (variable ::z) (variable ::w))))
+(:conj (:var :lab4.core/x) (:var :lab4.core/y) (:conj (:var :lab4.core/z) (:var :lab4.core/w)))
 clj::lab4.core=> 
 ; nREPL Connection was closed
