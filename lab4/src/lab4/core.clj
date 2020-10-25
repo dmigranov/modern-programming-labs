@@ -116,6 +116,7 @@
                    [(fn [expr] (and (conjunction? expr) (disjunction? (nth expr 2))))
                     (fn [expr] (let [conj-args (args expr), disj (second conj-args), disj-args (args disj)
                                      a (first disj-args), b (second disj-args), c (first conj-args)]
+                                 (println "here")
                                  (to-dnf-tier-2 (disjunction (conjunction c a) (conjunction c b))))
                       )]
 
