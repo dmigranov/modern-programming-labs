@@ -19,4 +19,3 @@ clj::lab4.core=>
 here
 (:disj (:conj (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y))) (:neg (:var :lab4.core/y))) (:conj (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y))) (:var :lab4.core/z)))
 clj::lab4.core=> 
-; nREPL Connection was closed

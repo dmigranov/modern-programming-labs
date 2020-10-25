@@ -94,29 +94,42 @@
 ;а тут может можно объединить законы де моргана и двойное отрицание?
 (declare to-dnf-tier-2)
 (def tier-2-rules (list
+                   ;де моргана
+                   
                    [(fn [expr] (and (negation? expr) (conjunction? (second expr))))
                     (fn [expr] (let [neg-arg (second expr)] (to-dnf-tier-2 (apply disjunction (->> (args neg-arg)
                                                                                                    (map (fn [elem] (negation elem))))))))]
                    [(fn [expr] (and (negation? expr) (disjunction? (second expr))))
                     (fn [expr] (let [neg-arg (second expr)] (to-dnf-tier-2 (apply conjunction (->> (args neg-arg)
                                                                                                    (map (fn [elem] (negation elem))))))))]
+                   ;двойное отрицание
+                   [(fn [expr] (and (negation? expr) (negation? (second expr))))
+                    (fn [expr] (let [arg (first (args (second expr)))] (to-dnf-tier-2 arg)))]
                    
+                   [(fn [expr] (conjunction? expr))
+                    (fn [expr] (let [e-args (args expr)] (apply conjunction (map to-dnf-tier-2 e-args))))]
+                   [(fn [expr] (disjunction? expr))
+                    (fn [expr] (let [e-args (args expr)] (apply disjunction (map to-dnf-tier-2 e-args))))]
+                   [(fn [expr] (negation? expr))
+                    (fn [expr] (let [arg (second expr)] (negation (to-dnf-tier-2 arg))))]
+                   [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
+                    (fn [expr] expr)]))
+
+(declare to-dnf-tier-3)
+(def tier-3-rules (list
                    ;дистрибутивность слева
                    ;(и (или a b) c)
                    [(fn [expr] (and (conjunction? expr) (disjunction? (second expr))))
                     (fn [expr] (let [conj-args (args expr), disj (first conj-args), disj-args (args disj)
                                      a (first disj-args), b (second disj-args), c (second conj-args)]
-                                 (to-dnf-tier-2 (disjunction (conjunction a c) (conjunction b c)))
-                                 ))] 
-                   
+                                 (to-dnf-tier-2 (disjunction (conjunction a c) (conjunction b c)))))]
+
                    ;дистрибутивность справа
                    ;(и c (или a b))
                    [(fn [expr] (and (conjunction? expr) (disjunction? (nth expr 2))))
                     (fn [expr] (let [conj-args (args expr), disj (second conj-args), disj-args (args disj)
                                      a (first disj-args), b (second disj-args), c (first conj-args)]
-                                 (println "here")
-                                 (to-dnf-tier-2 (disjunction (conjunction c a) (conjunction c b))))
-                      )]
+                                 (to-dnf-tier-2 (disjunction (conjunction c a) (conjunction c b)))))]
 
                    [(fn [expr] (and (negation? expr) (negation? (second expr))))
                     (fn [expr] (let [arg (first (args (second expr)))] (to-dnf-tier-2 arg)))]
@@ -128,6 +141,7 @@
                     (fn [expr] (let [arg (second expr)] (negation (to-dnf-tier-2 arg))))]
                    [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
                     (fn [expr] expr)]))
+
 
 
 (declare to-dnf-tier-unite)
@@ -171,17 +185,17 @@
 
 (defn to-dnf-tier-1 [expr] (to-dnf-tier expr tier-1-rules))
 (defn to-dnf-tier-2 [expr] (to-dnf-tier expr tier-2-rules))
+(defn to-dnf-tier-3 [expr] (to-dnf-tier expr tier-3-rules))
 (defn to-dnf-tier-unite [expr] (to-dnf-tier expr tier-unite-rules))
 
 ;это необходимо, поскольку при использовании правила отрицания; но должно гарантировано закончится
-(defn to-dnf-tier-2-cycle
-  
-  )
+;(defn to-dnf-tier-2-cycle [])
 
 (defn to-dnf [expr]
   (->> expr
        to-dnf-tier-1
-       to-dnf-tier-2-cycle
+       to-dnf-tier-2
+       to-dnf-tier-3 ;2 и 3 нельзя объединить в одну тк тогда могут быть не замечены некоторые правила дистрибутивности
 
        ;to-dnf-tier-unite
        ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
