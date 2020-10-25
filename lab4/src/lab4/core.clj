@@ -144,11 +144,14 @@
                        ;              (to-dnf-tier-unite (conjunction-internal c a b))))]
 
                        ;это плохо так как если много то перестает работать так как не обязательно на первом или втором месте
-                       ;надо через квантор существования одно правило?
 
                        [(fn [expr] (and (conjunction? expr) (some conjunction? (args expr))))
                         (fn [expr] (let [conj (some (fn [elem] (if (conjunction? elem) elem nil)) (args expr)), conj-args (args conj)]
                                      (to-dnf-tier-unite (apply conjunction-internal (concat (remove (fn [elem] (= elem conj)) (args expr)) conj-args)))))]
+
+                       [(fn [expr] (and (disjunction? expr) (some disjunction? (args expr))))
+                        (fn [expr] (let [disj (some (fn [elem] (if (disjunction? elem) elem nil)) (args expr)), disj-args (args disj)]
+                                     (to-dnf-tier-unite (apply disjunction-internal (concat (remove (fn [elem] (= elem disj)) (args expr)) disj-args)))))]
 
 
                        [(fn [expr] (conjunction? expr))
