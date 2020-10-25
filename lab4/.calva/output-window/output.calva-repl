@@ -15,10 +15,11 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - Clojure lines in stack traces are peekable and clickable.
 clj::lab4.core=> 
-(to-dnf (disjunction (disjunction-many (variable ::x) (variable ::y) (variable ::e)) (disjunction-many (variable ::z) (variable ::w) (variable ::t))))
-(:disj (:var :lab4.core/x) (:var :lab4.core/z) (:var :lab4.core/y) (:var :lab4.core/e) (:var :lab4.core/w) (:var :lab4.core/t))
+(to-dnf (conjunction (disjunction (variable ::a) (variable ::b)) (disjunction (variable ::c) (variable ::d))))
+(:disj (:conj (:var :lab4.core/a) (:var :lab4.core/c)) (:conj (:var :lab4.core/a) (:var :lab4.core/d)) (:conj (:var :lab4.core/b) (:var :lab4.core/c)) (:conj (:var :lab4.core/b) (:var :lab4.core/d)))
+()
 clj::lab4.core=> 
-(to-dnf (disjunction-many (disjunction-many (variable ::a) (variable ::b) (variable ::c)) (disjunction-many (variable ::d) (variable ::e) (variable ::f)) (disjunction-many (variable ::g) (variable ::h) (variable ::i))))
-(:disj (:var :lab4.core/a) (:var :lab4.core/b) (:var :lab4.core/c) (:var :lab4.core/d) (:var :lab4.core/g) (:var :lab4.core/e) (:var :lab4.core/f) (:var :lab4.core/h) (:var :lab4.core/i))
+(to-dnf (implication (variable ::a) (implication (variable ::b) (disjunction-many (variable ::c) (variable ::d) (variable ::e)))))
+(:disj (:neg (:var :lab4.core/a)) (:neg (:var :lab4.core/b)) (:var :lab4.core/c) (:var :lab4.core/d) (:var :lab4.core/e))
 clj::lab4.core=> 
 ; nREPL Connection was closed
