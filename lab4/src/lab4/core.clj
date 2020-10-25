@@ -122,23 +122,23 @@
                    [(fn [expr] (and (conjunction? expr) (disjunction? (second expr))))
                     (fn [expr] (let [conj-args (args expr), disj (first conj-args), disj-args (args disj)
                                      a (first disj-args), b (second disj-args), c (second conj-args)]
-                                 (to-dnf-tier-2 (disjunction (conjunction a c) (conjunction b c)))))]
+                                 (to-dnf-tier-3 (disjunction (conjunction a c) (conjunction b c)))))]
 
                    ;дистрибутивность справа
                    ;(и c (или a b))
                    [(fn [expr] (and (conjunction? expr) (disjunction? (nth expr 2))))
                     (fn [expr] (let [conj-args (args expr), disj (second conj-args), disj-args (args disj)
                                      a (first disj-args), b (second disj-args), c (first conj-args)]
-                                 (to-dnf-tier-2 (disjunction (conjunction c a) (conjunction c b)))))]
+                                 (to-dnf-tier-3 (disjunction (conjunction c a) (conjunction c b)))))]
 
                    [(fn [expr] (and (negation? expr) (negation? (second expr))))
-                    (fn [expr] (let [arg (first (args (second expr)))] (to-dnf-tier-2 arg)))]
+                    (fn [expr] (let [arg (first (args (second expr)))] (to-dnf-tier-3 arg)))]
                    [(fn [expr] (conjunction? expr))
-                    (fn [expr] (let [e-args (args expr)] (apply conjunction (map to-dnf-tier-2 e-args))))]
+                    (fn [expr] (let [e-args (args expr)] (apply conjunction (map to-dnf-tier-3 e-args))))]
                    [(fn [expr] (disjunction? expr))
-                    (fn [expr] (let [e-args (args expr)] (apply disjunction (map to-dnf-tier-2 e-args))))]
+                    (fn [expr] (let [e-args (args expr)] (apply disjunction (map to-dnf-tier-3 e-args))))]
                    [(fn [expr] (negation? expr))
-                    (fn [expr] (let [arg (second expr)] (negation (to-dnf-tier-2 arg))))]
+                    (fn [expr] (let [arg (second expr)] (negation (to-dnf-tier-3 arg))))]
                    [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
                     (fn [expr] expr)]))
 
@@ -168,11 +168,11 @@
 
 
                        [(fn [expr] (conjunction? expr))
-                        (fn [expr] (let [e-args (args expr)] (apply conjunction-internal (map to-dnf-tier-2 e-args))))]
+                        (fn [expr] (let [e-args (args expr)] (apply conjunction-internal (map to-dnf-tier-unite e-args))))]
                        [(fn [expr] (disjunction? expr))
-                        (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-2 e-args))))]
+                        (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-unite e-args))))]
                        [(fn [expr] (negation? expr))
-                        (fn [expr] (let [arg (second expr)] (negation (to-dnf-tier-2 arg))))]
+                        (fn [expr] (let [arg (second expr)] (negation (to-dnf-tier-unite arg))))]
                        [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
                         (fn [expr] expr)]))
 
