@@ -95,13 +95,11 @@
 (declare to-dnf-tier-2)
 (def tier-2-rules (list
                    [(fn [expr] (and (negation? expr) (conjunction? (second expr))))
-                    (fn [expr] (let [neg-arg (second expr)] (apply disjunction (->> (args neg-arg)
-                                                                                    (map to-dnf-tier-2)
-                                                                                    (map (fn [elem] (negation elem)))))))]
+                    (fn [expr] (let [neg-arg (second expr)] (to-dnf-tier-2 (apply disjunction (->> (args neg-arg)
+                                                                                                   (map (fn [elem] (negation elem))))))))]
                    [(fn [expr] (and (negation? expr) (disjunction? (second expr))))
-                    (fn [expr] (let [neg-arg (second expr)] (apply conjunction (->> (args neg-arg)
-                                                                                    (map to-dnf-tier-2)
-                                                                                    (map (fn [elem] (negation elem)))))))]
+                    (fn [expr] (let [neg-arg (second expr)] (to-dnf-tier-2 (apply conjunction (->> (args neg-arg)
+                                                                                                   (map (fn [elem] (negation elem))))))))]
                    
                    ;дистрибутивность слева
                    ;(и (или a b) c)
@@ -179,7 +177,7 @@
   (->> expr
        to-dnf-tier-1
        to-dnf-tier-2
-       to-dnf-tier-unite
+       ;to-dnf-tier-unite
        ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
        
        ))
