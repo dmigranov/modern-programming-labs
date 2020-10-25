@@ -134,19 +134,24 @@
 (declare to-dnf-tier-unite)
 (def tier-unite-rules (list
 
-                       [(fn [expr] (and (conjunction? expr) (conjunction? (first (args expr)))))
-                        (fn [expr] (let [conj (first (args expr)), conj-args (args conj), 
-                                         a (first conj-args), b (second conj-args), c (second (args expr))]
-                                     (to-dnf-tier-unite (conjunction-internal a b c))))]
-                       [(fn [expr] (and (conjunction? expr) (conjunction? (second (args expr)))))
-                        (fn [expr] (let [conj (second (args expr)), conj-args (args conj)
-                                         a (first conj-args), b (second conj-args), c (first (args expr))]
-                                     (to-dnf-tier-unite (conjunction-internal c a b))))]
+                       ;[(fn [expr] (and (conjunction? expr) (conjunction? (first (args expr)))))
+                       ; (fn [expr] (let [conj (first (args expr)), conj-args (args conj)
+                       ;                  a (first conj-args), b (second conj-args), c (second (args expr))]
+                       ;              (to-dnf-tier-unite (conjunction-internal a b c))))]
+                       ;[(fn [expr] (and (conjunction? expr) (conjunction? (second (args expr)))))
+                       ; (fn [expr] (let [conj (second (args expr)), conj-args (args conj)
+                       ;                  a (first conj-args), b (second conj-args), c (first (args expr))]
+                       ;              (to-dnf-tier-unite (conjunction-internal c a b))))]
+
+                       ;это плохо так как если много то перестает работать так как не обязательно на первом или втором месте
+                       ;надо через квантор существования одно правило?
+
+                       [(fn [expr] (and (conjunction? expr) (some conjunction? (args expr))))
+                        (fn [expr] (let [conj (some (fn [elem] (if (conjunction? elem) elem nil)) (args expr)), conj-args (args conj)]
+                                     (println (apply conjunction-internal (remove (fn [elem] (= elem conj)) (args expr)) conj-args))
+                                     (to-dnf-tier-unite (apply conjunction-internal (remove (fn [elem] (= elem conj)) (args expr)) conj-args))))]
 
 
-
-
-        
                        [(fn [expr] (conjunction? expr))
                         (fn [expr] (let [e-args (args expr)] (apply conjunction-internal (map to-dnf-tier-2 e-args))))]
                        [(fn [expr] (disjunction? expr))
