@@ -16,9 +16,13 @@
 ;   - Clojure lines in stack traces are peekable and clickable.
 clj::lab4.core=> 
 (to-dnf (conjunction (conjunction (variable ::x) (variable ::y)) (conjunction (variable ::z) (variable ::w))))
-((:conj (:var :lab4.core/z) (:var :lab4.core/w)))
-((:var :lab4.core/x) (:var :lab4.core/y))
-; Execution error (NullPointerException) at lab4.core/to-dnf-tier (core.clj:167).
-; null
+(:conj (:var :lab4.core/x) (:var :lab4.core/y) (:var :lab4.core/z) (:var :lab4.core/w))
 clj::lab4.core=> 
+(to-dnf (conjunction (conjunction (variable ::x) (variable ::y)) (conjunction-many (variable ::z) (variable ::w) (variable ::t))))
+(:conj (:var :lab4.core/x) (:var :lab4.core/y) (:var :lab4.core/z) (:var :lab4.core/w) (:var :lab4.core/t))
+clj::lab4.core=> 
+(to-dnf (conjunction (conjunction-many (variable ::x) (variable ::y) (variable ::e)) (conjunction-many (variable ::z) (variable ::w) (variable ::t))))
+(:conj (:var :lab4.core/x) (:var :lab4.core/z) (:var :lab4.core/y) (:var :lab4.core/e) (:var :lab4.core/w) (:var :lab4.core/t))
+clj::lab4.core=> 
+exit
 ; nREPL Connection was closed

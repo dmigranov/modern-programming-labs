@@ -148,8 +148,7 @@
 
                        [(fn [expr] (and (conjunction? expr) (some conjunction? (args expr))))
                         (fn [expr] (let [conj (some (fn [elem] (if (conjunction? elem) elem nil)) (args expr)), conj-args (args conj)]
-                                     (println (apply conjunction-internal (remove (fn [elem] (= elem conj)) (args expr)) conj-args))
-                                     (to-dnf-tier-unite (apply conjunction-internal (remove (fn [elem] (= elem conj)) (args expr)) conj-args))))]
+                                     (to-dnf-tier-unite (apply conjunction-internal (concat (remove (fn [elem] (= elem conj)) (args expr)) conj-args)))))]
 
 
                        [(fn [expr] (conjunction? expr))
