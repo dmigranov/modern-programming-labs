@@ -15,10 +15,16 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - Clojure lines in stack traces are peekable and clickable.
 clj::lab4.core=> 
-(to-dnf (disjunction (conjunction (conjunction (variable ::x) (variable ::y)) (conjunction (variable ::z) (variable ::w))) (variable ::a)))
-(:disj (:conj (:var :lab4.core/x) (:var :lab4.core/y) (:var :lab4.core/z) (:var :lab4.core/w)) (:var :lab4.core/a))
+(to-dnf (conjunction (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z))))) (variable ::u)))
+(:disj (:conj (:var :lab4.core/u) (:var :lab4.core/x) (:neg (:var :lab4.core/y)) (:neg (:var :lab4.core/y))) (:conj (:var :lab4.core/u) (:var :lab4.core/x) (:neg (:var :lab4.core/y)) (:var :lab4.core/z)))
 clj::lab4.core=> 
 (to-dnf (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z))))))
-(:disj (:conj (:neg (:var :lab4.core/y)) (:var :lab4.core/x) (:neg (:var :lab4.core/y))) (:conj (:var :lab4.core/z) (:var :lab4.core/x) (:neg (:var :lab4.core/y))))
+; Syntax error compiling at (.calva/output-window/output.calva-repl:1:1692).
+; Unable to resolve symbol: sjunction in this context
+; Syntax error reading source at (REPL:21:131).
+; Unmatched delimiter: )
+clj::lab4.core=> 
+(to-dnf (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z))))))
+(:disj (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y)) (:neg (:var :lab4.core/y))) (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y)) (:var :lab4.core/z)))
 clj::lab4.core=> 
 ; nREPL Connection was closed

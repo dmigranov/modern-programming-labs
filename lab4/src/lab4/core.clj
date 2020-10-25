@@ -176,6 +176,28 @@
                        [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
                         (fn [expr] expr)]))
 
+(defn unnegate-variable [x]
+    {:pre [(or (variable? x) (and (negation? x) (variable? (first (args x)))))]}
+  (if (variable? x)
+    x
+    (first (args x)))
+  )
+
+(declare to-dnf-tier-sort)
+(def tier-sort-rules (list
+
+
+                       [(fn [expr] (and (conjunction? expr)))
+                        (fn [expr] (let [c-args (args expr)]
+                                     (apply conjunction-internal (sort (fn [x y]
+                                                                         (let [a (unnegate-variable x) b (unnegate-variable y)]
+                                                                           (compare (variable-name a) (variable-name b)))) c-args))))]
+                       
+                       [(fn [expr] (disjunction? expr))
+                        (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
+                       ))
+
+
 
 (defn to-dnf-tier [expr rules]
   ((some (fn [[rule-cond rule-transform]]
@@ -187,17 +209,25 @@
 (defn to-dnf-tier-2 [expr] (to-dnf-tier expr tier-2-rules))
 (defn to-dnf-tier-3 [expr] (to-dnf-tier expr tier-3-rules))
 (defn to-dnf-tier-unite [expr] (to-dnf-tier expr tier-unite-rules))
+(defn to-dnf-tier-sort [expr] (to-dnf-tier expr tier-sort-rules))
 
-;это необходимо, поскольку при использовании правила отрицания; но должно гарантировано закончится
-;(defn to-dnf-tier-2-cycle [])
+;это необходимо, поскольку: ((a or b) and c) and d
+;это раскорется при первом применении tier-3 в ((a and c) or (b and c)) and d
+;но рекурсивно спускаясь мы пропустим возможность примениит это правило ко всему выражению!
+(defn to-dnf-tier-3-cycle [expr]
+ (let [new-expr (to-dnf-tier-3 expr)]
+   (if (= new-expr expr)
+     new-expr
+     (recur new-expr))) 
+   )
 
 (defn to-dnf [expr]
   (->> expr
        to-dnf-tier-1
-       to-dnf-tier-2
-       to-dnf-tier-3 ;2 и 3 нельзя объединить в одну тк тогда могут быть не замечены некоторые правила дистрибутивности
+       to-dnf-tier-2 ;2 и 3 нельзя объединить в одну тк тогда могут быть не замечены некоторые правила дистрибутивности
+       to-dnf-tier-3-cycle
        to-dnf-tier-unite
-       
+       to-dnf-tier-sort
        ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
        ))
 
