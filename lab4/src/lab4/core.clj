@@ -3,17 +3,25 @@
 ; :  - keyword
 ; :: - keyword в пользовательском неймспейсу
 
-(defn variable [name]
+(defn variable
+ ^{:doc "Creates a variable"} 
+  [name]
   {:pre [(keyword? name)]}
   (list :var name))
 
-(defn variable? [expr]
+(defn variable?
+  ^{:doc "Checks if expr is a variable"}
+  [expr]
   (= (first expr) :var))
 
-(defn variable-name [var]
+(defn variable-name
+  ^{:doc "Returns variable name"}
+  [var]
   (second var))
 
-(defn same-variables? [v1 v2]
+(defn same-variables?
+  ^{:doc "Checks if variables are the same"}
+  [v1 v2]
   (and
    (variable? v1)
    (variable? v2)
