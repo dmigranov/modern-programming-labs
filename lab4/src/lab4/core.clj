@@ -48,12 +48,12 @@
 (defn conjunction-internal [expr & rest]
   (cons :conj (cons expr rest)))  
 
-(defn conjunction [expr1 expr2]
+(defn conjunction-binary [expr1 expr2]
   (list :conj expr1 expr2))
 
-(defn conjunction-many [expr & others]
+(defn conjunction [expr & others]
   (if (not-empty others)
-    (conjunction expr (apply conjunction-many others))
+    ((fn [expr1 expr2] (list :conj expr1 expr2)) expr (apply conjunction others))
     expr))
 
 (defn conjunction? [expr]

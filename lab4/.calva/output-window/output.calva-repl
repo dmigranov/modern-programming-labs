@@ -18,4 +18,5 @@ clj::lab4.core=>
 (to-dnf (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z))))))
 (:disj (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y))) (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y)) (:var :lab4.core/z)))
 clj::lab4.core=> 
+exit
 ; nREPL Connection was closed

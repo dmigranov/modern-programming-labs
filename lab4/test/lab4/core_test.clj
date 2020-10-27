@@ -34,6 +34,6 @@
 (deftest conjunction-test
   (testing "Conjunction"
     (is (conjunction? (conjunction (variable :x) (variable :y))))
-    ;(is (conjunction? (conjunction (variable :x) (variable :y) (variable :z))))
-    ;(is (= :x (variable-name (first (args (conjunction (variable :x) (variable :y) (variable :z)))))))
+    (is (conjunction? (conjunction (variable :x) (variable :y) (variable :z))))
+    (is (= :x (variable-name (first (args (conjunction (variable :x) (variable :y) (variable :z)))))))
     ))
