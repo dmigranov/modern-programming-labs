@@ -225,7 +225,11 @@
   (let [simplified (simplify-disjunct-recur (list :conj) (if (or (variable? disjunct) (and (negation? disjunct) (variable? (first (args disjunct)))))
                                                            (list disjunct)
                                                            (rest disjunct)))]
-    
+    (if (conjunction? simplified)
+      (if (> (count (args simplified)) 1)
+        simplified
+        (second simplified))
+      simplified)
     ))
 
 (defn to-dnf-tier-simplify-disjuncts [expr] 
