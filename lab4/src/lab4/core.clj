@@ -3,24 +3,20 @@
 ; :  - keyword
 ; :: - keyword в пользовательском неймспейсу
 
-(defn variable
- ^{:doc "Creates a variable"} 
-  [name]
+(defn ^{:doc "Creates a variable"}
+  variable [name]
   {:pre [(keyword? name)]}
   (list :var name))
 
-(defn variable?
-  ^{:doc "Checks if expr is a variable"}
-  [expr]
+(defn ^{:doc "Checks if expr is a variable"}
+  variable?  [expr]
   (= (first expr) :var))
 
-(defn variable-name
-  ^{:doc "Returns variable name"}
+(defn ^{:doc "Returns variable name"} variable-name
   [var]
   (second var))
 
-(defn same-variables?
-  ^{:doc "Checks if variables are the same"}
+(defn ^{:doc "Checks if variables are the same"} same-variables?
   [v1 v2]
   (and
    (variable? v1)
@@ -30,74 +26,64 @@
 (defn disjunction-internal [expr & rest]
   (cons :disj (cons expr rest)))
 
-(defn disjunction-binary
-  ^{:doc "Creates binary disjunction"}
+(defn ^{:doc "Creates binary disjunction"} disjunction-binary
   [expr1 expr2]
   (list :disj expr1 expr2))
 
-(defn disjunction
-  ^{:doc "Creates n-ary disjunction, if n = 1 returns expr"}
+(defn ^{:doc "Creates n-ary disjunction, if n = 1 returns expr"} disjunction
   [expr & others]
   (if (not-empty others)
     ((fn [expr1 expr2] (list :disj expr1 expr2)) expr (apply disjunction others))
     expr))
 
-(defn disjunction?
-  ^{:doc "Checks if expr is a disjunction"}
+(defn ^{:doc "Checks if expr is a disjunction"} disjunction?
   [expr]
   (= :disj (first expr)))
 
 (defn conjunction-internal [expr & rest]
   (cons :conj (cons expr rest)))  
 
-(defn conjunction-binary
-  ^{:doc "Creates binary conjunction"}
+(defn ^{:doc "Creates binary conjunction"} conjunction-binary
   [expr1 expr2]
   (list :conj expr1 expr2))
 
-(defn conjunction
-  ^{:doc "Creates n-ary conjunction, if n = 1 returns expr"}
+(defn ^{:doc "Creates n-ary conjunction, if n = 1 returns expr"} conjunction
   [expr & others]
   (if (not-empty others)
     ((fn [expr1 expr2] (list :conj expr1 expr2)) expr (apply conjunction others))
     expr))
 
-(defn conjunction?
-  ^{:doc "Checks if expr is a conjunction"}
+(defn ^{:doc "Checks if expr is a conjunction"} conjunction?
   [expr]
   (= :conj (first expr)))
 
-(defn implication
-  ^{:doc "Creates implication"}
+(defn ^{:doc "Creates implication"} implication
   [expr1 expr2]
   (list :impl expr1 expr2))
 
-(defn implication?
-  ^{:doc "Checks if expr is a implication"}
+(defn ^{:doc "Checks if expr is a implication"} implication?
   [expr]
   (= :impl (first expr)))
 
-(defn negation
-  ^{:doc "Creates negation of expr"}
+(defn ^{:doc "Creates negation of expr"} negation
   [expr]
   (list :neg expr))
 
-(defn negation?
-  ^{:doc "Checks if expr is a negation"}
+(defn ^{:doc "Checks if expr is a negation"} negation?
   [expr]
   (= :neg (first expr)))
 
-(def log-true ^{:doc "Returns logical true"} (list :true))
+(def ^{:doc "Returns logical true"} log-true (list :true))
 
-(defn log-true? ^{:doc "Checks if expr is true"} [expr]
+(defn ^{:doc "Checks if expr is true"} log-true? [expr]
   (= :true (first expr)))
 
-(def log-false ^{:doc "Returns logical false"} (list :false))
+(def ^{:doc "Returns logical false"} log-false (list :false))
 
-(defn log-false? ^{:doc "Checks if expr is false"} [expr]
+(defn ^{:doc "Checks if expr is false"} log-false? [expr]
   (= :false (first expr)))
 
-(defn args ^{:doc "Returns args of expr"} [expr] (rest expr))
+(defn ^{:doc "Returns args of expr"} args [expr] (rest expr))
 
 
 ;избавление ото всех нестандартных операций типа импликации
@@ -271,7 +257,7 @@
      (recur new-expr))) 
    )
 
-(defn to-dnf ^{:doc "Returns DNF of expr"} [expr]
+(defn ^{:doc "Returns DNF of expr"} to-dnf [expr]
   (->> expr
        to-dnf-tier-1
        to-dnf-tier-2 ;2 и 3 нельзя объединить в одну тк тогда могут быть не замечены некоторые правила дистрибутивности
@@ -283,10 +269,7 @@
        ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
        ))
 
-
-
-
-(defn signify ^{:doc "Signifies variable var in expr"} [expr var val]
+(defn ^{:doc "Signifies variable var in expr"} signify [expr var val]
   ;todo: найти все вхождения переменной var, заменить на val и привести к нормальной форме
   )
 
