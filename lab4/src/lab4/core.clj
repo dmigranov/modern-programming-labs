@@ -209,18 +209,23 @@
 (defn to-dnf-tier-sort [expr] (to-dnf-tier expr tier-sort-rules))
 
 
-(defn simplify-disjunct-recur [simplified rest-disjunct]
-  (let [conjuncts (args rest-disjunct)
-        c1 (first conjuncts)
-        c2 (second conjuncts)]
-    (cond
-      (= c1 c2) (recur (conj simplified c1) (drop 2 rest-disjunct)) ;они оба одна переменная с одним знаком
-      (= (unnegate-variable c1) (unnegate-variable c2)) log-false ;одна переменна, но с противоположными знаками
-      :else (recur (conj simplified c1) (rest rest-disjunct)) ;разные
-      )))
+(defn simplify-disjunct-recur [simplified rest-disjunct-args]
+  (if (> (count rest-disjunct-args) 1)
+    (let [conjuncts (args rest-disjunct-args)
+          c1 (first conjuncts)
+          c2 (second conjuncts)]
+      (cond
+        (= c1 c2) (recur (conj simplified c1) (drop 2 rest-disjunct-args)) ;они оба одна переменная с одним знаком
+        (= (unnegate-variable c1) (unnegate-variable c2)) log-false ;одна переменна, но с противоположными знаками
+        :else (recur (conj simplified c1) (rest rest-disjunct-args)) ;разные
+        ))
+    (concat simplified rest-disjunct-args) ;else
+    )
+  
+  )
 
 (defn simplify-disjunct [disjunct] ;x & not y & y ...
-  (simplify-disjunct-recur (list :conj) disjunct))
+  (simplify-disjunct-recur (list :conj) (rest disjunct)))
 
 (defn to-dnf-tier-simplify-disjuncts [expr] 
   (let [disjuncts (args expr)]
