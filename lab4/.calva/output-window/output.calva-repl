@@ -19,3 +19,4 @@ clj::lab4.core=>
 ; Execution error (AssertionError) at lab4.core/unnegate-variable (core.clj:179).
 ; Assert failed: (or (variable? x) (and (negation? x) (variable? (first (args x)))))
 clj::lab4.core=> 
+; nREPL Connection was closed
