@@ -75,9 +75,7 @@
 
 
 ;избавление ото всех нестандартных операций типа импликации
-;в виде списка чтобы можно было добавлять новые
-;проблема: так не получится с импликацийй вложенной внутрь!
-;надо все правила проработать
+;в виде списка чтобы можно было добавлять новые (!!! РАСШИРЯЕМОСТЬ !!!)
 (declare to-dnf-tier-1)
 (def tier-1-rules (list
                    [(fn [expr] (implication? expr))
@@ -91,7 +89,6 @@
                    [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
                     (fn [expr] expr)]))
 
-;а тут может можно объединить законы де моргана и двойное отрицание?
 (declare to-dnf-tier-2)
 (def tier-2-rules (list
                    ;де моргана
@@ -103,6 +100,7 @@
                     (fn [expr] (let [neg-arg (second expr)] (to-dnf-tier-2 (apply conjunction (->> (args neg-arg)
                                                                                                    (map (fn [elem] (negation elem))))))))]
                    ;двойное отрицание
+                   
                    [(fn [expr] (and (negation? expr) (negation? (second expr))))
                     (fn [expr] (let [arg (first (args (second expr)))] (to-dnf-tier-2 arg)))]
                    
