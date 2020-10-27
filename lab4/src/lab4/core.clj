@@ -67,16 +67,24 @@
   [expr]
   (= :conj (first expr)))
 
-(defn implication [expr1 expr2]
+(defn implication
+  ^{:doc "Creates implication"}
+  [expr1 expr2]
   (list :impl expr1 expr2))
 
-(defn implication? [expr]
+(defn implication?
+  ^{:doc "Checks if expr is a implication"}
+  [expr]
   (= :impl (first expr)))
 
-(defn negation [expr]
+(defn negation
+  ^{:doc "Creates negation of expr"}
+  [expr]
   (list :neg expr))
 
-(defn negation? [expr]
+(defn negation?
+  ^{:doc "Checks if expr is a negation"}
+  [expr]
   (= :neg (first expr)))
 
 (def log-true (list :true))
