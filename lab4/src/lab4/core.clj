@@ -30,15 +30,17 @@
 (defn disjunction-internal [expr & rest]
   (cons :disj (cons expr rest)))
 
-(defn disjunction-binary [expr1 expr2]
+(defn disjunction-binary
+  ^{:doc "Creates binary disjunction"}
+  [expr1 expr2]
   (list :disj expr1 expr2))
 
-(defn disjunction [expr & others]
+(defn disjunction
+  ^{:doc "Creates n-ary disjunction, if n = 1 returns expr"}
+  [expr & others]
   (if (not-empty others)
     ((fn [expr1 expr2] (list :disj expr1 expr2)) expr (apply disjunction others))
-    expr
-    )
-  )
+    expr))
 
 (defn disjunction?
   ^{:doc "Checks if expr is a disjunction"}
@@ -48,15 +50,21 @@
 (defn conjunction-internal [expr & rest]
   (cons :conj (cons expr rest)))  
 
-(defn conjunction-binary [expr1 expr2]
+(defn conjunction-binary
+  ^{:doc "Creates binary conjunction"}
+  [expr1 expr2]
   (list :conj expr1 expr2))
 
-(defn conjunction [expr & others]
+(defn conjunction
+  ^{:doc "Creates n-ary conjunction, if n = 1 returns expr"}
+  [expr & others]
   (if (not-empty others)
     ((fn [expr1 expr2] (list :conj expr1 expr2)) expr (apply conjunction others))
     expr))
 
-(defn conjunction? [expr]
+(defn conjunction?
+  ^{:doc "Checks if expr is a conjunction"}
+  [expr]
   (= :conj (first expr)))
 
 (defn implication [expr1 expr2]
