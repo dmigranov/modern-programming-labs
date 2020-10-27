@@ -211,8 +211,7 @@
 
 (defn simplify-disjunct-recur [simplified rest-conjuncts]
   (if (> (count rest-conjuncts) 1)
-    (let [
-          c1 (first rest-conjuncts)
+    (let [c1 (first rest-conjuncts)
           c2 (second rest-conjuncts)]
       (cond
         (= c1 c2) (recur simplified (concat (list c1) (drop 2 rest-conjuncts))) ;они оба одна переменная с одним знаком
@@ -220,16 +219,14 @@
         :else (recur (concat simplified (list c1)) (rest rest-conjuncts)) ;разные
         ))
     (concat simplified rest-conjuncts) ;else
-    )
-  
-  )
+    ))
 
 (defn simplify-disjunct [disjunct] ;x & not y & y ...
-  (simplify-disjunct-recur (list :conj) 
-                           
-                           (if (or (variable? disjunct) (and (negation? disjunct) (variable? (first (args disjunct)))))
-                             (list disjunct)
-                             (rest disjunct))))
+  (let [simplified (simplify-disjunct-recur (list :conj) (if (or (variable? disjunct) (and (negation? disjunct) (variable? (first (args disjunct)))))
+                                                           (list disjunct)
+                                                           (rest disjunct)))]
+    
+    ))
 
 (defn to-dnf-tier-simplify-disjuncts [expr] 
   (let [disjuncts (args expr)]
