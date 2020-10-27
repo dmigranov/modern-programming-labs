@@ -27,12 +27,13 @@
 (deftest disjunction-test
   (testing "Disjunction"
     (is (disjunction? (disjunction (variable :x) (variable :y))))
-    (is (disjunction? (disjunction-many (variable :x) (variable :y))))
-    (is (= :x (variable-name (first (args (disjunction-many (variable :x) (variable :y) (variable :z)))))))
+    (is (disjunction? (disjunction (variable :x) (variable :y) (variable :z))))
+    (is (= :x (variable-name (first (args (disjunction (variable :x) (variable :y) (variable :z)))))))
     ))
 
 (deftest conjunction-test
   (testing "Conjunction"
     (is (conjunction? (conjunction (variable :x) (variable :y))))
-    (is (conjunction? (conjunction-many (variable :x) (variable :y))))
-    (is (= :x (variable-name (first (args (conjunction-many (variable :x) (variable :y) (variable :z)))))))))
+    ;(is (conjunction? (conjunction (variable :x) (variable :y) (variable :z))))
+    ;(is (= :x (variable-name (first (args (conjunction (variable :x) (variable :y) (variable :z)))))))
+    ))

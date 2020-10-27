@@ -30,12 +30,12 @@
 (defn disjunction-internal [expr & rest]
   (cons :disj (cons expr rest)))
 
-(defn disjunction [expr1 expr2]
+(defn disjunction-binary [expr1 expr2]
   (list :disj expr1 expr2))
 
-(defn disjunction-many [expr & others]
+(defn disjunction [expr & others]
   (if (not-empty others)
-    (disjunction expr (apply disjunction-many others))
+    ((fn [expr1 expr2] (list :disj expr1 expr2)) expr (apply disjunction others))
     expr
     )
   )
