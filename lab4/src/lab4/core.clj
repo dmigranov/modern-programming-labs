@@ -40,7 +40,9 @@
     )
   )
 
-(defn disjunction? [expr]
+(defn disjunction?
+  ^{:doc "Checks if expr is a disjunction"}
+  [expr]
   (= :disj (first expr)))
 
 (defn conjunction-internal [expr & rest]
