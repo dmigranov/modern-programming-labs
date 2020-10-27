@@ -185,8 +185,6 @@
 
 (declare to-dnf-tier-sort)
 (def tier-sort-rules (list
-
-
                        [(fn [expr] (and (conjunction? expr)))
                         (fn [expr] (let [c-args (args expr)]
                                      (apply conjunction-internal (sort (fn [x y]
@@ -196,6 +194,19 @@
                        [(fn [expr] (disjunction? expr))
                         (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
                        ))
+
+
+(declare to-dnf-tier-simplify-disjuncts)
+(def tier-simplify-disjuncts-rules (list
+                      [(fn [expr] (and (conjunction? expr)))
+                       (fn [expr] (let [c-args (args expr)]
+                                    (apply conjunction-internal (sort (fn [x y]
+                                                                        (let [a (unnegate-variable x) b (unnegate-variable y)]
+                                                                          (compare (variable-name a) (variable-name b)))) c-args))))]
+
+                      [(fn [expr] (disjunction? expr))
+                       (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-sort e-args))))]))
+
 
 
 
@@ -210,6 +221,7 @@
 (defn to-dnf-tier-3 [expr] (to-dnf-tier expr tier-3-rules))
 (defn to-dnf-tier-unite [expr] (to-dnf-tier expr tier-unite-rules))
 (defn to-dnf-tier-sort [expr] (to-dnf-tier expr tier-sort-rules))
+(defn to-dnf-tier-simplify-disjuncts [expr] (to-dnf-tier expr tier-simplify-disjuncts-rules))
 
 ;это необходимо, поскольку: ((a or b) and c) and d
 ;это раскорется при первом применении tier-3 в ((a and c) or (b and c)) and d
@@ -228,6 +240,8 @@
        to-dnf-tier-3-cycle
        to-dnf-tier-unite
        to-dnf-tier-sort
+       to-dnf-tier-simplify-disjuncts
+
        ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
        ))
 
