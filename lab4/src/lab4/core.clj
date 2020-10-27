@@ -87,17 +87,17 @@
   [expr]
   (= :neg (first expr)))
 
-(def log-true (list :true))
+(def log-true ^{:doc "Returns logical true"} (list :true))
 
-(defn log-true? [expr]
+(defn log-true? ^{:doc "Checks if expr is true"} [expr]
   (= :true (first expr)))
 
-(def log-false (list :false))
+(def log-false ^{:doc "Returns logical false"} (list :false))
 
-(defn log-false? [expr]
+(defn log-false? ^{:doc "Checks if expr is false"} [expr]
   (= :false (first expr)))
 
-(defn args [expr] (rest expr))
+(defn args ^{:doc "Returns args of expr"} [expr] (rest expr))
 
 
 ;избавление ото всех нестандартных операций типа импликации
@@ -271,7 +271,7 @@
      (recur new-expr))) 
    )
 
-(defn to-dnf [expr]
+(defn to-dnf ^{:doc "Returns DNF of expr"} [expr]
   (->> expr
        to-dnf-tier-1
        to-dnf-tier-2 ;2 и 3 нельзя объединить в одну тк тогда могут быть не замечены некоторые правила дистрибутивности
@@ -286,13 +286,11 @@
 
 
 
-(defn signify [expr var val]
+(defn signify ^{:doc "Signifies variable var in expr"} [expr var val]
   ;todo: найти все вхождения переменной var, заменить на val и привести к нормальной форме
   )
 
 (defn -main
   [& args]
-  (println "Hello, World!")
-  (to-dnf (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z))))))
-
+  (println (to-dnf (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z)))))))
   )
