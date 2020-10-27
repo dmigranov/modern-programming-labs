@@ -215,9 +215,10 @@
           c1 (first rest-conjuncts)
           c2 (second rest-conjuncts)]
       (cond
+        ; (= c1 c2) (recur simplified (concat (list c1) (drop 2 rest-conjuncts))) ;они оба одна переменная с одним знаком
         (= c1 c2) (recur (concat simplified (list c1)) (drop 2 rest-conjuncts)) ;они оба одна переменная с одним знаком
         (= (unnegate-variable c1) (unnegate-variable c2)) log-false ;одна переменна, но с противоположными знаками
-        :else (recur (concat simplified ) (rest rest-conjuncts)) ;разные
+        :else (recur (concat simplified (list c1)) (rest rest-conjuncts)) ;разные
         ))
     (concat simplified rest-conjuncts) ;else
     )
