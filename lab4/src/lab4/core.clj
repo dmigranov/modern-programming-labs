@@ -197,6 +197,7 @@
 
 (declare to-dnf-tier-sort)
 (def tier-sort-rules (list
+                      ;todo: ошибка для одиночной переменной
                        [(fn [expr] (and (conjunction? expr)))
                         (fn [expr] (let [c-args (args expr)]
                                      (apply conjunction-internal (sort (fn [x y]
@@ -259,6 +260,7 @@
      (recur new-expr))) 
    )
 
+
 (defn ^{:doc "Returns DNF of expr"} to-dnf [expr]
   (->> expr
        to-dnf-tier-1
@@ -266,7 +268,7 @@
        to-dnf-tier-3-cycle
        to-dnf-tier-unite
        to-dnf-tier-sort
-       to-dnf-tier-simplify-disjuncts
+       ;to-dnf-tier-simplify-disjuncts
 
        ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
        ))
@@ -277,10 +279,13 @@
      ;todo: найти все вхождения переменной var, заменить на val и привести к нормальной форме
 
    [(fn [expr] (and (variable? expr) (same-variables? var expr)))
-    (fn [expr] ())]
-
+    (fn [expr] val)]
+   [(fn [expr] (conjunction? expr))
+    (fn [expr] (let [e-args (args expr)] (apply conjunction-internal (map (fn [elem] (signify-expression var val elem)) e-args))))]
+   [(fn [expr] (disjunction? expr))
+    (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map (fn [elem] (signify-expression var val elem)) e-args))))]
    [(fn [expr] (negation? expr))
-    (fn [expr] (let [arg (second expr)] (negation (signify-expression var arg))))])
+    (fn [expr] (let [arg (second expr)] (negation (signify-expression var val arg))))])
   )
 
 (defn signify-expression [var val expr] (to-dnf-tier (signify-rules var val) expr))
