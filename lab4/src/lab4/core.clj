@@ -197,8 +197,7 @@
 
 (declare to-dnf-tier-sort)
 (def tier-sort-rules (list
-                      ;todo: ошибка для одиночной переменной
-                       [(fn [expr] (and (conjunction? expr)))
+                       [(fn [expr] (conjunction? expr))
                         (fn [expr] (let [c-args (args expr)]
                                      (apply conjunction-internal (sort (fn [x y]
                                                                          (let [a (unnegate-variable x) b (unnegate-variable y)]
@@ -206,7 +205,11 @@
                        
                        [(fn [expr] (disjunction? expr))
                         (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
-                       ))
+                       
+                      [(fn [expr] (atomic-expression? expr))
+                       (fn [expr] expr)]
+                      
+                      ))
 
 
 (defn to-dnf-tier [expr rules]
@@ -246,6 +249,7 @@
     ))
 
 (defn to-dnf-tier-simplify-disjuncts [expr] 
+  ;todo: ошибка для одиночных переменных
   (let [disjuncts (args expr)]
     (apply disjunction-internal (map simplify-disjunct disjuncts)))
   )
@@ -268,7 +272,7 @@
        to-dnf-tier-3-cycle
        to-dnf-tier-unite
        to-dnf-tier-sort
-       ;to-dnf-tier-simplify-disjuncts
+       to-dnf-tier-simplify-disjuncts
 
        ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
        ))
