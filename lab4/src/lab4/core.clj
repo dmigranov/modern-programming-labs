@@ -273,14 +273,14 @@
        to-dnf-tier-unite
        to-dnf-tier-sort
        to-dnf-tier-simplify-disjuncts
+       ;todo: tier для констант
+       ;todo: исправить всё что выше на случай работы с константами!!!!
        ))
 
 (declare signify-expression)
 (defn signify-rules [var val]
   (list
-     ;todo: найти все вхождения переменной var, заменить на val и привести к нормальной форме
-
-   [(fn [expr] (and (variable? expr) (same-variables? var expr))) ;todo: not variable, atomic-...?
+   [(fn [expr] (and (variable? expr) (same-variables? var expr))) 
     (fn [expr] val)]
    [(fn [expr] (conjunction? expr))
     (fn [expr] (let [e-args (args expr)] (apply conjunction-internal (map (fn [elem] (signify-expression var val elem)) e-args))))]
