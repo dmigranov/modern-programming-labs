@@ -85,6 +85,8 @@
 
 (defn ^{:doc "Returns args of expr"} args [expr] (rest expr))
 
+(defn ^{:doc "Checks if x is variable or variable's negation"} atomic-expression? [x] ;variable or variable's negation
+  (or (variable? x) (and (negation? x) (variable? (first (args x))))))
 
 ;избавление ото всех нестандартных операций типа импликации
 ;в виде списка чтобы можно было добавлять новые (!!! РАСШИРЯЕМОСТЬ !!!)
@@ -271,10 +273,14 @@
 
 to-dnf-tier-simplify-disjuncts
 
+
+
+
 (defn ^{:doc "Signifies variable var in expr"} signify [expr var val]
   ;todo: найти все вхождения переменной var, заменить на val и привести к нормальной форме
 (let [rules (list
-             []
+             [(fn [expr] (atomic-expression? expr))
+              (fn [expr] ())]
              
              )]
   
