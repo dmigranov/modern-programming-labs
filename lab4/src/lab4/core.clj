@@ -272,26 +272,26 @@
        ))
 
 (declare signify-expression)
-(defn signify-rules [var]
+(defn signify-rules [var val]
   (list
+     ;todo: найти все вхождения переменной var, заменить на val и привести к нормальной форме
+
    [(fn [expr] (and (variable? expr) (same-variables? var expr)))
     (fn [expr] ())]
 
    [(fn [expr] (negation? expr))
-    (fn [expr] (let [arg (second expr)] (negation (signify-expression (signify-rules var) arg))))])
+    (fn [expr] (let [arg (second expr)] (negation (signify-expression var arg))))])
   )
 
-(defn signify-expression [rules expr] (to-dnf-tier rules expr))
+(defn signify-expression [var val expr] (to-dnf-tier (signify-rules var val) expr))
 
 (defn ^{:doc "Signifies variable var in expr"} signify [expr var val]
-  ;todo: найти все вхождения переменной var, заменить на val и привести к нормальной форме
-(let [rules ]
-  
+
   (->>
    expr
-   (signify-expression rules)
+   (signify-expression var val)
    to-dnf)
-  ))
+  )
 
 (defn -main
   [& args]
