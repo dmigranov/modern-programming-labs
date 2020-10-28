@@ -279,8 +279,9 @@
 (let [rules (list
              [(fn [expr] (and (variable? expr) (same-variables? var expr)))
               (fn [expr] ())]
-             
-             )]
+
+             [(fn [expr] (negation? expr))
+              (fn [expr] (let [arg (second expr)] (negation (signify-expression rules arg))))])]
   
   (->>
    expr
