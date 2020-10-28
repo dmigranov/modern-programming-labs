@@ -248,10 +248,10 @@
       simplified)
     ))
 
-(defn to-dnf-tier-simplify-disjuncts [expr] 
-  ;todo: ошибка для одиночных переменных
-  (let [disjuncts (args expr)]
-    (apply disjunction-internal (map simplify-disjunct disjuncts)))
+(defn to-dnf-tier-simplify-disjuncts [expr]
+  (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr))))
+
+  ;todo: если дизъюнкция одной переменной, то сократить
   )
 
 ;это необходимо, поскольку: ((a or b) and c) and d
@@ -273,8 +273,6 @@
        to-dnf-tier-unite
        to-dnf-tier-sort
        to-dnf-tier-simplify-disjuncts
-
-       ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
        ))
 
 (declare signify-expression)
@@ -282,17 +280,20 @@
   (list
      ;todo: найти все вхождения переменной var, заменить на val и привести к нормальной форме
 
-   [(fn [expr] (and (variable? expr) (same-variables? var expr)))
+   [(fn [expr] (and (variable? expr) (same-variables? var expr))) ;todo: not variable, atomic-...?
     (fn [expr] val)]
    [(fn [expr] (conjunction? expr))
     (fn [expr] (let [e-args (args expr)] (apply conjunction-internal (map (fn [elem] (signify-expression var val elem)) e-args))))]
    [(fn [expr] (disjunction? expr))
     (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map (fn [elem] (signify-expression var val elem)) e-args))))]
    [(fn [expr] (negation? expr))
-    (fn [expr] (let [arg (second expr)] (negation (signify-expression var val arg))))])
+    (fn [expr] (let [arg (second expr)] (negation (signify-expression var val arg))))]
+   [(fn [expr] (variable? expr))
+    (fn [expr] expr)]
+   )
   )
 
-(defn signify-expression [var val expr] (to-dnf-tier (signify-rules var val) expr))
+(defn signify-expression [var val expr] (to-dnf-tier expr (signify-rules var val)))
 
 (defn ^{:doc "Signifies variable var in expr"} signify [expr var val]
 
