@@ -238,7 +238,7 @@
     ))
 
 (defn simplify-disjunct [disjunct] ;x & not y & y ...
-  (let [simplified (simplify-disjunct-recur (list :conj) (if (or (variable? disjunct) (and (negation? disjunct) (variable? (first (args disjunct)))))
+  (let [simplified (simplify-disjunct-recur (list :conj) (if (atomic-expression? disjunct)
                                                            (list disjunct)
                                                            (rest disjunct)))]
     (if (conjunction? simplified)
