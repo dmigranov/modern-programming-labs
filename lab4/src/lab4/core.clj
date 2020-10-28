@@ -269,9 +269,20 @@
        ;tier4 - поиск одинаковых переменных, плюс избавление от единиц и нулей?
        ))
 
+to-dnf-tier-simplify-disjuncts
+
 (defn ^{:doc "Signifies variable var in expr"} signify [expr var val]
   ;todo: найти все вхождения переменной var, заменить на val и привести к нормальной форме
-  )
+(let [rules (list
+             []
+             
+             )]
+  
+  (->>
+   expr
+   (fn [e] (to-dnf-tier rules e))
+   to-dnf)
+  ))
 
 (defn -main
   [& args]
