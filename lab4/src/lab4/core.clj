@@ -83,6 +83,9 @@
 (defn ^{:doc "Checks if expr is false"} log-false? [expr]
   (= :false (first expr)))
 
+(defn ^{:doc "Checks if expr is true or false"} constant? [expr]
+  (or (log-true? expr) (log-false? expr)))
+
 (defn ^{:doc "Returns args of expr"} args [expr] (rest expr))
 
 (defn ^{:doc "Checks if x is variable or variable's negation"} atomic-expression? [x] ;variable or variable's negation
@@ -206,7 +209,7 @@
                        [(fn [expr] (disjunction? expr))
                         (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
                        
-                      [(fn [expr] (atomic-expression? expr))
+                      [(fn [expr] (or (atomic-expression? expr) (constant? expr)))
                        (fn [expr] expr)]
                       
                       ))
