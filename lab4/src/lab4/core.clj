@@ -213,7 +213,12 @@
 
 (declare to-dnf-tier-repeats)
 (def tier-repeats-rules (list
-                           
+                           [(fn [expr] (let [repeat-expr (some (fn [elem] (if (atomic-expression? elem) elem nil)) (args expr))] 
+                                         (and (disjunction? expr) repeat-expr (some? (fn [elem] (= (unnegate-variable repeat-expr) (unnegate-variable elem))) ()))))
+                            (fn [expr] (let [disj (some (fn [elem] (if (disjunction? elem) elem nil)) (args expr)), disj-args (args disj)]
+                                         (to-dnf-tier-unite (apply disjunction-internal (concat (remove (fn [elem] (= elem disj)) (args expr)) disj-args)))))]
+
+
                          
                          ))
 
