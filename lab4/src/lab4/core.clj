@@ -258,13 +258,18 @@
         (second simplified))
       simplified))) )
 
+
+(defn kill-duplicates [list]
+  (distinct list)
+  )
+
 ;найти вещи типа x & not x
 (defn find-contradictions [disjunct]
   (if (or (constant? disjunct) (atomic-expression? disjunct))
     disjunct ;точно ничего не найти
     (let [args-list (args disjunct)
           no-negations-list (map (fn [elem] (unnegate-variable elem)) args-list)]
-      (if (> (count no-negations-list) (count args-list))
+      (if (< (count (kill-duplicates no-negations-list)) (count (kill-duplicates args-list))) ;todo: нет, неправильно, надо ещё убрать неуникальные
         log-false ;если больше, то значит точно есть отрицания одинаковых переменных
         disjunct ;иначе противоречий нет...
         ))
@@ -272,13 +277,7 @@
   )
 
 (defn simplify-disjunct [disjunct]
-  (let [result (find-contradictions disjunct)]
-    (if (log-false? result)
-      result
-      (
-       ;todo: убрать дубликаты
-       ))
-    )) ;x & not y & y
+  (find-contradictions (apply conjunction-internal (kill-duplicates (args disjunct))))) ;x & not y & y
 
 (defn to-dnf-tier-simplify-disjuncts [expr] ;todo: исправить для констант
   (let [result (if (conjunction? expr)
