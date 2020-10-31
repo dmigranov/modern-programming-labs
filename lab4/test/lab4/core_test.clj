@@ -141,4 +141,14 @@
          (to-dnf (disjunction (variable :x) (negation log-true)))
          '(:var :x)))
     
+    (is (=
+         (to-dnf (disjunction (variable :x) (conjunction (variable :y) log-false)))
+         '(:var :x)
+         ))
+    
     ))
+
+(deftest signify-test
+  (testing "Signigy"))
+
+

@@ -350,8 +350,7 @@
 )
 
 
-(defn to-dnf-tier-simplify-disjuncts [expr] ;todo: исправить для констант
-  
+(defn to-dnf-tier-simplify-disjuncts [expr]
   (if (or (constant? expr) (atomic-expression? expr))
     expr
     (let [result (if (conjunction? expr)
@@ -359,9 +358,7 @@
                    (->>
                     (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr))))
                     kill-duplicates
-                    find-contradictions-in-disjunction
-                    ))
-          ]
+                    find-contradictions-in-disjunction))]
 
       (if (disjunction? result)
         (if (> (count (args result)) 1)
@@ -369,7 +366,6 @@
           (second result))
         result)))
   ) 
-
 
 
 ;это необходимо, поскольку: ((a or b) and c) and d
@@ -399,8 +395,7 @@
        to-dnf-tier-unite
        to-dnf-tier-sort
        to-dnf-tier-simplify-disjuncts
-       ;to-dnf-tier-constants-cycle
-       to-dnf-tier-constants
+       to-dnf-tier-constants-cycle
        to-dnf-tier-simplify-disjuncts ; на прошлом шаге выражение типа (и x 1) превратится в (и x), нужно упростить
        ))
 
