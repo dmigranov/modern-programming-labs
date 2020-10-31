@@ -15,38 +15,68 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - Clojure lines in stack traces are peekable and clickable.
 clj::lab4.core=> 
-(run-tests)
-; Syntax error compiling at (.calva/output-window/output.calva-repl:18:1).
-; Unable to resolve symbol: run-tests in this context
+(to-dnf (variable :x))
+(:disj (:var :x))
 clj::lab4.core=> 
-(require '[clojure.test :refer [run-tests]])
-()
-nil
+(to-dnf (conjunction (variable :x) (variable :y)))
+(:disj (:var :x) (:var :y))
 clj::lab4.core=> 
-(run-tests)
-
-Testing lab4.core
-
-Ran 0 tests containing 0 assertions.
-0 failures, 0 errors.
-{:test 0, :pass 0, :fail 0, :error 0, :type :summary}
+(to-dnf (disjunction (variable :x) (variable :y)))
+(:disj (:var :x) (:var :y))
 clj::lab4.core=> 
-(require 'lab4.core-test :reload-all)
-nil
-clj::lab4.core-test=> 
-(run-tests 'lab4.core-test)
+(to-dnf (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z))))))
+(:disj (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y))) (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y)) (:var :lab4.core/z)))
+clj::lab4.core=> 
+(to-dnf (disjunction (variable :x) (variable :y)))
+(:disj (:var :x) (:var :y))
+clj::lab4.core=> 
+(to-dnf (disjunction (variable :x) (variable :y)))
+(:disj (:var :x) (:var :y))
+clj::lab4.core=> 
+(defn ^{:doc "Returns DNF of expr"} to-dnf [expr]
+  (->> expr
+       to-dnf-tier-1
+       to-dnf-tier-2 ;2 и 3 нельзя объединить в одну тк тогда могут быть не замечены некоторые правила дистрибутивности
+       to-dnf-tier-3-cycle
+       to-dnf-tier-unite
+       to-dnf-tier-sort
+       ;to-dnf-tier-simplify-disjuncts
+       ;todo: tier для констант
+       ;todo: исправить всё что выше на случай работы с константами!!!!
+       ))
+#'lab4.core/to-dnf
+clj::lab4.core=> 
+(to-dnf (disjunction (variable :x) (variable :y)))
+(:disj (:var :x) (:var :y))
+clj::lab4.core=> 
+(to-dnf (conjunction (variable :x) (variable :y)))
+(:conj (:var :x) (:var :y))
+clj::lab4.core=> 
+(defn ^{:doc "Returns DNF of expr"} to-dnf [expr]
+  (->> expr
+       to-dnf-tier-1
+       to-dnf-tier-2 ;2 и 3 нельзя объединить в одну тк тогда могут быть не замечены некоторые правила дистрибутивности
+       to-dnf-tier-3-cycle
+       to-dnf-tier-unite
+       to-dnf-tier-sort
+       to-dnf-tier-simplify-disjuncts
+       ;todo: tier для констант
+       ;todo: исправить всё что выше на случай работы с константами!!!!
+       ))
+#'lab4.core/to-dnf
+clj::lab4.core=> 
+(to-dnf (conjunction (variable :x) (variable :y)))
+(:disj (:var :x) (:var :y))
+clj::lab4.core=> 
+(defn to-dnf-tier-simplify-disjuncts [expr]
+  (if (conjunction? expr)
+    (simplify-disjunct expr)
+    (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr)))))
 
-Testing lab4.core-test
-
-FAIL in (to-dnf-test) (core_test.clj:43)
-To DNF
-expected: (= (to-dnf (negation (disjunction (implication (variable :lab4.core-test/x) (variable :lab4.core-test/y)) (negation (implication (variable :lab4.core-test/y) (variable :lab4.core-test/z)))))) (quote (:disj (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y))) (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y)) (:var :lab4.core/z)))))
-  actual: (not (= 
-                (:disj (:conj (:var :lab4.core-test/x) (:neg (:var :lab4.core-test/y))) (:conj (:var :lab4.core-test/x) (:neg (:var :lab4.core-test/y)) (:var :lab4.core-test/z))) 
-                (:disj (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y))) (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y)) (:var :lab4.core/z)))))
-
-Ran 6 tests containing 15 assertions.
-1 failures, 0 errors.
-{:test 6, :pass 14, :fail 1, :error 0, :type :summary}
-clj::lab4.core-test=> 
-; nREPL Connection was closed
+  ;todo: если дизъюнкция одной переменной, то сократить
+  )
+#'lab4.core/to-dnf-tier-simplify-disjuncts
+clj::lab4.core=> 
+(to-dnf (conjunction (variable :x) (variable :y)))
+(:conj (:var :x) (:var :y))
+clj::lab4.core=> 

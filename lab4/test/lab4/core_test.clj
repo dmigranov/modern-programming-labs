@@ -43,4 +43,17 @@
     (is (=
          (to-dnf (negation (disjunction (implication (variable :x) (variable :y)) (negation (implication (variable :y) (variable :z))))))
          '(:disj (:conj (:var :x) (:neg (:var :y))) (:conj (:var :x) (:neg (:var :y)) (:var :z)))))
+
+    (is (=
+         (to-dnf (disjunction (variable :x) (variable :y)))
+         '(:disj (:var :x) (:var :y))))
+    
+    (is (=
+         (to-dnf (conjunction (variable :x) (variable :y)))
+         '(:conj (:var :x) (:var :y))
+         ))
+        
+    ;(is (=
+    ;     (to-dnf (variable :x))
+    ;     '(:var :x)))
   ))

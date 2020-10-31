@@ -249,7 +249,9 @@
     ))
 
 (defn to-dnf-tier-simplify-disjuncts [expr]
-  (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr))))
+  (if (conjunction? expr)
+    (simplify-disjunct expr)
+    (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr)))))
 
   ;todo: если дизъюнкция одной переменной, то сократить
   )
