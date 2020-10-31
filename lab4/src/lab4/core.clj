@@ -191,9 +191,9 @@
                        [(fn [expr] (or (variable? expr) (log-true? expr) (log-false? expr)))
                         (fn [expr] expr)]))
 
-(defn unnegate-variable [x]
-    {:pre [(or (variable? x) (and (negation? x) (variable? (first (args x)))))]}
-  (if (variable? x)
+(defn unnegate-variable-or-constant [x]
+    {:pre [(or (variable? x) (constant? x) (and (negation? x) (or (variable? (first (args x))) (constant? (first (args x))))))]}
+  (if (or (variable? x) (constant? x))
     x
     (first (args x)))
   )
@@ -203,8 +203,13 @@
                       [(fn [expr] (conjunction? expr))
                        (fn [expr] (let [c-args (args expr)]
                                     (apply conjunction-internal (sort (fn [x y]
-                                                                        (let [a (unnegate-variable x) b (unnegate-variable y)]
-                                                                          (compare (variable-name a) (variable-name b)))) c-args))))]
+                                                                        (let [a (unnegate-variable-or-constant x) b (unnegate-variable-or-constant y)
+                                                                              comp-fn (fn [elem]
+                                                                                        (if (variable? elem)
+                                                                                          (variable-name elem)
+                                                                                          :0))
+                                                                              ]
+                                                                          (compare (comp-fn a) (comp-fn b)))) c-args))))]
 
                       [(fn [expr] (disjunction? expr))
                        (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
@@ -242,7 +247,7 @@
            c2 (second rest-conjuncts)]
        (cond
          (= c1 c2) (recur simplified (concat (list c1) (drop 2 rest-conjuncts))) ;они оба одна переменная с одним знаком
-         (= (unnegate-variable c1) (unnegate-variable c2)) log-false ;одна переменна, но с противоположными знаками
+         (= (unnegate-variable-or-constant c1) (unnegate-variable-or-constant c2)) log-false ;одна переменна, но с противоположными знаками
          :else (recur (concat simplified (list c1)) (rest rest-conjuncts)) ;разные
          ))
      (concat simplified rest-conjuncts) ;else
@@ -266,7 +271,7 @@
 ;найти вещи типа x & not x
 (defn find-contradictions-in-conjunction [conjun]
   (let [args-list (args conjun)
-        no-negations-list (map (fn [elem] (unnegate-variable elem)) args-list)]
+        no-negations-list (map (fn [elem] (unnegate-variable-or-constant elem)) args-list)]
     (if (< (count (kill-duplicates no-negations-list)) (count (kill-duplicates args-list))) 
       log-false ;если больше, то значит точно есть отрицания одинаковых переменных
       conjun ;иначе противоречий нет...
