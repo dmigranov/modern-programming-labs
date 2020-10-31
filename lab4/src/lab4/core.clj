@@ -212,8 +212,14 @@
                                                                           (compare (comp-fn a) (comp-fn b)))) c-args))))]
 
                       [(fn [expr] (disjunction? expr))
-                       (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
+                       (fn [expr] (let [e-args (args expr)] 
+                                    (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
 
+                      [(fn [expr] (and (negation? expr) (constant? (second expr))))
+                       (fn [expr] (if (= (second expr) log-true)
+                                    log-false
+                                    log-true))]
+                      
                       [(fn [expr] (or (atomic-expression? expr) (constant? expr)))
                        (fn [expr] expr)]))
 

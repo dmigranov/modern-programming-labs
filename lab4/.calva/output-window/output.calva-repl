@@ -120,3 +120,63 @@ clj::lab4.core=>
 ; Execution error (NullPointerException) at lab4.core/to-dnf-tier (core.clj:253).
 ; null
 clj::lab4.core=> 
+(declare to-dnf-tier-sort)
+(def tier-sort-rules (list
+                      [(fn [expr] (conjunction? expr))
+                       (fn [expr] (let [c-args (args expr)]
+                                    (apply conjunction-internal (sort (fn [x y]
+                                                                        (let [a (unnegate-variable-or-constant x) b (unnegate-variable-or-constant y)
+                                                                              comp-fn (fn [elem]
+                                                                                        (if (variable? elem)
+                                                                                          (variable-name elem)
+                                                                                          :0))]
+                                                                          (compare (comp-fn a) (comp-fn b)))) c-args))))]
+
+                      [(fn [expr] (disjunction? expr))
+                       (fn [expr] (let [e-args (args expr)]
+                                    (println e-args)
+                                    (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
+
+                      [(fn [expr] (or (atomic-expression? expr) (constant? expr)))
+                       (fn [expr] expr)]))
+#'lab4.core/tier-sort-rules
+clj::lab4.core=> 
+(to-dnf-tier-sort (disjunction (variable ::x) (negation log-false)))
+((:var :lab4.core/x) (:neg (:false)))
+; Execution error (NullPointerException) at lab4.core/to-dnf-tier (core.clj:253).
+; null
+clj::lab4.core=> 
+(def tier-sort-rules (list
+                      [(fn [expr] (conjunction? expr))
+                       (fn [expr] (let [c-args (args expr)]
+                                    (apply conjunction-internal (sort (fn [x y]
+                                                                        (let [a (unnegate-variable-or-constant x) b (unnegate-variable-or-constant y)
+                                                                              comp-fn (fn [elem]
+                                                                                        (if (variable? elem)
+                                                                                          (variable-name elem)
+                                                                                          :0))]
+                                                                          (compare (comp-fn a) (comp-fn b)))) c-args))))]
+
+                      [(fn [expr] (disjunction? expr))
+                       (fn [expr] (let [e-args (args expr)]
+                                    (println e-args)
+                                    (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
+
+                      [(fn [expr] (and (negation? expr) (constant? (second expr))))
+                       (fn [expr] (if (= (second expr) log-true)
+                                    log-false
+                                    log-true))]
+
+                      [(fn [expr] (or (atomic-expression? expr) (constant? expr)))
+                       (fn [expr] expr)]))
+#'lab4.core/tier-sort-rules
+clj::lab4.core=> 
+(to-dnf-tier-sort (disjunction (variable ::x) (negation log-false)))
+((:var :lab4.core/x) (:neg (:false)))
+(:disj (:var :lab4.core/x) (:true))
+clj::lab4.core=> 
+(to-dnf-tier-sort (disjunction (variable ::x) (negation log-false)))
+((:var :lab4.core/x) (:neg (:false)))
+(:disj (:var :lab4.core/x) (:true))
+clj::lab4.core=> 
+; nREPL Connection was closed
