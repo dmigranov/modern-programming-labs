@@ -262,8 +262,12 @@
 (defn find-contradictions [disjunct]
   (if (or (constant? disjunct) (atomic-expression? disjunct))
     disjunct ;точно ничего не найти
-    (let [no-negations-list (map (fn [elem] (unnegate-variable elem)) (args disjunct))]
-      no-negations-list)
+    (let [args-list (args disjunct)
+          no-negations-list (map (fn [elem] (unnegate-variable elem)) args-list)]
+      (if (> (count no-negations-list) (count args-list))
+        log-false ;если больше, то значит точно есть отрицания одинаковых переменных
+        disjunct ;иначе противоречий нет...
+        ))
     )
   )
 
