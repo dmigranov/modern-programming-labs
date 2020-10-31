@@ -234,8 +234,8 @@
 
 
 
-;удаление повторяющихся переменных (в том числе с отрицанием), для этоо нужна сортировка
-;на самом деле можно было сделать без сортировки с помощью same...
+(comment
+ ;удаление повторяющихся переменных (в том числе с отрицанием), для этоо нужна сортировка
  (defn simplify-disjunct-recur [simplified rest-conjuncts]
    (if (> (count rest-conjuncts) 1)
      (let [c1 (first rest-conjuncts)
@@ -256,7 +256,21 @@
       (if (> (count (args simplified)) 1)
         simplified
         (second simplified))
-      simplified)))
+      simplified))) )
+
+;найти вещи типа x & not x
+(defn find-contradictions [disjunct]
+  
+  )
+
+(defn simplify-disjunct [disjunct]
+  (let [result (find-contradictions disjunct)]
+    (if (log-false? result)
+      result
+      (
+       ;todo: убрать дубликаты
+       ))
+    )) ;x & not y & y
 
 (defn to-dnf-tier-simplify-disjuncts [expr] ;todo: исправить для констант
   (let [result (if (conjunction? expr)
