@@ -260,7 +260,11 @@
 
 ;найти вещи типа x & not x
 (defn find-contradictions [disjunct]
-  
+  (if (or (constant? disjunct) (atomic-expression? disjunct))
+    disjunct ;точно ничего не найти
+    (let [no-negations-list (map (fn [elem] (unnegate-variable elem)) (args disjunct))]
+      no-negations-list)
+    )
   )
 
 (defn simplify-disjunct [disjunct]
