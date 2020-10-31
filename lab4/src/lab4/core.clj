@@ -222,7 +222,19 @@
                       [(fn [expr] (and (disjunction? expr) (some (fn [elem] 
                                                                    (or (constant? elem) (and (negation? elem) (constant? (second elem))))) 
                                                                  (args expr))))
-                       (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
+                       (fn [expr] (let [const (some (fn [elem] (if (or (constant? elem) (and (negation? elem) (constant? (second elem))))
+                                                                 elem
+                                                                 nil)
+                                                     )
+                                                   (args expr))] 
+                                    (if (or
+                                         (= const log-true)
+                                         (= const (negation log-false)))
+                                      log-true ;тогда выражение истина
+                                      () ;иначе можно выкинуть todo
+                                      )
+                                    
+                                    ))]
 
                            ))
 
@@ -276,7 +288,7 @@
   (let [args-list (args conjun)
         no-negations-list (map (fn [elem] (unnegate-variable-or-constant elem)) args-list)]
     (if (< (count (kill-duplicates no-negations-list)) (count (kill-duplicates args-list))) 
-      log-false ;если больше, то значит точно есть отрицания одинаковых переменных
+      log-false ;если больше, то значит точно есть переменные с разными знаками
       conjun ;иначе противоречий нет...
       ))
   )
@@ -301,7 +313,7 @@
                                             (second elem)
                                             elem)) args-list)]
     (if (< (count (kill-duplicates no-negations-list)) (count (kill-duplicates args-list))) 
-      log-true ;если больше, то значит точно есть отрицания одинаковых переменных
+      log-true ;если больше, то значит точно есть переменные с разными знаками
       disjun ;иначе противоречий нет...
       ))
 )
@@ -318,11 +330,7 @@
                     kill-duplicates
                     find-contradictions-in-disjunction
                     ))
-
           ]
-
-    ;todo: убить дубликаты по аналогии
-
 
       (if (disjunction? result)
         (if (> (count (args result)) 1)
@@ -343,6 +351,15 @@
      (recur new-expr))) 
    )
 
+;так как разбираем сверху вниз, то при одной итерации не все случаи могут быть учтены
+;пример x или (y и 0)
+;после первой итерации получим x или 0
+(defn to-dnf-tier-constants-cycle [expr]
+  (let [new-expr (to-dnf-tier-constants expr)]
+    (if (= new-expr expr)
+      new-expr
+      (recur new-expr))))
+
 (defn ^{:doc "Returns DNF of expr"} to-dnf [expr]
   (->> expr
        to-dnf-tier-1
@@ -351,7 +368,8 @@
        to-dnf-tier-unite
        to-dnf-tier-sort
        to-dnf-tier-simplify-disjuncts
-       ;to-dnf-tier-constants
+       ;to-dnf-tier-constants-cycle
+       to-dnf-tier-constants
        ))
 
 (declare signify-expression)
