@@ -232,14 +232,11 @@
                                                                       elem
                                                                       nil))
                                                          (args expr))]
-                                         (if (or
-                                              (= const log-true)
-                                              (= const (negation log-false)))
+                                         (if (= const log-true)
                                            log-true ; тогда выражение истина
                                            (apply disjunction-internal (->> (args expr)
                                                                         (remove (fn [elem]
-                                                                                 (or (= elem log-false) (= elem (negation log-true))))
-                                                                               )
+                                                                                  (= elem log-false)))
                                                                         (map to-dnf-tier-constants)
                                                                         )))))]
 
