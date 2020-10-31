@@ -80,6 +80,10 @@
     (is (=
          (to-dnf (conjunction (variable :x) (negation (variable :x))))
          '(:false)))
+    
+    (is (=
+         (to-dnf (disjunction (variable :x) (variable :x)))
+         '(:var :x)))
 
 
     (is (=

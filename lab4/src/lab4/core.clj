@@ -290,9 +290,12 @@
   
   (if (or (constant? expr) (atomic-expression? expr))
     expr
-    (let [result (if (conjunction? expr)
+    (let [result-first (if (conjunction? expr)
                    (simplify-disjunct expr) ;единственная коньюнкция без окружащих ее дизъюнкций
-                   (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr)))))]
+                   (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr)))))
+          
+          result (kill-duplicates result-first)
+          ]
 
     ;todo: убить дубликаты по аналогии
 
