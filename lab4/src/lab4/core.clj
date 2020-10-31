@@ -280,9 +280,10 @@
   (find-contradictions (apply conjunction-internal (kill-duplicates (args disjunct))))) ;x & not y & y
 
 (defn to-dnf-tier-simplify-disjuncts [expr] ;todo: исправить для констант
-  (let [result (if (conjunction? expr)
-                 (simplify-disjunct expr)
-                 (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr)))))]
+  (let [result (if (conjunction? expr) 
+                 (simplify-disjunct expr) ;единственная коньюнкция без окружащих ее дизъюнкций
+                 (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr))))
+                 )]
 
     ;todo: убить дубликаты по аналогии
     
