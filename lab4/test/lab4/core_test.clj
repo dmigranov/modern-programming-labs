@@ -120,10 +120,25 @@
     (is (=
          (to-dnf (conjunction (variable ::x) log-false (negation (variable :y))))
          '(:false)))
-    
-    
+
     (is (=
          (to-dnf (conjunction (variable ::x) (negation log-true) (negation (variable :y))))
          '(:false)))
+
+    (is (=
+         (to-dnf (conjunction (variable :x) log-true))
+         '(:var :x)))
+
+    (is (=
+         (to-dnf (conjunction (variable :x) (negation log-false)))
+         '(:var :x)))
+
+    (is (=
+         (to-dnf (disjunction (variable :x) log-false))
+         '(:var :x)))
+    
+    (is (=
+         (to-dnf (disjunction (variable :x) (negation log-true)))
+         '(:var :x)))
     
     ))

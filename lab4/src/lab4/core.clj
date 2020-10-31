@@ -108,19 +108,18 @@
 
 (declare to-dnf-tier-2)
 (def tier-2-rules (list
-                   ;де моргана
-
+                   ; де моргана
                    [(fn [expr] (and (negation? expr) (conjunction? (second expr))))
                     (fn [expr] (let [neg-arg (second expr)] (to-dnf-tier-2 (apply disjunction (->> (args neg-arg)
                                                                                                    (map (fn [elem] (negation elem))))))))]
                    [(fn [expr] (and (negation? expr) (disjunction? (second expr))))
                     (fn [expr] (let [neg-arg (second expr)] (to-dnf-tier-2 (apply conjunction (->> (args neg-arg)
                                                                                                    (map (fn [elem] (negation elem))))))))]
-                   ;двойное отрицание
-
+                   ; двойное отрицание
                    [(fn [expr] (and (negation? expr) (negation? (second expr))))
                     (fn [expr] (let [arg (first (args (second expr)))] (to-dnf-tier-2 arg)))]
 
+                   ; отрицание константы 
                    [(fn [expr] (and (negation? expr) (constant? (second expr))))
                     (fn [expr] (if (= (second expr) log-true)
                                  log-false
@@ -236,7 +235,7 @@
                                          (if (or
                                               (= const log-true)
                                               (= const (negation log-false)))
-                                           log-true ;тогда выражение истина
+                                           log-true ; тогда выражение истина
                                            (apply disjunction-internal (->> (args expr)
                                                                         (remove (fn [elem]
                                                                                  (or (= elem log-false) (= elem (negation log-true))))
@@ -254,9 +253,9 @@
                                          (if (or
                                               (= const log-false)
                                               (= const (negation log-true))) ;вообще таких не должно остаться но на всякий случай
-                                           log-false ;тогда выражение ложб при любом раскладе
+                                           log-false ;тогда выражение ложь при любом раскладе
                                            (apply conjunction-internal (remove (fn [elem]
-                                                                                 (or (= elem log-false) (= elem (negation log-true))))
+                                                                                 (or (= elem log-true) (= elem (negation log-false))))
                                                                                (args expr))))))]
 
                            [(fn [expr] (disjunction? expr))
@@ -395,13 +394,14 @@
 (defn ^{:doc "Returns DNF of expr"} to-dnf [expr]
   (->> expr
        to-dnf-tier-1
-       to-dnf-tier-2 ;2 и 3 нельзя объединить в одну тк тогда могут быть не замечены некоторые правила дистрибутивности
+       to-dnf-tier-2 ; 2 и 3 нельзя объединить в одну тк тогда могут быть не замечены некоторые правила дистрибутивности
        to-dnf-tier-3-cycle
        to-dnf-tier-unite
        to-dnf-tier-sort
        to-dnf-tier-simplify-disjuncts
        ;to-dnf-tier-constants-cycle
        to-dnf-tier-constants
+       to-dnf-tier-simplify-disjuncts ; на прошлом шаге выражение типа (и x 1) превратится в (и x), нужно упростить
        ))
 
 (declare signify-expression)
