@@ -287,19 +287,22 @@
   ) ;x & not y & y
 
 (defn to-dnf-tier-simplify-disjuncts [expr] ;todo: исправить для констант
-  (let [result (if (conjunction? expr) 
-                 (simplify-disjunct expr) ;единственная коньюнкция без окружащих ее дизъюнкций
-                 (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr))))
-                 )]
+  
+  (if (or (constant? expr) (atomic-expression? expr))
+    expr
+    (let [result (if (conjunction? expr)
+                   (simplify-disjunct expr) ;единственная коньюнкция без окружащих ее дизъюнкций
+                   (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr)))))]
 
     ;todo: убить дубликаты по аналогии
-    
 
-    (if (disjunction? result)
-      (if (> (count (args result)) 1)
-        result
-        (second result))
-      result))) 
+
+      (if (disjunction? result)
+        (if (> (count (args result)) 1)
+          result
+          (second result))
+        result)))
+  ) 
 
 
 

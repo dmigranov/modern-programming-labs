@@ -79,11 +79,11 @@
 
 
     (is (=
-         (to-dnf (log-true))
+         (to-dnf log-true)
          '(:true)))
 
     (is (=
-         (to-dnf (log-false))
+         (to-dnf log-false)
          '(:false)))
     
     
