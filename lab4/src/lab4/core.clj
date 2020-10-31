@@ -265,19 +265,26 @@
 
 ;найти вещи типа x & not x
 (defn find-contradictions [disjunct]
-  (if (or (constant? disjunct) (atomic-expression? disjunct))
-    disjunct ;точно ничего не найти
-    (let [args-list (args disjunct)
-          no-negations-list (map (fn [elem] (unnegate-variable elem)) args-list)]
-      (if (< (count (kill-duplicates no-negations-list)) (count (kill-duplicates args-list))) ;todo: нет, неправильно, надо ещё убрать неуникальные
-        log-false ;если больше, то значит точно есть отрицания одинаковых переменных
-        disjunct ;иначе противоречий нет...
-        ))
-    )
+  (let [args-list (args disjunct)
+        no-negations-list (map (fn [elem] (unnegate-variable elem)) args-list)]
+    (if (< (count (kill-duplicates no-negations-list)) (count (kill-duplicates args-list))) ;todo: нет, неправильно, надо ещё убрать неуникальные
+      log-false ;если больше, то значит точно есть отрицания одинаковых переменных
+      disjunct ;иначе противоречий нет...
+      ))
   )
 
 (defn simplify-disjunct [disjunct]
-  (find-contradictions (apply conjunction-internal (kill-duplicates (args disjunct))))) ;x & not y & y
+    (let [simplified (if (or (constant? disjunct) (atomic-expression? disjunct))
+                       disjunct ;точно ничего не найти
+                       (find-contradictions (apply conjunction-internal (kill-duplicates (args disjunct)))))]
+
+      (if (conjunction? simplified)
+        (if (> (count (args simplified)) 1)
+          simplified
+          (second simplified))
+        simplified)
+      )
+  ) ;x & not y & y
 
 (defn to-dnf-tier-simplify-disjuncts [expr] ;todo: исправить для констант
   (let [result (if (conjunction? expr) 
