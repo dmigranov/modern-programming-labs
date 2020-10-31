@@ -15,88 +15,17 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - Clojure lines in stack traces are peekable and clickable.
 clj::lab4.core=> 
-(to-dnf (variable :x))
-(:disj (:var :x))
+(to-dnf (variable ::x) (variable ::x))
+; Execution error (ArityException) at lab4.core/eval1841 (form-init7348658274929021474.clj:18).
+; Wrong number of args (2) passed to: lab4.core/to-dnf
 clj::lab4.core=> 
-(to-dnf (conjunction (variable :x) (variable :y)))
-(:disj (:var :x) (:var :y))
+(to-dnf (conjunction (variable ::x) (variable ::x)))
+:lab4.core/x
 clj::lab4.core=> 
-(to-dnf (disjunction (variable :x) (variable :y)))
-(:disj (:var :x) (:var :y))
+(to-dnf (disjunction (variable ::x) (variable ::x)))
+(:disj (:var :lab4.core/x) (:var :lab4.core/x))
 clj::lab4.core=> 
-(to-dnf (negation (disjunction (implication (variable ::x) (variable ::y)) (negation (implication (variable ::y) (variable ::z))))))
-(:disj (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y))) (:conj (:var :lab4.core/x) (:neg (:var :lab4.core/y)) (:var :lab4.core/z)))
+(to-dnf (conjunction (variable ::x) (variable ::x)))
+:lab4.core/x
 clj::lab4.core=> 
-(to-dnf (disjunction (variable :x) (variable :y)))
-(:disj (:var :x) (:var :y))
-clj::lab4.core=> 
-(to-dnf (disjunction (variable :x) (variable :y)))
-(:disj (:var :x) (:var :y))
-clj::lab4.core=> 
-(defn ^{:doc "Returns DNF of expr"} to-dnf [expr]
-  (->> expr
-       to-dnf-tier-1
-       to-dnf-tier-2 ;2 и 3 нельзя объединить в одну тк тогда могут быть не замечены некоторые правила дистрибутивности
-       to-dnf-tier-3-cycle
-       to-dnf-tier-unite
-       to-dnf-tier-sort
-       ;to-dnf-tier-simplify-disjuncts
-       ;todo: tier для констант
-       ;todo: исправить всё что выше на случай работы с константами!!!!
-       ))
-#'lab4.core/to-dnf
-clj::lab4.core=> 
-(to-dnf (disjunction (variable :x) (variable :y)))
-(:disj (:var :x) (:var :y))
-clj::lab4.core=> 
-(to-dnf (conjunction (variable :x) (variable :y)))
-(:conj (:var :x) (:var :y))
-clj::lab4.core=> 
-(defn ^{:doc "Returns DNF of expr"} to-dnf [expr]
-  (->> expr
-       to-dnf-tier-1
-       to-dnf-tier-2 ;2 и 3 нельзя объединить в одну тк тогда могут быть не замечены некоторые правила дистрибутивности
-       to-dnf-tier-3-cycle
-       to-dnf-tier-unite
-       to-dnf-tier-sort
-       to-dnf-tier-simplify-disjuncts
-       ;todo: tier для констант
-       ;todo: исправить всё что выше на случай работы с константами!!!!
-       ))
-#'lab4.core/to-dnf
-clj::lab4.core=> 
-(to-dnf (conjunction (variable :x) (variable :y)))
-(:disj (:var :x) (:var :y))
-clj::lab4.core=> 
-(defn to-dnf-tier-simplify-disjuncts [expr]
-  (if (conjunction? expr)
-    (simplify-disjunct expr)
-    (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr)))))
-
-  ;todo: если дизъюнкция одной переменной, то сократить
-  )
-#'lab4.core/to-dnf-tier-simplify-disjuncts
-clj::lab4.core=> 
-(to-dnf (conjunction (variable :x) (variable :y)))
-(:conj (:var :x) (:var :y))
-clj::lab4.core=> 
-(to-dnf (conjunction (disjunction (variable :x) (variable :y))))
-; Syntax error compiling at (.calva/output-window/output.calva-repl:83:1).
-; Unable to resolve symbol: to-dnf in this context
-clj::lab4.core=> 
-(to-dnf (conjunction (disjunction (variable :x) (variable :y))))
-; Syntax error compiling at (.calva/output-window/output.calva-repl:87:1).
-; Unable to resolve symbol: to-dnf in this context
-clj::lab4.core=> 
-(to-dnf (conjunction (variable :x) (variable :y)))
-(:conj (:var :x) (:var :y))
-clj::lab4.core=> 
-(to-dnf (conjunction (disjunction (variable :x) (variable :y)) (disjunction (variable :z) (variable :s))))
-(:disj (:var :x) (:var :y))
-clj::lab4.core=> 
-(to-dnf (conjunction (disjunction (variable :x) (variable :y)) (disjunction (variable :z) (variable :s))))
-(:disj (:conj (:var :x) (:var :z)) (:conj (:var :s) (:var :x)) (:conj (:var :y) (:var :z)) (:conj (:var :s) (:var :y)))
-clj::lab4.core=> 
-(to-dnf (conjunction (disjunction (variable :x) (variable :y)) (disjunction (variable :x) (variable :y))))
-(:disj (:var :x) (:conj (:var :x) (:var :y)) (:conj (:var :x) (:var :y)) (:var :y))
-clj::lab4.core=> 
+; nREPL Connection was closed

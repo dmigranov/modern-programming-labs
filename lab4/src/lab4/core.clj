@@ -258,12 +258,15 @@
         (second simplified))
       simplified)))
 
-(defn to-dnf-tier-simplify-disjuncts [expr]
+(defn to-dnf-tier-simplify-disjuncts [expr] ;todo: исправить для констант
   (let [result (if (conjunction? expr)
                  (simplify-disjunct expr)
                  (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr)))))]
 
-    (if (disjunction result)
+    ;todo: убить дубликаты по аналогии
+    
+
+    (if (disjunction? result)
       (if (> (count (args result)) 1)
         result
         (second result))
@@ -281,7 +284,6 @@
      (recur new-expr))) 
    )
 
-
 (defn ^{:doc "Returns DNF of expr"} to-dnf [expr]
   (->> expr
        to-dnf-tier-1
@@ -291,7 +293,6 @@
        to-dnf-tier-sort
        to-dnf-tier-simplify-disjuncts
        ;to-dnf-tier-constants
-       ;todo: исправить всё что выше на случай работы с константами!!!!
        ))
 
 (declare signify-expression)

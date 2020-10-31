@@ -74,12 +74,17 @@
          '(:var :x)))
 
     (is (=
-         (to-dnf (log-true))
-         '(:true)))
+         (to-dnf (conjunction (variable :x) (variable :x)))
+         '(:var :x)))
+    
+    
+    ;(is (=
+    ;     (to-dnf (log-true))
+    ;     '(:true)))
 
-    (is (=
-         (to-dnf (log-false))
-         '(:false)))
+    ;(is (=
+    ;     (to-dnf (log-false))
+    ;     '(:false)))
     
     
     ))
