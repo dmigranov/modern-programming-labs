@@ -47,13 +47,21 @@
     (is (=
          (to-dnf (disjunction (variable :x) (variable :y)))
          '(:disj (:var :x) (:var :y))))
-    
+
+    (is (=
+         (to-dnf (disjunction (variable :x) (variable :y) (variable :z) (variable :d)))
+         '(:disj (:var :x) (:var :y) (:var :z) (:var :d))))
+
     (is (=
          (to-dnf (conjunction (variable :x) (variable :y)))
-         '(:conj (:var :x) (:var :y))
-         ))
-        
+         '(:conj (:var :x) (:var :y))))
+
+    
+    (is (=
+         (to-dnf (conjunction (variable :x) (variable :y) (variable :z) (variable :d)))
+         '(:conj (:var :d) (:var :x) (:var :y) (:var :z))))
+    
     ;(is (=
     ;     (to-dnf (variable :x))
     ;     '(:var :x)))
-  ))
+    ))
