@@ -64,7 +64,7 @@
     (is (=
          (to-dnf (conjunction (disjunction (variable :x) (variable :y)) (disjunction (variable :z) (variable :s))))
          '(:disj (:conj (:var :x) (:var :z)) (:conj (:var :s) (:var :x)) (:conj (:var :y) (:var :z)) (:conj (:var :s) (:var :y)))))
-    
+
     (is (=
          (to-dnf (conjunction (disjunction (variable :x) (variable :y)) (disjunction (variable :z) (variable :s))))
          '(:disj (:conj (:var :x) (:var :z)) (:conj (:var :s) (:var :x)) (:conj (:var :y) (:var :z)) (:conj (:var :s) (:var :y)))))
@@ -72,6 +72,14 @@
     (is (=
          (to-dnf (variable :x))
          '(:var :x)))
+
+    (is (=
+         (to-dnf (log-true))
+         '(:true)))
+
+    (is (=
+         (to-dnf (log-false))
+         '(:false)))
     
     
     ))

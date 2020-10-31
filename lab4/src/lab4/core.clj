@@ -211,18 +211,6 @@
                       
                       ))
 
-(declare to-dnf-tier-repeats)
-(def tier-repeats-rules (list
-                           [(fn [expr] (let [repeat-expr (some (fn [elem] (if (atomic-expression? elem) elem nil)) (args expr))] 
-                                         (and (disjunction? expr) repeat-expr (some? (fn [elem] (= (unnegate-variable repeat-expr) (unnegate-variable elem))) ()))))
-                            (fn [expr] (let [disj (some (fn [elem] (if (disjunction? elem) elem nil)) (args expr)), disj-args (args disj)]
-                                         (to-dnf-tier-unite (apply disjunction-internal (concat (remove (fn [elem] (= elem disj)) (args expr)) disj-args)))))]
-
-
-                         
-                         ))
-
-
 (declare to-dnf-tier-constants)
 (def tier-constants-rules (list
                       
@@ -241,25 +229,23 @@
 (defn to-dnf-tier-3 [expr] (to-dnf-tier expr tier-3-rules))
 (defn to-dnf-tier-unite [expr] (to-dnf-tier expr tier-unite-rules))
 (defn to-dnf-tier-sort [expr] (to-dnf-tier expr tier-sort-rules))
-(defn to-dnf-tier-repeats [expr] (to-dnf-tier expr tier-repeats-rules) )
 (defn to-dnf-tier-constants [expr] (to-dnf-tier expr tier-constants-rules))
 
 
 
 ;удаление повторяющихся переменных (в том числе с отрицанием), для этоо нужна сортировка
 ;на самом деле можно было сделать без сортировки с помощью same...
-(comment
  (defn simplify-disjunct-recur [simplified rest-conjuncts]
-  (if (> (count rest-conjuncts) 1)
-    (let [c1 (first rest-conjuncts)
-          c2 (second rest-conjuncts)]
-      (cond
-        (= c1 c2) (recur simplified (concat (list c1) (drop 2 rest-conjuncts))) ;они оба одна переменная с одним знаком
-        (= (unnegate-variable c1) (unnegate-variable c2)) log-false ;одна переменна, но с противоположными знаками
-        :else (recur (concat simplified (list c1)) (rest rest-conjuncts)) ;разные
-        ))
-    (concat simplified rest-conjuncts) ;else
-    ))
+   (if (> (count rest-conjuncts) 1)
+     (let [c1 (first rest-conjuncts)
+           c2 (second rest-conjuncts)]
+       (cond
+         (= c1 c2) (recur simplified (concat (list c1) (drop 2 rest-conjuncts))) ;они оба одна переменная с одним знаком
+         (= (unnegate-variable c1) (unnegate-variable c2)) log-false ;одна переменна, но с противоположными знаками
+         :else (recur (concat simplified (list c1)) (rest rest-conjuncts)) ;разные
+         ))
+     (concat simplified rest-conjuncts) ;else
+     ))
 
 (defn simplify-disjunct [disjunct] ;x & not y & y ...
   (let [simplified (simplify-disjunct-recur (list :conj) (if (atomic-expression? disjunct)
@@ -269,8 +255,7 @@
       (if (> (count (args simplified)) 1)
         simplified
         (second simplified))
-      simplified)
-    ))
+      simplified)))
 
 (defn to-dnf-tier-simplify-disjuncts [expr]
   (let [result (if (conjunction? expr)
@@ -281,7 +266,7 @@
       (if (> (count (args result)) 1)
         result
         (second result))
-      result))) )
+      result))) 
 
 
 
@@ -303,8 +288,7 @@
        to-dnf-tier-3-cycle
        to-dnf-tier-unite
        to-dnf-tier-sort
-       ;to-dnf-tier-simplify-disjuncts
-       to-dnf-tier-repeats
+       to-dnf-tier-simplify-disjuncts
        to-dnf-tier-constants
        ;todo: исправить всё что выше на случай работы с константами!!!!
        ))
