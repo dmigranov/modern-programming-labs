@@ -200,19 +200,17 @@
 
 (declare to-dnf-tier-sort)
 (def tier-sort-rules (list
-                       [(fn [expr] (conjunction? expr))
-                        (fn [expr] (let [c-args (args expr)]
-                                     (apply conjunction-internal (sort (fn [x y]
-                                                                         (let [a (unnegate-variable x) b (unnegate-variable y)]
-                                                                           (compare (variable-name a) (variable-name b)))) c-args))))]
-                       
-                       [(fn [expr] (disjunction? expr))
-                        (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
-                       
+                      [(fn [expr] (conjunction? expr))
+                       (fn [expr] (let [c-args (args expr)]
+                                    (apply conjunction-internal (sort (fn [x y]
+                                                                        (let [a (unnegate-variable x) b (unnegate-variable y)]
+                                                                          (compare (variable-name a) (variable-name b)))) c-args))))]
+
+                      [(fn [expr] (disjunction? expr))
+                       (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
+
                       [(fn [expr] (or (atomic-expression? expr) (constant? expr)))
-                       (fn [expr] expr)]
-                      
-                      ))
+                       (fn [expr] expr)]))
 
 (declare to-dnf-tier-constants)
 (def tier-constants-rules (list
@@ -291,7 +289,7 @@
        to-dnf-tier-3-cycle
        to-dnf-tier-unite
        to-dnf-tier-sort
-       ;to-dnf-tier-simplify-disjuncts
+       to-dnf-tier-simplify-disjuncts
        ;to-dnf-tier-constants
        ;todo: исправить всё что выше на случай работы с константами!!!!
        ))
