@@ -225,32 +225,49 @@
 
 (declare to-dnf-tier-constants)
 (def tier-constants-rules (list
-                           [(fn [expr] (and (disjunction? expr) (some (fn [elem] 
-                                                                        (or (constant? elem) (and (negation? elem) (constant? (second elem))))) 
+                           ;на самом деле negation true быть не может так как раньше устранили но корректности это не нарушает так что пусть останется
+                           [(fn [expr] (and (disjunction? expr) (some (fn [elem]
+                                                                        (or (constant? elem) (and (negation? elem) (constant? (second elem)))))
                                                                       (args expr))))
                             (fn [expr] (let [const (some (fn [elem] (if (or (constant? elem) (and (negation? elem) (constant? (second elem))))
                                                                       elem
-                                                                      nil)
-                                                           )
-                                                         (args expr))] 
-                                         (println const)
+                                                                      nil))
+                                                         (args expr))]
                                          (if (or
                                               (= const log-true)
                                               (= const (negation log-false)))
                                            log-true ;тогда выражение истина
-                                           () ;иначе можно выкинуть todo
-                                           )
-                                         
-                                         ))]
-                           
-                           
+                                           (apply disjunction-internal (->> (args expr)
+                                                                        (remove (fn [elem]
+                                                                                 (or (= elem log-false) (= elem (negation log-true))))
+                                                                               )
+                                                                        (map to-dnf-tier-constants)
+                                                                        )))))]
+
                            [(fn [expr] (and (conjunction? expr) (some (fn [elem]
                                                                         (or (constant? elem) (and (negation? elem) (constant? (second elem)))))
                                                                       (args expr))))
-                            (fn [expr]
-                              ;todo
-                              )]
+                            (fn [expr] (let [const (some (fn [elem] (if (or (constant? elem) (and (negation? elem) (constant? (second elem))))
+                                                                      elem
+                                                                      nil))
+                                                         (args expr))]
+                                         (if (or
+                                              (= const log-false)
+                                              (= const (negation log-true))) ;вообще таких не должно остаться но на всякий случай
+                                           log-false ;тогда выражение ложб при любом раскладе
+                                           (apply conjunction-internal (remove (fn [elem]
+                                                                                 (or (= elem log-false) (= elem (negation log-true))))
+                                                                               (args expr))))))]
 
+                           [(fn [expr] (disjunction? expr))
+                            (fn [expr] (let [e-args (args expr)]
+                                         (apply disjunction-internal (map to-dnf-tier-constants e-args))))]
+                           
+                           [(fn [expr] (conjunction? expr))
+                            (fn [expr] expr)]
+                           
+                           [(fn [expr] (or (atomic-expression? expr)))
+                            (fn [expr] expr)]
                            ))
 
 

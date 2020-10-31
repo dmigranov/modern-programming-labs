@@ -113,4 +113,6 @@
          (to-dnf (disjunction (variable ::x) (negation (variable ::y)) (negation log-false)))
          '(:true)))
     
+    
+    
     ))
