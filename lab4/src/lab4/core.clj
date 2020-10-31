@@ -219,7 +219,10 @@
 
 (declare to-dnf-tier-constants)
 (def tier-constants-rules (list
-                      
+                      [(fn [expr] (and (disjunction? expr) (some (fn [elem] 
+                                                                   (or (constant? elem) (and (negation? elem) (constant? (second elem))))) 
+                                                                 (args expr))))
+                       (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
 
                            ))
 
