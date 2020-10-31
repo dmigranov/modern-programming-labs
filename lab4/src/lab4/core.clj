@@ -109,7 +109,7 @@
 (declare to-dnf-tier-2)
 (def tier-2-rules (list
                    ;де моргана
-                   
+
                    [(fn [expr] (and (negation? expr) (conjunction? (second expr))))
                     (fn [expr] (let [neg-arg (second expr)] (to-dnf-tier-2 (apply disjunction (->> (args neg-arg)
                                                                                                    (map (fn [elem] (negation elem))))))))]
@@ -117,10 +117,15 @@
                     (fn [expr] (let [neg-arg (second expr)] (to-dnf-tier-2 (apply conjunction (->> (args neg-arg)
                                                                                                    (map (fn [elem] (negation elem))))))))]
                    ;двойное отрицание
-                   
+
                    [(fn [expr] (and (negation? expr) (negation? (second expr))))
                     (fn [expr] (let [arg (first (args (second expr)))] (to-dnf-tier-2 arg)))]
-                   
+
+                   [(fn [expr] (and (negation? expr) (constant? (second expr))))
+                    (fn [expr] (if (= (second expr) log-true)
+                                 log-false
+                                 log-true))]
+
                    [(fn [expr] (conjunction? expr))
                     (fn [expr] (let [e-args (args expr)] (apply conjunction (map to-dnf-tier-2 e-args))))]
                    [(fn [expr] (disjunction? expr))
@@ -215,11 +220,6 @@
                        (fn [expr] (let [e-args (args expr)] 
                                     (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
 
-                      [(fn [expr] (and (negation? expr) (constant? (second expr))))
-                       (fn [expr] (if (= (second expr) log-true)
-                                    log-false
-                                    log-true))]
-                      
                       [(fn [expr] (or (atomic-expression? expr) (constant? expr)))
                        (fn [expr] expr)]))
 
