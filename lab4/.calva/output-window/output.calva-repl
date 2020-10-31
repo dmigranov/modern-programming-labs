@@ -15,12 +15,21 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - Clojure lines in stack traces are peekable and clickable.
 clj::lab4.core=> 
-(to-dnf (disjunction (variable ::x) (negation (variable ::x))))
-(:true)
+(to-dnf (conjunction (disjunction (variable :x) (variable :y)) (disjunction (variable :x) (variable :y))))
+(:disj (:var :x) (:conj (:var :x) (:var :y)) (:var :y))
 clj::lab4.core=> 
-(=
- (to-dnf (disjunction (variable :x) (negation (variable :x))))
- '(:true))
-true
+(to-dnf (disjunction (conjunction (negation (variable :x)) (variable :y)) (disjunction (variable :x) (variable :y))))
+(:disj (:conj (:neg (:var :x)) (:var :y)) (:var :x) (:var :y))
+clj::lab4.core=> 
+(to-dnf (disjunction (conjunction (negation (variable :x)) (variable :y)) (disjunction (negation (variable :x) (variable :y)))))
+; Execution error (ArityException) at lab4.core/eval1963 (form-init10722732969196422918.clj:24).
+; Wrong number of args (2) passed to: lab4.core/negation
+clj::lab4.core=> 
+(to-dnf (disjunction (conjunction (negation (variable :x)) (variable :y)) (conjunction (negation (variable :x) (variable :y)))))
+; Execution error (ArityException) at lab4.core/eval2055 (form-init10722732969196422918.clj:28).
+; Wrong number of args (2) passed to: lab4.core/negation
+clj::lab4.core=> 
+(to-dnf (disjunction (conjunction (negation (variable :x)) (variable :y)) (conjunction (negation (variable :x)) (variable :y))))
+(:conj (:neg (:var :x)) (:var :y))
 clj::lab4.core=> 
 ; nREPL Connection was closed

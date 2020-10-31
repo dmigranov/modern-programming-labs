@@ -97,4 +97,8 @@
          (to-dnf log-false)
          '(:false)))
     
+    (is (=
+         (to-dnf (disjunction (conjunction (negation (variable :x)) (variable :y)) (conjunction (negation (variable :x)) (variable :y))))
+         '(:conj (:neg (:var :x)) (:var :y))))
+    
     ))
