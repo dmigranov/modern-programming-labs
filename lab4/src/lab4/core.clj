@@ -211,6 +211,20 @@
                       
                       ))
 
+(declare to-dnf-tier-constants)
+(def tier-constants (list
+                      [(fn [expr] (conjunction? expr))
+                       (fn [expr] (let [c-args (args expr)]
+                                    (apply conjunction-internal (sort (fn [x y]
+                                                                        (let [a (unnegate-variable x) b (unnegate-variable y)]
+                                                                          (compare (variable-name a) (variable-name b)))) c-args))))]
+
+                      [(fn [expr] (disjunction? expr))
+                       (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map to-dnf-tier-sort e-args))))]
+
+                      [(fn [expr] (atomic-expression? expr))
+                       (fn [expr] expr)]))
+
 
 (defn to-dnf-tier [expr rules]
   ((some (fn [[rule-cond rule-transform]]
@@ -223,8 +237,12 @@
 (defn to-dnf-tier-3 [expr] (to-dnf-tier expr tier-3-rules))
 (defn to-dnf-tier-unite [expr] (to-dnf-tier expr tier-unite-rules))
 (defn to-dnf-tier-sort [expr] (to-dnf-tier expr tier-sort-rules))
+(defn to-dnf-tier-constants [expr] (to-dnf-tier expr tier-constants))
 
 
+
+;удаление повторяющихся переменных (в том числе с отрицанием), для этоо нужна сортировка
+;на самом деле можно было сделать без сортировки с помощью same...
 (defn simplify-disjunct-recur [simplified rest-conjuncts]
   (if (> (count rest-conjuncts) 1)
     (let [c1 (first rest-conjuncts)
@@ -249,12 +267,17 @@
     ))
 
 (defn to-dnf-tier-simplify-disjuncts [expr]
-  (if (conjunction? expr)
-    (simplify-disjunct expr)
-    (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr)))))
+  (let [result (if (conjunction? expr)
+                 (simplify-disjunct expr)
+                 (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr)))))]
 
-  ;todo: если дизъюнкция одной переменной, то сократить
-  )
+    (if (disjunction result)
+      (if (> (count (args result)) 1)
+        result
+        (second result))
+      result)))
+
+
 
 ;это необходимо, поскольку: ((a or b) and c) and d
 ;это раскорется при первом применении tier-3 в ((a and c) or (b and c)) and d
@@ -275,7 +298,7 @@
        to-dnf-tier-unite
        to-dnf-tier-sort
        to-dnf-tier-simplify-disjuncts
-       ;todo: tier для констант
+       to-dnf-tier-constants
        ;todo: исправить всё что выше на случай работы с константами!!!!
        ))
 

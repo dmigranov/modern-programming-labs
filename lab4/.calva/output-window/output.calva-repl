@@ -80,3 +80,23 @@ clj::lab4.core=>
 (to-dnf (conjunction (variable :x) (variable :y)))
 (:conj (:var :x) (:var :y))
 clj::lab4.core=> 
+(to-dnf (conjunction (disjunction (variable :x) (variable :y))))
+; Syntax error compiling at (.calva/output-window/output.calva-repl:83:1).
+; Unable to resolve symbol: to-dnf in this context
+clj::lab4.core=> 
+(to-dnf (conjunction (disjunction (variable :x) (variable :y))))
+; Syntax error compiling at (.calva/output-window/output.calva-repl:87:1).
+; Unable to resolve symbol: to-dnf in this context
+clj::lab4.core=> 
+(to-dnf (conjunction (variable :x) (variable :y)))
+(:conj (:var :x) (:var :y))
+clj::lab4.core=> 
+(to-dnf (conjunction (disjunction (variable :x) (variable :y)) (disjunction (variable :z) (variable :s))))
+(:disj (:var :x) (:var :y))
+clj::lab4.core=> 
+(to-dnf (conjunction (disjunction (variable :x) (variable :y)) (disjunction (variable :z) (variable :s))))
+(:disj (:conj (:var :x) (:var :z)) (:conj (:var :s) (:var :x)) (:conj (:var :y) (:var :z)) (:conj (:var :s) (:var :y)))
+clj::lab4.core=> 
+(to-dnf (conjunction (disjunction (variable :x) (variable :y)) (disjunction (variable :x) (variable :y))))
+(:disj (:var :x) (:conj (:var :x) (:var :y)) (:conj (:var :x) (:var :y)) (:var :y))
+clj::lab4.core=> 
