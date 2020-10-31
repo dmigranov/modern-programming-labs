@@ -101,4 +101,16 @@
          (to-dnf (disjunction (conjunction (negation (variable :x)) (variable :y)) (conjunction (negation (variable :x)) (variable :y))))
          '(:conj (:neg (:var :x)) (:var :y))))
     
+    (is (=
+         (to-dnf (disjunction (variable ::x) log-true))
+         '(:true)))
+    
+    (is (=
+         (to-dnf (disjunction (variable ::x) (negation (variable ::y)) log-true))
+         '(:true)))
+    
+    (is (=
+         (to-dnf (disjunction (variable ::x) (negation (variable ::y)) (negation log-false)))
+         '(:true)))
+    
     ))

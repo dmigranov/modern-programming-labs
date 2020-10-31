@@ -219,22 +219,31 @@
 
 (declare to-dnf-tier-constants)
 (def tier-constants-rules (list
-                      [(fn [expr] (and (disjunction? expr) (some (fn [elem] 
-                                                                   (or (constant? elem) (and (negation? elem) (constant? (second elem))))) 
-                                                                 (args expr))))
-                       (fn [expr] (let [const (some (fn [elem] (if (or (constant? elem) (and (negation? elem) (constant? (second elem))))
-                                                                 elem
-                                                                 nil)
-                                                     )
-                                                   (args expr))] 
-                                    (if (or
-                                         (= const log-true)
-                                         (= const (negation log-false)))
-                                      log-true ;тогда выражение истина
-                                      () ;иначе можно выкинуть todo
-                                      )
-                                    
-                                    ))]
+                           [(fn [expr] (and (disjunction? expr) (some (fn [elem] 
+                                                                        (or (constant? elem) (and (negation? elem) (constant? (second elem))))) 
+                                                                      (args expr))))
+                            (fn [expr] (let [const (some (fn [elem] (if (or (constant? elem) (and (negation? elem) (constant? (second elem))))
+                                                                      elem
+                                                                      nil)
+                                                           )
+                                                         (args expr))] 
+                                         (println const)
+                                         (if (or
+                                              (= const log-true)
+                                              (= const (negation log-false)))
+                                           log-true ;тогда выражение истина
+                                           () ;иначе можно выкинуть todo
+                                           )
+                                         
+                                         ))]
+                           
+                           
+                           [(fn [expr] (and (conjunction? expr) (some (fn [elem]
+                                                                        (or (constant? elem) (and (negation? elem) (constant? (second elem)))))
+                                                                      (args expr))))
+                            (fn [expr]
+                              ;todo
+                              )]
 
                            ))
 

@@ -15,21 +15,108 @@
 ;      when the cursor is after the last contents at the prompt
 ;   - Clojure lines in stack traces are peekable and clickable.
 clj::lab4.core=> 
-(to-dnf (conjunction (disjunction (variable :x) (variable :y)) (disjunction (variable :x) (variable :y))))
-(:disj (:var :x) (:conj (:var :x) (:var :y)) (:var :y))
+(to-dnf (disjunction (variable ::x) log-false))
+(:var :lab4.core/x)
+; Execution error (NullPointerException) at lab4.core/fn$fn (core.clj:225).
+; null
 clj::lab4.core=> 
-(to-dnf (disjunction (conjunction (negation (variable :x)) (variable :y)) (disjunction (variable :x) (variable :y))))
-(:disj (:conj (:neg (:var :x)) (:var :y)) (:var :x) (:var :y))
+(to-dnf (disjunction (variable ::x) log-true
+                     ))
+(:var :lab4.core/x)
+; Execution error (NullPointerException) at lab4.core/fn$fn (core.clj:225).
+; null
 clj::lab4.core=> 
-(to-dnf (disjunction (conjunction (negation (variable :x)) (variable :y)) (disjunction (negation (variable :x) (variable :y)))))
-; Execution error (ArityException) at lab4.core/eval1963 (form-init10722732969196422918.clj:24).
-; Wrong number of args (2) passed to: lab4.core/negation
+(to-dnf (disjunction (variable ::x) log-true))
+(:var :lab4.core/x)
+; Execution error (NullPointerException) at lab4.core/fn$fn (core.clj:225).
+; null
 clj::lab4.core=> 
-(to-dnf (disjunction (conjunction (negation (variable :x)) (variable :y)) (conjunction (negation (variable :x) (variable :y)))))
-; Execution error (ArityException) at lab4.core/eval2055 (form-init10722732969196422918.clj:28).
-; Wrong number of args (2) passed to: lab4.core/negation
+(def tier-constants-rules (list
+                           [(fn [expr] (and (disjunction? expr) (some (fn [elem]
+                                                                        (or (constant? elem) (and (negation? elem) (constant? (second elem)))))
+                                                                      (args expr))))
+                            (fn [expr] (let [const (some (fn [elem] (if (or (constant? elem) (and (negation? elem) (constant? (second elem))))
+                                                                      elem
+                                                                      nil))
+                                                         (args expr))]
+                                         (if (or
+                                              (= const log-true)
+                                              (= const (negation log-false)))
+                                           log-true ;тогда выражение истина
+                                           () ;иначе можно выкинуть todo
+                                           )))]
+
+
+                           [(fn [expr] (and (conjunction? expr) (some (fn [elem]
+                                                                        (or (constant? elem) (and (negation? elem) (constant? (second elem)))))
+                                                                      (args expr))))
+                            (fn [expr]
+                              ;todo
+                              )]))
+#'lab4.core/tier-constants-rules
 clj::lab4.core=> 
-(to-dnf (disjunction (conjunction (negation (variable :x)) (variable :y)) (conjunction (negation (variable :x)) (variable :y))))
-(:conj (:neg (:var :x)) (:var :y))
+(to-dnf (disjunction (variable ::x) log-true))
+(:true)
 clj::lab4.core=> 
-; nREPL Connection was closed
+(def tier-constants-rules (list
+                           [(fn [expr] (and (disjunction? expr) (some (fn [elem]
+                                                                        (or (constant? elem) (and (negation? elem) (constant? (second elem)))))
+                                                                      (args expr))))
+                            (fn [expr] (let [const (some (fn [elem] (if (or (constant? elem) (and (negation? elem) (constant? (second elem))))
+                                                                      elem
+                                                                      nil))
+                                                         (args expr))]
+                                         (println const)
+                                         (if (or
+                                              (= const log-true)
+                                              (= const (negation log-false)))
+                                           log-true ;тогда выражение истина
+                                           () ;иначе можно выкинуть todo
+                                           )))]
+
+
+                           [(fn [expr] (and (conjunction? expr) (some (fn [elem]
+                                                                        (or (constant? elem) (and (negation? elem) (constant? (second elem)))))
+                                                                      (args expr))))
+                            (fn [expr]
+                              ;todo
+                              )]))
+#'lab4.core/tier-constants-rules
+clj::lab4.core=> 
+(to-dnf (disjunction (variable ::x) log-true))
+(:true)
+(:true)
+clj::lab4.core=> 
+(to-dnf (disjunction (variable ::x) (negation log-false)))
+; Execution error (NullPointerException) at lab4.core/to-dnf-tier (core.clj:253).
+; null
+clj::lab4.core=> 
+(negation log-false)
+(:neg (:false))
+clj::lab4.core=> 
+(disjunction (variable ::x) (negation log-false))
+(:disj (:var :lab4.core/x) (:neg (:false)))
+clj::lab4.core=> 
+(to-dnf-tier-1 (disjunction (variable ::x) (negation log-false)))
+(:disj (:var :lab4.core/x) (:neg (:false)))
+clj::lab4.core=> 
+(to-dnf-tier-2 (disjunction (variable ::x) (negation log-false)))
+(:disj (:var :lab4.core/x) (:neg (:false)))
+clj::lab4.core=> 
+(to-dnf-tier-3 (disjunction (variable ::x) (negation log-false)))
+(:disj (:var :lab4.core/x) (:neg (:false)))
+clj::lab4.core=> 
+(to-dnf-tier-unite (disjunction (variable ::x) (negation log-false)))
+(:disj (:var :lab4.core/x) (:neg (:false)))
+clj::lab4.core=> 
+(to-dnf-tier-sort (disjunction (variable ::x) (negation log-false)))
+; Execution error (NullPointerException) at lab4.core/to-dnf-tier (core.clj:253).
+; null
+clj::lab4.core=> 
+(to-dnf-tier-sort (conjunction (variable ::x) (negation log-false)))
+(:conj (:neg (:false)) (:var :lab4.core/x))
+clj::lab4.core=> 
+(to-dnf-tier-sort (disjunction (variable ::x) (negation log-false)))
+; Execution error (NullPointerException) at lab4.core/to-dnf-tier (core.clj:253).
+; null
+clj::lab4.core=> 
