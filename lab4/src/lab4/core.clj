@@ -288,8 +288,8 @@
        to-dnf-tier-3-cycle
        to-dnf-tier-unite
        to-dnf-tier-sort
-       to-dnf-tier-simplify-disjuncts
-       to-dnf-tier-constants
+       ;to-dnf-tier-simplify-disjuncts
+       ;to-dnf-tier-constants
        ;todo: исправить всё что выше на случай работы с константами!!!!
        ))
 
