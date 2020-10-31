@@ -264,19 +264,19 @@
   )
 
 ;найти вещи типа x & not x
-(defn find-contradictions [disjunct]
-  (let [args-list (args disjunct)
+(defn find-contradictions-in-conjunction [conjun]
+  (let [args-list (args conjun)
         no-negations-list (map (fn [elem] (unnegate-variable elem)) args-list)]
-    (if (< (count (kill-duplicates no-negations-list)) (count (kill-duplicates args-list))) ;todo: нет, неправильно, надо ещё убрать неуникальные
+    (if (< (count (kill-duplicates no-negations-list)) (count (kill-duplicates args-list))) 
       log-false ;если больше, то значит точно есть отрицания одинаковых переменных
-      disjunct ;иначе противоречий нет...
+      conjun ;иначе противоречий нет...
       ))
   )
 
 (defn simplify-disjunct [disjunct]
     (let [simplified (if (or (constant? disjunct) (atomic-expression? disjunct))
                        disjunct ;точно ничего не найти
-                       (find-contradictions (apply conjunction-internal (kill-duplicates (args disjunct)))))]
+                       (find-contradictions-in-conjunction (apply conjunction-internal (kill-duplicates (args disjunct)))))]
 
       (if (conjunction? simplified)
         (if (> (count (args simplified)) 1)
@@ -286,15 +286,31 @@
       )
   ) ;x & not y & y
 
+
+(defn find-contradictions-in-disjunction [disjun]
+  (let [args-list (args disjun)
+        no-negations-list (map (fn [elem] (if (negation? elem)
+                                            (second elem)
+                                            elem)) args-list)]
+    (if (< (count (kill-duplicates no-negations-list)) (count (kill-duplicates args-list))) 
+      log-true ;если больше, то значит точно есть отрицания одинаковых переменных
+      disjun ;иначе противоречий нет...
+      ))
+)
+
+
 (defn to-dnf-tier-simplify-disjuncts [expr] ;todo: исправить для констант
   
   (if (or (constant? expr) (atomic-expression? expr))
     expr
-    (let [result-first (if (conjunction? expr)
+    (let [result (if (conjunction? expr)
                    (simplify-disjunct expr) ;единственная коньюнкция без окружащих ее дизъюнкций
-                   (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr)))))
-          
-          result (kill-duplicates result-first)
+                   (->>
+                    (apply disjunction-internal (map simplify-disjunct (if (atomic-expression? expr) (list expr) (args expr))))
+                    kill-duplicates
+                    find-contradictions-in-disjunction
+                    ))
+
           ]
 
     ;todo: убить дубликаты по аналогии

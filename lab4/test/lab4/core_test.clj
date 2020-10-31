@@ -85,6 +85,9 @@
          (to-dnf (disjunction (variable :x) (variable :x)))
          '(:var :x)))
 
+    (is (=
+         (to-dnf (disjunction (variable :x) (negation (variable :x))))
+         '(:true)))
 
     (is (=
          (to-dnf log-true)
@@ -92,4 +95,6 @@
 
     (is (=
          (to-dnf log-false)
-         '(:false)))))
+         '(:false)))
+    
+    ))
