@@ -37,3 +37,10 @@
     (is (conjunction? (conjunction (variable :x) (variable :y) (variable :z))))
     (is (= :x (variable-name (first (args (conjunction (variable :x) (variable :y) (variable :z)))))))
     ))
+
+(deftest to-dnf-test
+  (testing "To DNF"
+    (is (=
+         (to-dnf (negation (disjunction (implication (variable :x) (variable :y)) (negation (implication (variable :y) (variable :z))))))
+         '(:disj (:conj (:var :x) (:neg (:var :y))) (:conj (:var :x) (:neg (:var :y)) (:var :z)))))
+  ))
