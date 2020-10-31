@@ -77,6 +77,10 @@
          (to-dnf (conjunction (variable :x) (variable :x)))
          '(:var :x)))
 
+    (is (=
+         (to-dnf (conjunction (variable :x) (negation (variable :x))))
+         '(:false)))
+
 
     (is (=
          (to-dnf log-true)
@@ -84,7 +88,4 @@
 
     (is (=
          (to-dnf log-false)
-         '(:false)))
-    
-    
-    ))
+         '(:false)))))
