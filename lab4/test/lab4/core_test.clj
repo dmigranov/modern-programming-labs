@@ -80,7 +80,7 @@
     (is (=
          (to-dnf (conjunction (variable :x) (negation (variable :x))))
          '(:false)))
-    
+
     (is (=
          (to-dnf (disjunction (variable :x) (variable :x)))
          '(:var :x)))
@@ -96,23 +96,34 @@
     (is (=
          (to-dnf log-false)
          '(:false)))
-    
+
     (is (=
          (to-dnf (disjunction (conjunction (negation (variable :x)) (variable :y)) (conjunction (negation (variable :x)) (variable :y))))
          '(:conj (:neg (:var :x)) (:var :y))))
-    
+
     (is (=
          (to-dnf (disjunction (variable ::x) log-true))
          '(:true)))
-    
+
     (is (=
          (to-dnf (disjunction (variable ::x) (negation (variable ::y)) log-true))
          '(:true)))
-    
+
     (is (=
          (to-dnf (disjunction (variable ::x) (negation (variable ::y)) (negation log-false)))
          '(:true)))
+
+    (is (=
+         (to-dnf (conjunction (variable ::x) log-false))
+         '(:false)))
+
+    (is (=
+         (to-dnf (conjunction (variable ::x) log-false (negation (variable :y))))
+         '(:false)))
     
     
+    (is (=
+         (to-dnf (conjunction (variable ::x) (negation log-true) (negation (variable :y))))
+         '(:false)))
     
     ))

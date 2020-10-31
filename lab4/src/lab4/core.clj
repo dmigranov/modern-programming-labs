@@ -266,7 +266,7 @@
                            [(fn [expr] (conjunction? expr))
                             (fn [expr] expr)]
                            
-                           [(fn [expr] (or (atomic-expression? expr)))
+                           [(fn [expr] (or (atomic-expression? expr) (constant? expr)))
                             (fn [expr] expr)]
                            ))
 
