@@ -56,7 +56,6 @@
          (to-dnf (conjunction (variable :x) (variable :y)))
          '(:conj (:var :x) (:var :y))))
 
-
     (is (=
          (to-dnf (conjunction (variable :x) (variable :y) (variable :z) (variable :d)))
          '(:conj (:var :d) (:var :x) (:var :y) (:var :z))))
@@ -149,6 +148,10 @@
     ))
 
 (deftest signify-test
-  (testing "Signigy"))
+  (testing "Signify"
+;(is (= (signify (variable :x) log-true (variable :x))))
+
+
+    ))
 
 

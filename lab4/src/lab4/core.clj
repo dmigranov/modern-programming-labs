@@ -398,7 +398,9 @@
    [(fn [expr] (negation? expr))
     (fn [expr] (let [arg (second expr)] (negation (signify-expression var val arg))))]
    [(fn [expr] (variable? expr))
-    (fn [expr] expr)]
+    (fn [expr]
+     (println "here")
+      expr)]
    )
   )
 
