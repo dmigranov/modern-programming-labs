@@ -149,9 +149,16 @@
 
 (deftest signify-test
   (testing "Signify"
-;(is (= (signify (variable :x) log-true (variable :x))))
-
-
+    
+    (is (=
+         (signify (variable :x) (variable :x) log-true)
+         '(:true)))
+    
+    (is (=
+         (signify (variable :x) (variable :x) log-false)
+         '(:false)))
+    
+    
     ))
 
 
