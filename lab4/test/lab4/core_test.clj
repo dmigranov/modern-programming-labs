@@ -192,6 +192,11 @@
          (signify (disjunction (variable :x) (variable :y)) (variable :z) log-true)
          '(:disj (:var :x) (:var :y))))
     
+        
+    (is (=
+         (signify (conjunction (variable :x) (variable :y) (variable :f) (variable :z) (variable :q) (variable :w)) (variable :z) log-false)
+         '(:false)))
+    
     ))
     
     
