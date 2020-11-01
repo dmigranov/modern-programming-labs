@@ -149,14 +149,30 @@
 
 (deftest signify-test
   (testing "Signify"
-    
+
     (is (=
          (signify (variable :x) (variable :x) log-true)
          '(:true)))
-    
+
     (is (=
          (signify (variable :x) (variable :x) log-false)
          '(:false)))
+
+    (is (=
+         (signify (conjunction (variable :x) (variable :y)) (variable :x) log-false)
+         '(:false)))
+
+    (is (=
+         (signify (disjunction (variable :x) (variable :y)) (variable :x) log-false)
+         '(:var :y)))
+
+    (is (=
+         (signify (conjunction (variable :x) (variable :y)) (variable :x) log-true)
+         '(:var :y)))
+
+    (is (=
+         (signify (disjunction (variable :x) (variable :y)) (variable :x) log-true)
+         '(:true)))
     
     
     ))
