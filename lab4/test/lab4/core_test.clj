@@ -173,8 +173,28 @@
     (is (=
          (signify (disjunction (variable :x) (variable :y)) (variable :x) log-true)
          '(:true)))
+
+    (is (=
+         (signify
+          (to-dnf (negation (disjunction (implication (variable :x) (variable :y)) (negation (implication (variable :y) (variable :z))))))
+          (variable :z)
+          log-true)
+         '(:conj (:var :x) (:neg (:var :y)))))
     
+    (is (=
+         (signify
+          (negation (disjunction (implication (variable :x) (variable :y)) (negation (implication (variable :y) (variable :z)))))
+          (variable :z)
+          log-true)
+         '(:conj (:var :x) (:neg (:var :y)))))
+    
+    (is (=
+         (signify (disjunction (variable :x) (variable :y)) (variable :z) log-true)
+         '(:disj (:var :x) (:var :y))))
     
     ))
+    
+    
+
 
 

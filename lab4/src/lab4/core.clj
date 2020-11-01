@@ -397,7 +397,7 @@
     (fn [expr] (let [e-args (args expr)] (apply disjunction-internal (map (fn [elem] (signify-expression var val elem)) e-args))))]
    [(fn [expr] (negation? expr))
     (fn [expr] (let [arg (second expr)] (negation (signify-expression var val arg))))]
-   [(fn [expr] (variable? expr))
+   [(fn [expr] (or (variable? expr) (constant? expr)))
     (fn [expr]
       expr)]
    )
@@ -409,6 +409,7 @@
 
   (->>
    expr
+   to-dnf ; чтобы не было импликаций
    (signify-expression var val)
    to-dnf)
   )
