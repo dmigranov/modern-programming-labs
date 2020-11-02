@@ -224,7 +224,6 @@
 
 (declare to-dnf-tier-constants)
 (def tier-constants-rules (list
-                           ;на самом деле negation true быть не может так как раньше устранили но корректности это не нарушает так что пусть останется
                            [(fn [expr] (and (disjunction? expr) (some constant? (args expr))))
                             (fn [expr] (let [const (some (fn [elem] (if (constant? elem) elem nil))
                                                          (args expr))]
