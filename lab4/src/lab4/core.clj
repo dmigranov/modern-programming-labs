@@ -305,7 +305,7 @@
   (let [args-list (args conjun)
         no-negations-list (map (fn [elem] (unnegate-variable-or-constant elem)) args-list)]
     (if (< (count (kill-duplicates no-negations-list)) (count (kill-duplicates args-list))) 
-      log-false ;если больше, то значит точно есть переменные с разными знаками
+      log-false ;если меньше, то значит точно есть переменные с разными знаками: x & not x. мощность одного списка один, другого два
       conjun ;иначе противоречий нет...
       ))
   )
@@ -330,7 +330,7 @@
                                             (second elem)
                                             elem)) args-list)]
     (if (< (count (kill-duplicates no-negations-list)) (count (kill-duplicates args-list))) 
-      log-true ;если больше, то значит точно есть переменные с разными знаками
+      log-true ;если меньше, то значит точно есть переменные с разными знаками
       disjun ;иначе противоречий нет...
       ))
 )
